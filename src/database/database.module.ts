@@ -7,7 +7,7 @@ import { databaseConfig } from '../config';
   imports: [
     ConfigModule,
     TypeOrmModule.forRoot({
-      type: 'postgres',
+      type: 'mysql',
       host: databaseConfig.host,
       port: databaseConfig.port,
       username: databaseConfig.username,
