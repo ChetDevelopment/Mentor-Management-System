@@ -12,7 +12,7 @@
 ## 🗓️ DAY 1: Setup (6 tasks, ~8 hours total)
 
 ```
-1.1 Install Node.js v20+ if not installed [15m]
+1.1 Install Node.js v20+ if not installed [15m] 
 1.2 Install VS Code if not installed [15m]
 1.3 Install PostgreSQL (or use Docker) [1h]
 1.4 Create database named 'mentorkhet' [30m]
