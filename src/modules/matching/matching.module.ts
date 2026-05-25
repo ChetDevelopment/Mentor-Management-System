@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { MatchingController } from '../controllers/matching/matching.controller';
+import { MatchingController } from '../../controllers/matching/matching.controller';
 import { MatchingService } from '../../services/matching/matching.service';
 import { MatchingRepository } from '../../repositories/matching/matching.repository';
 import { Matching } from '../../entities/matching/matching.entity';

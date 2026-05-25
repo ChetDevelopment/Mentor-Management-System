@@ -1,17 +1,18 @@
-import { Module } from '@nestjs/common';
+import { Module, Global } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule } from '@nestjs/config';
 
-import { AuthController } from '../controllers/auth/auth.controller';
-import { AuthService } from '../services/auth/auth.service';
-import { AuthRepository } from '../repositories/auth/auth.repository';
-import { AuthToken } from '../entities/auth/auth-token.entity';
+import { AuthController } from '../../controllers/auth/auth.controller';
+import { AuthService } from '../../services/auth/auth.service';
+import { AuthRepository } from '../../repositories/auth/auth.repository';
+import { AuthToken } from '../../entities/auth/auth-token.entity';
 
-import { UserModule } from './user/user.module';
-import { jwtConfig } from '../config';
+import { UserModule } from '../user/user.module';
+import { jwtConfig } from '../../config';
 
+@Global()
 @Module({
   imports: [
     UserModule,
@@ -24,6 +25,6 @@ import { jwtConfig } from '../config';
   ],
   controllers: [AuthController],
   providers: [AuthService, AuthRepository],
-  exports: [AuthService],
+  exports: [AuthService, JwtModule],
 })
 export class AuthModule {}

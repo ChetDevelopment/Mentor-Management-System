@@ -7,7 +7,11 @@ export class SessionService {
   constructor(private sessionRepository: SessionRepository) {}
 
   async create(createSessionDto: CreateSessionDto, user: any) {
-    return this.sessionRepository.create(createSessionDto);
+    return this.sessionRepository.create({
+      ...createSessionDto,
+      scheduledAt: new Date(createSessionDto.scheduledAt),
+      ...(createSessionDto.duration && { duration: Number(createSessionDto.duration) }),
+    });
   }
 
   async findAll(query?: any, user?: any) {
@@ -31,7 +35,10 @@ export class SessionService {
   }
 
   async update(id: string, updateSessionDto: UpdateSessionDto) {
-    return this.sessionRepository.update(id, updateSessionDto);
+    return this.sessionRepository.update(id, {
+      ...updateSessionDto,
+      ...(updateSessionDto.scheduledAt && { scheduledAt: new Date(updateSessionDto.scheduledAt) }),
+    });
   }
 
   async remove(id: string) {
