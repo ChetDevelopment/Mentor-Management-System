@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional, IsEnum } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsEnum, IsEmail, IsBoolean, MinLength } from 'class-validator';
 import { UserRole } from '../../constants';
 
 export class CreateUserDto {

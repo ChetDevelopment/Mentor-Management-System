@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { AdminController } from '../controllers/admin/admin.controller';
+import { AdminController } from '../../controllers/admin/admin.controller';
 import { AdminService } from '../../services/admin/admin.service';
-import { User } from '../../entities/user/user.entity';
-import { Mentor } from '../../entities/mentor/mentor.entity';
-import { Mentee } from '../../entities/mentee/mentee.entity';
+import { UserModule } from '../user/user.module';
+import { MentorModule } from '../mentor/mentor.module';
+import { MenteeModule } from '../mentee/mentee.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Mentor, Mentee])],
+  imports: [UserModule, MentorModule, MenteeModule],
   controllers: [AdminController],
   providers: [AdminService],
 })

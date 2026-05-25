@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserRepository } from '../../repositories/user/user.repository';
 import { MentorRepository } from '../../repositories/mentor/mentor.repository';
 import { MenteeRepository } from '../../repositories/mentee/mentee.repository';
