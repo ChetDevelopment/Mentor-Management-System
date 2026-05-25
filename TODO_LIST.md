@@ -12,7 +12,7 @@
 ## 🗓️ DAY 1: Setup (6 tasks, ~8 hours total)
 
 ```
-1.1 Install Node.js v20+ if not installed [15m]
+1.1 Install Node.js v20+ if not installed [15m] 
 1.2 Install VS Code if not installed [15m]
 1.3 Install PostgreSQL (or use Docker) [1h]
 1.4 Create database named 'mentorkhet' [30m]
@@ -55,13 +55,13 @@
 ## 🗓️ DAY 2: Authentication Part 1 (8 tasks, ~8 hours)
 
 ```
-2.1 Create constants/index.ts file [5m]
-2.2 Add UserRole enum (ADMIN, MENTOR, MENTEE) [15m]
-2.3 Create config/index.ts file [5m]
-2.4 Add databaseConfig object [15m]
-2.5 Add jwtConfig object [10m]
-2.6 Create dto/auth/login.dto.ts [10m]
-2.7 Add email validation with @IsEmail [15m]
+2.1 Create constants/index.ts file [5m] ❤️
+2.2 Add UserRole enum (ADMIN, MENTOR, MENTEE) [15m] ❤️
+2.3 Create config/index.ts file [5m] ❤️
+2.4 Add databaseConfig object [15m] ❤️
+2.5 Add jwtConfig object [10m] ❤️
+2.6 Create dto/auth/login.dto.ts [10m] 
+2.7 Add email validation with @IsEmail [15m] 
 2.8 Add password validation with @MinLength [10m]
 2.9 Create dto/auth/register.dto.ts [15m]
 2.10 Add firstName, lastName validations [15m]
@@ -71,14 +71,14 @@
 2.14 Add @InjectRepository decorator [15m]
 2.15 Add create() method [20m]
 2.16 Add findByUserId() method [20m]
-2.17 Create services/auth folder [5m]
-2.18 Create auth.service.ts file [10m]
+2.17 Create services/auth folder [5m] 
+2.18 Create auth.service.ts file [10m] 
 2.19 Import bcrypt package [10m]
-2.20 Install bcrypt: npm install bcrypt [15m]
-2.21 Install @types/bcrypt: npm install -D @types/bcrypt [10m]
-2.22 Create hashPassword() method [20m]
-2.23 Create comparePassword() method [20m]
-2.24 Install @nestjs/jwt: npm install @nestjs/jwt [15m]
+2.20 Install bcrypt: npm install bcrypt [15m] ❤️
+2.21 Install @types/bcrypt: npm install -D @types/bcrypt [10m] ❤️
+2.22 Create hashPassword() method [20m] ❤️
+2.23 Create comparePassword() method [20m] ❤️
+2.24 Install @nestjs/jwt: npm install @nestjs/jwt [15m]ad
 2.25 Install @nestjs/passport: npm install @nestjs/passport [10m]
 2.26 Install passport-jwt: npm install passport-jwt [10m]
 2.27 Install passport-local: npm install passport-local [10m]
