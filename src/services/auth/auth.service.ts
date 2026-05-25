@@ -16,7 +16,7 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.userService.findByEmail(email);
-    if (user && (await bcrypt.compare(password, user.password))) {
+    if (user && (await this.userService.comparePassword(password, user.password))) {
       const { password: _, ...result } = user;
       return result;
     }
@@ -82,7 +82,7 @@ export class AuthService {
         secret: jwtConfig.secret,
       });
 
-      const hashedPassword = await bcrypt.hash(resetPasswordDto.password, 10);
+      const hashedPassword = await this.userService.hashPassword(resetPasswordDto.password);
       await this.userService.updatePassword(payload.sub, hashedPassword);
 
       return { message: 'Password reset successful' };

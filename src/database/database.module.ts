@@ -14,7 +14,7 @@ import { databaseConfig } from '../config';
       password: databaseConfig.password,
       database: databaseConfig.database,
       autoLoadEntities: true,
-      synchronize: process.env.NODE_ENV !== 'production',
+      synchronize: false,
     }),
   ],
   exports: [TypeOrmModule],
