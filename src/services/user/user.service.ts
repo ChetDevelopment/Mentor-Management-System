@@ -8,7 +8,7 @@ export class UserService {
   constructor(private userRepository: UserRepository) {}
 
   async create(createUserDto: CreateUserDto) {
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    const hashedPassword = await this.hashPassword(createUserDto.password);
     return this.userRepository.create({
       ...createUserDto,
       password: hashedPassword,
@@ -29,6 +29,14 @@ export class UserService {
 
   async findByEmail(email: string) {
     return this.userRepository.findByEmail(email);
+  }
+
+  async hashPassword(password: string) {
+    return bcrypt.hash(password, 10);
+  }
+
+  async comparePassword(password: string, hashedPassword: string) {
+    return bcrypt.compare(password, hashedPassword);
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
