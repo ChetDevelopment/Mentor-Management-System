@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { MenteeController } from '../controllers/mentee/mentee.controller';
+import { MenteeController } from '../../controllers/mentee/mentee.controller';
 import { MenteeService } from '../../services/mentee/mentee.service';
 import { MenteeRepository } from '../../repositories/mentee/mentee.repository';
 import { Mentee } from '../../entities/mentee/mentee.entity';
