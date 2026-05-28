@@ -55,7 +55,7 @@ pre { background: #11111b; padding: 10px; border-radius: 4px; overflow-x: auto; 
   <div class="endpoint"><span class="method">GET</span> <span class="url">/api/users/profile</span> <button onclick="call('GET','/api/users/profile')">Send</button></div>
   <div class="endpoint"><span class="method">GET</span> <span class="url">/api/users</span> <button onclick="call('GET','/api/users')">Send</button></div>
   <div class="endpoint"><span class="method">GET</span> <span class="url">/api/users/u2</span> <button onclick="call('GET','/api/users/u2')">Send</button></div>
-  <div class="endpoint"><span class="method">PUT</span> <span class="url">/api/users/profile</span> <button onclick="call('PUT','/api/users/profile','{"firstName":"Updated"}')">Update Profile</button></div>
+  <div class="endpoint"><span class="method">PUT</span> <span class="url">/api/users/profile</span> <button onclick='call("PUT","/api/users/profile",JSON.stringify({ firstName: "Updated" }))'>Update Profile</button></div>
 </div>
 
 <div class="card">
