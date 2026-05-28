@@ -69,7 +69,7 @@ export class AuthService {
     }
 
     const resetToken = this.jwtService.sign(
-      { sub: user.id, email: user.email },
+      { userId: user.id, email: user.email },
       { expiresIn: '1h' },
     );
 
@@ -83,7 +83,7 @@ export class AuthService {
       });
 
       const hashedPassword = await this.userService.hashPassword(resetPasswordDto.password);
-      await this.userService.updatePassword(payload.sub, hashedPassword);
+      await this.userService.updatePassword(payload.userId, hashedPassword);
 
       return { message: 'Password reset successful' };
     } catch {
@@ -103,7 +103,7 @@ export class AuthService {
   }
 
   private async generateTokens(user: any) {
-    const payload = { sub: user.id, email: user.email, role: user.role };
+    const payload = { userId: user.id, email: user.email, role: user.role };
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload),
       this.jwtService.signAsync(payload, { expiresIn: '7d' }),
