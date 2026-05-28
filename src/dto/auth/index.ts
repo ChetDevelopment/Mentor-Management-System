@@ -1,4 +1,4 @@
-export { LoginDto } from './login.dto';
-export { RegisterDto } from './register.dto';
-export { ForgotPasswordDto } from './forgot-password.dto';
-export { ResetPasswordDto } from './reset-password.dto';
+export * from './login.dto';
+export * from './register.dto';
+export * from './forgot-password.dto';
+export * from './reset-password.dto';
