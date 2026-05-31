@@ -47,7 +47,11 @@ export class UserService {
     return this.userRepository.update(id, { password: hashedPassword });
   }
 
+  async delete(id: string) {
+    return this.userRepository.delete(id);
+  }
+
   async remove(id: string) {
-    return this.userRepository.remove(id);
+    return this.delete(id);
   }
 }

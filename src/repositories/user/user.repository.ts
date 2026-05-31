@@ -32,7 +32,11 @@ export class UserRepository {
     return this.findById(id);
   }
 
-  async remove(id: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     await this.repository.delete(id);
+  }
+
+  async remove(id: string): Promise<void> {
+    return this.delete(id);
   }
 }

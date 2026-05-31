@@ -12,6 +12,7 @@ import { FeedbackModule } from './modules/feedback/feedback.module';
 import { NotificationModule } from './modules/notification/notification.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { ActivityLogModule } from './modules/activity-log/activity-log.module';
+import { SharedModule } from './modules/shared/shared.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ActivityLogModule } from './modules/activity-log/activity-log.module';
     NotificationModule,
     AdminModule,
     ActivityLogModule,
+    SharedModule,
   ],
 })
 export class AppModule {}
