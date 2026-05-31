@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Mentor } from '../../entities/mentor/mentor.entity';
+import { MentorStatus } from '../../constants';
 
 @Injectable()
 export class MentorRepository {
@@ -39,6 +40,13 @@ export class MentorRepository {
   async update(id: string, data: Partial<Mentor>): Promise<Mentor> {
     await this.repository.update(id, data);
     return this.findById(id);
+  }
+
+  async findPending(): Promise<Mentor[]> {
+    return this.repository.find({
+      where: { status: MentorStatus.PENDING },
+      relations: ['user'],
+    });
   }
 
   async remove(id: string): Promise<void> {

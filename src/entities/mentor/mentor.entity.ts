@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn } from 'typeorm';
 import { User } from '../user/user.entity';
+import { MentorStatus } from '../../constants';
 
 @Entity('mentors')
 export class Mentor {
@@ -12,6 +13,36 @@ export class Mentor {
 
   @Column()
   userId: string;
+
+  @Column({ unique: true })
+  nid: string;
+
+  @Column({ nullable: true })
+  phone: string;
+
+  @Column({ nullable: true })
+  avatar: string;
+
+  @Column({ nullable: true })
+  cvUrl: string;
+
+  @Column({ nullable: true })
+  portfolioUrl: string;
+
+  @Column({ nullable: true })
+  shortDescription: string;
+
+  @Column('text', { nullable: true })
+  fullBio: string;
+
+  @Column({ type: 'enum', enum: MentorStatus, default: MentorStatus.PENDING })
+  status: MentorStatus;
+
+  @Column({ nullable: true })
+  rejectionReason: string;
+
+  @Column({ nullable: true })
+  approvedAt: Date;
 
   @Column({ nullable: true })
   title: string;
