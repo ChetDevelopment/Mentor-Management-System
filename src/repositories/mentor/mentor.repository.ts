@@ -42,11 +42,21 @@ export class MentorRepository {
     return this.findById(id);
   }
 
+<<<<<<< HEAD
   async findPending(): Promise<Mentor[]> {
     return this.repository.find({
       where: { status: MentorStatus.PENDING },
       relations: ['user'],
     });
+=======
+  async updateStatus(id: string, status: string, rejectionReason?: string): Promise<Mentor> {
+    const data: any = { status };
+    if (rejectionReason !== undefined) {
+      data.rejectionReason = rejectionReason;
+    }
+    await this.repository.update(id, data);
+    return this.findById(id);
+>>>>>>> Develop
   }
 
   async remove(id: string): Promise<void> {

@@ -50,8 +50,17 @@ export class Mentor {
   @Column({ nullable: true })
   company: string;
 
+  @Column({ length: 160, nullable: true })
+  shortDescription: string;
+
   @Column('text', { nullable: true })
-  bio: string;
+  fullBio: string;
+
+  @Column({ nullable: true })
+  nid: string;
+
+  @Column({ nullable: true })
+  phone: string;
 
   @Column('int', { default: 0 })
   yearsOfExperience: number;
@@ -67,6 +76,12 @@ export class Mentor {
 
   @Column({ default: true })
   isAvailable: boolean;
+
+  @Column({ type: 'enum', enum: MentorStatus, default: MentorStatus.PENDING })
+  status: MentorStatus;
+
+  @Column('text', { nullable: true })
+  rejectionReason: string;
 
   @CreateDateColumn()
   createdAt: Date;

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { IsString, IsNotEmpty, IsOptional, IsNumber, IsBoolean, IsArray, IsEnum, MaxLength } from 'class-validator';
 import { MentorStatus } from '../../constants';
 
@@ -126,3 +127,7 @@ export class UpdateMentorDto {
   @IsOptional()
   isAvailable?: boolean;
 }
+=======
+export { CreateMentorDto } from './create-mentor.dto';
+export { UpdateMentorDto } from './update-mentor.dto';
+>>>>>>> Develop
