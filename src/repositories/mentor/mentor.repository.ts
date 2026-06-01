@@ -41,6 +41,15 @@ export class MentorRepository {
     return this.findById(id);
   }
 
+  async updateStatus(id: string, status: string, rejectionReason?: string): Promise<Mentor> {
+    const data: any = { status };
+    if (rejectionReason !== undefined) {
+      data.rejectionReason = rejectionReason;
+    }
+    await this.repository.update(id, data);
+    return this.findById(id);
+  }
+
   async remove(id: string): Promise<void> {
     await this.repository.delete(id);
   }
