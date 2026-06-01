@@ -9,6 +9,6 @@ import { Mentor } from '../../entities/mentor/mentor.entity';
   imports: [TypeOrmModule.forFeature([Mentor])],
   controllers: [MentorController],
   providers: [MentorService, MentorRepository],
-  exports: [MentorService],
+  exports: [MentorService, MentorRepository],
 })
 export class MentorModule {}

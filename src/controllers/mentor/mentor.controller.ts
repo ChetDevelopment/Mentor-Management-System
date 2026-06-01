@@ -31,6 +31,18 @@ export class MentorController {
     return this.mentorService.update(id, updateMentorDto);
   }
 
+  @Post(':id/reject')
+  @Roles(UserRole.ADMIN)
+  async reject(@Param('id') id: string, @Body('reason') reason: string) {
+    return this.mentorService.reject(id, reason);
+  }
+
+  @Post(':id/suspend')
+  @Roles(UserRole.ADMIN)
+  async suspend(@Param('id') id: string) {
+    return this.mentorService.suspend(id);
+  }
+
   @Delete(':id')
   @Roles(UserRole.ADMIN)
   async remove(@Param('id') id: string) {

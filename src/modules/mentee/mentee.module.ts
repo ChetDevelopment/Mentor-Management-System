@@ -9,6 +9,6 @@ import { Mentee } from '../../entities/mentee/mentee.entity';
   imports: [TypeOrmModule.forFeature([Mentee])],
   controllers: [MenteeController],
   providers: [MenteeService, MenteeRepository],
-  exports: [MenteeService],
+  exports: [MenteeService, MenteeRepository],
 })
 export class MenteeModule {}
