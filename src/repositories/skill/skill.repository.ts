@@ -8,7 +8,7 @@ export class SkillRepository {
   constructor(
     @InjectRepository(Skill)
     private repository: Repository<Skill>,
-  ) {}
+  ) { }
 
   async create(data: Partial<Skill>): Promise<Skill> {
     const entity = this.repository.create(data);
@@ -25,6 +25,10 @@ export class SkillRepository {
 
   async findByName(name: string): Promise<Skill | null> {
     return this.repository.findOne({ where: { name } });
+  }
+
+  async findByCategory(categoryId: string): Promise<Skill[]> {
+    return this.repository.find({ where: { categoryId }, relations: ['category'] });
   }
 
   async update(id: string, data: Partial<Skill>): Promise<Skill> {
