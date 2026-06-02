@@ -79,6 +79,12 @@ api.get = async (url: string, config?: any) => {
 api.post = async (url: string, data?: any, config?: any) => {
   const mapped = mapPath(url, 'POST');
 
+  // Convert uppercase roles to lowercase for backend
+  if (data && (url === '/auth/register' || url === '/auth/login')) {
+    data = { ...data };
+    if (data.role) data.role = data.role.toLowerCase();
+  }
+
   // Handle mentor verify → approve or reject
   const verifyMatch = url.match(/^\/admin\/mentors\/(.+)\/verify$/);
   if (verifyMatch) {
