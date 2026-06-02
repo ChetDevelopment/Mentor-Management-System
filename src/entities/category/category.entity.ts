@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert, BeforeUpdate } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert, BeforeUpdate, OneToMany } from 'typeorm';
+import { Skill } from '../skill/skill.entity';
 
 const slugify = (value: string) =>
   value
@@ -25,6 +26,9 @@ export class Category {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @OneToMany(() => Skill, skill => skill.category)
+  skills: Skill[];
 
   @CreateDateColumn()
   createdAt: Date;

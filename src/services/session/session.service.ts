@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { SessionRepository } from '../../repositories/session/session.repository';
 import { CreateSessionDto, UpdateSessionDto } from '../../dto/session';
 import { Session } from '../../entities/session/session.entity';
+import { SessionStatus } from '../../constants';
 
 @Injectable()
 export class SessionService {
@@ -62,5 +63,30 @@ export class SessionService {
 
   async remove(id: string) {
     return this.sessionRepository.remove(id);
+  }
+
+  async accept(id: string, user?: any) {
+    return this.updateStatus(id, SessionStatus.SCHEDULED);
+  }
+
+  async decline(id: string, user?: any) {
+    return this.updateStatus(id, SessionStatus.CANCELLED);
+  }
+
+  async complete(id: string, user?: any) {
+    return this.updateStatus(id, SessionStatus.COMPLETED);
+  }
+
+  async cancel(id: string, user?: any) {
+    return this.updateStatus(id, SessionStatus.CANCELLED);
+  }
+
+  async noShow(id: string, user?: any) {
+    return this.updateStatus(id, SessionStatus.NO_SHOW);
+  }
+
+  private async updateStatus(id: string, status: SessionStatus) {
+    await this.findById(id);
+    return this.sessionRepository.update(id, { status });
   }
 }

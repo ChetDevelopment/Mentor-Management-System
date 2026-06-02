@@ -2,13 +2,18 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { MentorRepository } from '../../repositories/mentor/mentor.repository';
 import { CreateMentorDto, UpdateMentorDto } from '../../dto/mentor';
 import { MentorStatus } from '../../constants';
+import { Skill } from '../../entities/skill/skill.entity';
 
 @Injectable()
 export class MentorService {
   constructor(private mentorRepository: MentorRepository) {}
 
   async create(createMentorDto: CreateMentorDto) {
-    return this.mentorRepository.create(createMentorDto);
+    const { skills, ...mentorData } = createMentorDto;
+    return this.mentorRepository.create({
+      ...mentorData,
+      skills: this.toSkillRefs(skills),
+    });
   }
 
   async findAll(query?: any) {
@@ -28,7 +33,11 @@ export class MentorService {
   }
 
   async update(id: string, updateMentorDto: UpdateMentorDto) {
-    return this.mentorRepository.update(id, updateMentorDto);
+    const { skills, ...mentorData } = updateMentorDto;
+    return this.mentorRepository.update(id, {
+      ...mentorData,
+      ...(skills ? { skills: this.toSkillRefs(skills) } : {}),
+    });
   }
 
   async approve(id: string) {
@@ -55,5 +64,9 @@ export class MentorService {
 
   async delete(id: string) {
     return this.remove(id);
+  }
+
+  private toSkillRefs(skillIds?: string[]): Skill[] | undefined {
+    return skillIds?.map((id) => ({ id }) as Skill);
   }
 }
