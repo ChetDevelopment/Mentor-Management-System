@@ -6,6 +6,12 @@ import { MentorStatus } from '../../constants';
 
 @Injectable()
 export class AdminService {
+  getMentors(arg0: { page: number; limit: number; }) {
+    throw new Error('Method not implemented.');
+  }
+  getUsers(arg0: { search: string; filter: string; page: number; limit: number; }) {
+    throw new Error('Method not implemented.');
+  }
   handleReport(id: string, body: any) {
     throw new Error('Method not implemented.');
   }
