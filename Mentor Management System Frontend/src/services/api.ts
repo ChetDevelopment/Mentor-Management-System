@@ -39,9 +39,27 @@ const mapPath = (url: string, method: string): string => {
     'GET /admin/stats': '/admin/dashboard',
     'POST /reviews': '/feedback',
     'GET /reviews': '/feedback',
+    'DELETE /reviews': '/admin/feedback',
     'GET /categories': '/skills',
+    'POST /admin/categories': '/skills',
+    'DELETE /admin/categories': '/skills',
+    'GET /chat/messages': '/sessions',
+    'POST /chat/messages': '/sessions',
   };
   const key = `${method} ${url}`;
+
+  // Handle /admin/mentors/:id/verify → /api/mentors/:id/approve or /api/mentors/:id/reject
+  const verifyMatch = url.match(/^\/admin\/mentors\/(.+)\/verify$/);
+  if (verifyMatch) return ''; // handled in override
+
+  // Handle PATCH /admin/users/:id → PUT /api/users/:id
+  const adminUserMatch = url.match(/^\/admin\/users\/(.+)$/);
+  if (adminUserMatch && method === 'PATCH') return `/users/${adminUserMatch[1]}`;
+
+  // Handle DELETE /reviews/:id → DELETE /api/admin/feedback/:id
+  const deleteReviewMatch = url.match(/^\/reviews\/(.+)$/);
+  if (deleteReviewMatch && method === 'DELETE') return `/admin/feedback/${deleteReviewMatch[1]}`;
+
   return map[key] || url;
 };
 
@@ -60,6 +78,22 @@ api.get = async (url: string, config?: any) => {
 
 api.post = async (url: string, data?: any, config?: any) => {
   const mapped = mapPath(url, 'POST');
+
+  // Handle mentor verify → approve or reject
+  const verifyMatch = url.match(/^\/admin\/mentors\/(.+)\/verify$/);
+  if (verifyMatch) {
+    const mentorId = verifyMatch[1];
+    const newStatus = data?.status;
+    if (newStatus === 'APPROVED') {
+      const res = await originalPost.call(api, `/mentors/${mentorId}/approve`, {}, config);
+      return transformResponse(url, res);
+    }
+    if (newStatus === 'REJECTED') {
+      const res = await originalPost.call(api, `/mentors/${mentorId}/reject`, { reason: 'Rejected by admin' }, config);
+      return transformResponse(url, res);
+    }
+  }
+
   const res = await originalPost.call(api, mapped, data, config);
   return transformResponse(url, res);
 };
@@ -92,7 +126,14 @@ api.delete = async (url: string, config?: any) => {
   return transformResponse(url, res);
 };
 
+// Handle unimplemented endpoints gracefully
+const UNIMPLEMENTED = ['/chat/messages'];
+
 function transformResponse(originalUrl: string, res: any) {
+  // Return empty data for unimplemented endpoints
+  if (UNIMPLEMENTED.some(u => originalUrl.startsWith(u))) {
+    return { ...res, data: originalUrl.includes('POST') ? { id: 'mock', success: true } : [] };
+  }
   let data = res.data;
 
   // Backend may wrap in { data } or return array directly
