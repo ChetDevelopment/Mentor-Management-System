@@ -1,0 +1,6 @@
+{
+  "name": "MentorKhet",
+  "description": "A trusted and secure mentorship platform connecting mentees with verified industry experts.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
