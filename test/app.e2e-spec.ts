@@ -764,6 +764,22 @@ describe('MentorKhet API — Full QA Test Suite', () => {
         .set('Authorization', `Bearer ${adminToken}`)
         .expect(404);
     });
+
+    // 7.13 POSITIVE: No-show session
+    it('POST /api/sessions/:id/no-show — should mark session as no-show', async () => {
+      await request(app.getHttpServer())
+        .post(`/api/sessions/${createdSessionId}/no-show`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(201);
+    });
+
+    // 7.14 POSITIVE: Delete session
+    it('DELETE /api/sessions/:id — should delete session', async () => {
+      await request(app.getHttpServer())
+        .delete(`/api/sessions/${createdSessionId}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(200);
+    });
   });
 
   // ==========================================================================
@@ -814,7 +830,15 @@ describe('MentorKhet API — Full QA Test Suite', () => {
         .expect(200);
     });
 
-    // 8.5 POSITIVE: Delete matching (admin)
+    // 8.5 POSITIVE: Get matching by ID
+    it('GET /api/matchings/:id — should get matching by ID', async () => {
+      await request(app.getHttpServer())
+        .get(`/api/matchings/${createdMatchingId}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(200);
+    });
+
+    // 8.6 POSITIVE: Delete matching (admin)
     it('DELETE /api/matchings/:id — should delete matching (admin)', async () => {
       await request(app.getHttpServer())
         .delete(`/api/matchings/${createdMatchingId}`)
@@ -896,7 +920,15 @@ describe('MentorKhet API — Full QA Test Suite', () => {
         .expect(200);
     });
 
-    // 9.7 POSITIVE: Delete feedback
+    // 9.7 POSITIVE: Get feedback by ID
+    it('GET /api/feedback/:id — should get feedback by ID', async () => {
+      await request(app.getHttpServer())
+        .get(`/api/feedback/${createdFeedbackId}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(200);
+    });
+
+    // 9.8 POSITIVE: Delete feedback
     it('DELETE /api/feedback/:id — should delete feedback', async () => {
       await request(app.getHttpServer())
         .delete(`/api/feedback/${createdFeedbackId}`)
@@ -949,7 +981,15 @@ describe('MentorKhet API — Full QA Test Suite', () => {
       expect(Array.isArray(res.body)).toBe(true);
     });
 
-    // 10.4 POSITIVE: Get unread count
+    // 10.4 POSITIVE: Get notification by ID
+    it('GET /api/notifications/:id — should get notification by ID', async () => {
+      await request(app.getHttpServer())
+        .get(`/api/notifications/${createdNotificationId}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(200);
+    });
+
+    // 10.5 POSITIVE: Get unread count
     it('GET /api/notifications/unread — should get unread count', async () => {
       await request(app.getHttpServer())
         .get('/api/notifications/unread')
@@ -1034,7 +1074,24 @@ describe('MentorKhet API — Full QA Test Suite', () => {
         .expect(403);
     });
 
-    // 11.7 POSITIVE: Delete user (admin)
+    // 11.7 POSITIVE: Reset user password (admin)
+    it('POST /api/admin/users/:id/reset-password — should reset user password (admin)', async () => {
+      await request(app.getHttpServer())
+        .post(`/api/admin/users/${createdUserId}/reset-password`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ password: 'NewTempPass123!' })
+        .expect(201);
+    });
+
+    // 11.8 POSITIVE: Delete feedback moderation (admin)
+    it('DELETE /api/admin/feedback/:id — should moderate feedback (admin)', async () => {
+      await request(app.getHttpServer())
+        .delete(`/api/admin/feedback/${createdFeedbackId || '00000000-0000-0000-0000-000000000000'}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(200);
+    });
+
+    // 11.9 POSITIVE: Delete user (admin)
     it('DELETE /api/admin/users/:id — should delete user (admin)', async () => {
       await request(app.getHttpServer())
         .delete(`/api/admin/users/${createdUserId}`)
@@ -1057,7 +1114,35 @@ describe('MentorKhet API — Full QA Test Suite', () => {
       expect(Array.isArray(res.body)).toBe(true);
     });
 
-    // 12.2 NEGATIVE: Non-admin cannot view logs
+    // 12.2 POSITIVE: Get activity log by ID (admin)
+    it('GET /api/activity-logs/:id — should get activity log by ID (admin)', async () => {
+      const logs = await request(app.getHttpServer())
+        .get('/api/activity-logs')
+        .set('Authorization', `Bearer ${adminToken}`);
+
+      if (logs.body.length > 0) {
+        await request(app.getHttpServer())
+          .get(`/api/activity-logs/${logs.body[0].id}`)
+          .set('Authorization', `Bearer ${adminToken}`)
+          .expect(200);
+      }
+    });
+
+    // 12.3 POSITIVE: Create activity log (admin)
+    it('POST /api/activity-logs — should create activity log (admin)', async () => {
+      await request(app.getHttpServer())
+        .post('/api/activity-logs')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          action: 'create',
+          entity: 'test',
+          entityId: '00000000-0000-0000-0000-000000000000',
+          description: 'QA test log entry',
+        })
+        .expect(201);
+    });
+
+    // 12.4 NEGATIVE: Non-admin cannot view logs
     it('GET /api/activity-logs — should reject non-admin', async () => {
       await request(app.getHttpServer())
         .get('/api/activity-logs')
@@ -1169,6 +1254,36 @@ describe('MentorKhet API — Full QA Test Suite', () => {
         .set('Authorization', `Bearer ${menteeToken}`)
         .send({ mentorId: 'm1', date: '2026-06-15', startTime: '09:00', endTime: '17:00' })
         .expect(403);
+    });
+
+    // 14.5 POSITIVE: Update availability (mentor)
+    it('PUT /api/availabilities/:id — should update availability (mentor)', async () => {
+      if (createdAvailabilityId) {
+        await request(app.getHttpServer())
+          .put(`/api/availabilities/${createdAvailabilityId}`)
+          .set('Authorization', `Bearer ${mentorToken}`)
+          .send({ startTime: '10:00', endTime: '16:00' })
+          .expect(200);
+      }
+    });
+
+    // 14.6 POSITIVE: Delete availability (mentor)
+    it('DELETE /api/availabilities/:id — should delete availability (mentor)', async () => {
+      if (createdAvailabilityId) {
+        await request(app.getHttpServer())
+          .delete(`/api/availabilities/${createdAvailabilityId}`)
+          .set('Authorization', `Bearer ${mentorToken}`)
+          .expect(200);
+      }
+    });
+
+    // 14.7 POSITIVE: Block a date (mentor)
+    it('POST /api/availabilities/block — should block a date (mentor)', async () => {
+      await request(app.getHttpServer())
+        .post('/api/availabilities/block')
+        .set('Authorization', `Bearer ${mentorToken}`)
+        .send({ mentorId: 'm1', date: '2026-06-20', startTime: '00:00', endTime: '23:59' })
+        .expect(201);
     });
   });
 });
