@@ -33,4 +33,5 @@ export class Mentee {
 
   @UpdateDateColumn()
   updatedAt: Date;
+  feedbacks: any;
 }

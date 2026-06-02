@@ -701,8 +701,8 @@ Swagger: http://localhost:3000/api/docs (if enabled)
 | POST | `/auth/login` | ❌ | - | Login and get tokens |
 | POST | `/auth/logout` | ✅ | - | Logout |
 | POST | `/auth/refresh-token` | ✅ | - | Refresh access token |
-| POST | `/auth/forgot-password` | ❌ | - | Request password reset |
-| POST | `/auth/reset-password` | ❌ | - | Reset password |
+| POST | `/auth/forgot-password` | ❌ | - | Request password reset (returns token) |
+| POST | `/auth/reset-password` | ❌ | - | Reset password with token |
 
 ### User
 
@@ -721,26 +721,29 @@ Swagger: http://localhost:3000/api/docs (if enabled)
 |--------|----------|------|------|-------------|
 | GET | `/mentors` | ✅ | - | Get all mentors |
 | GET | `/mentors/:id` | ✅ | - | Get mentor by ID |
-| GET | `/mentors/me` | ✅ | MENTOR | Get own mentor profile |
-| PUT | `/mentors/me` | ✅ | MENTOR | Update own profile |
-| POST | `/mentors/me/skills` | ✅ | MENTOR | Add skill to profile |
-| DELETE | `/mentors/me/skills/:skillId` | ✅ | MENTOR | Remove skill |
+| POST | `/mentors` | ✅ | ADMIN | Create mentor profile |
+| PUT | `/mentors/:id` | ✅ | ADMIN | Update mentor |
+| POST | `/mentors/:id/reject` | ✅ | ADMIN | Reject mentor |
+| POST | `/mentors/:id/suspend` | ✅ | ADMIN | Suspend mentor |
+| DELETE | `/mentors/:id` | ✅ | ADMIN | Delete mentor |
 
 ### Mentee
 
 | Method | Endpoint | Auth | Role | Description |
 |--------|----------|------|------|-------------|
-| GET | `/mentees/me` | ✅ | MENTEE | Get own mentee profile |
-| PUT | `/mentees/me` | ✅ | MENTEE | Update own profile |
-| POST | `/mentees/me/interests` | ✅ | MENTEE | Add interest |
-| DELETE | `/mentees/me/interests/:skillId` | ✅ | MENTEE | Remove interest |
+| GET | `/mentees` | ✅ | - | Get all mentees |
+| GET | `/mentees/:id` | ✅ | - | Get mentee by ID |
+| POST | `/mentees` | ✅ | ADMIN | Create mentee profile |
+| PUT | `/mentees/:id` | ✅ | ADMIN | Update mentee |
+| DELETE | `/mentees/:id` | ✅ | ADMIN | Delete mentee |
 
 ### Skill
 
 | Method | Endpoint | Auth | Role | Description |
 |--------|----------|------|------|-------------|
-| GET | `/skills` | ✅ | - | Get all skills |
-| GET | `/skills/:id` | ✅ | - | Get skill by ID |
+| GET | `/skills` | ❌ | - | Get all skills |
+| GET | `/skills/:id` | ❌ | - | Get skill by ID |
+| GET | `/skills/category/:categoryId` | ❌ | - | Get skills by category |
 | POST | `/skills` | ✅ | ADMIN | Create skill |
 | PUT | `/skills/:id` | ✅ | ADMIN | Update skill |
 | DELETE | `/skills/:id` | ✅ | ADMIN | Delete skill |
@@ -749,30 +752,37 @@ Swagger: http://localhost:3000/api/docs (if enabled)
 
 | Method | Endpoint | Auth | Role | Description |
 |--------|----------|------|------|-------------|
-| POST | `/sessions/request` | ✅ | MENTEE | Request session |
-| GET | `/sessions` | ✅ | - | Get own sessions |
+| GET | `/sessions` | ✅ | - | Get all sessions |
 | GET | `/sessions/:id` | ✅ | - | Get session by ID |
-| PATCH | `/sessions/:id/approve` | ✅ | MENTOR | Approve session |
-| PATCH | `/sessions/:id/decline` | ✅ | MENTOR | Decline session |
-| PATCH | `/sessions/:id/complete` | ✅ | MENTOR/MENTEE | Complete session |
-| PATCH | `/sessions/:id/cancel` | ✅ | MENTOR/MENTEE | Cancel session |
+| POST | `/sessions` | ✅ | - | Create session request |
+| PUT | `/sessions/:id` | ✅ | - | Update session |
+| DELETE | `/sessions/:id` | ✅ | - | Delete session |
+| POST | `/sessions/:id/accept` | ✅ | MENTOR | Accept session request |
+| POST | `/sessions/:id/decline` | ✅ | MENTOR | Decline session request |
+| POST | `/sessions/:id/complete` | ✅ | - | Mark session as complete |
+| POST | `/sessions/:id/cancel` | ✅ | - | Cancel session |
+| POST | `/sessions/:id/no-show` | ✅ | - | Mark session as no-show |
 
 ### Matching
 
 | Method | Endpoint | Auth | Role | Description |
 |--------|----------|------|------|-------------|
-| GET | `/matching/recommended-mentors` | ✅ | MENTEE | Get recommended mentors |
-| GET | `/matching/score/:mentorId` | ✅ | MENTEE | Get match score for mentor |
+| GET | `/matchings` | ✅ | - | Get all matchings |
+| GET | `/matchings/:id` | ✅ | - | Get matching by ID |
+| POST | `/matchings` | ✅ | - | Create matching |
+| PUT | `/matchings/:id` | ✅ | - | Update matching |
+| DELETE | `/matchings/:id` | ✅ | - | Delete matching |
 
 ### Feedback
 
 | Method | Endpoint | Auth | Role | Description |
 |--------|----------|------|------|-------------|
-| POST | `/feedback` | ✅ | MENTEE | Submit feedback |
-| GET | `/feedback` | ✅ | - | Get own feedback |
-| GET | `/feedback/mentor/:mentorId` | ✅ | - | Get mentor feedback |
-| GET | `/feedback/session/:sessionId` | ✅ | - | Get session feedback |
-| PUT | `/feedback/:id` | ✅ | MENTOR | Respond to feedback |
+| GET | `/feedback` | ✅ | - | Get all feedback |
+| GET | `/feedback/:id` | ✅ | - | Get feedback by ID |
+| GET | `/feedback/mentor/:mentorId` | ✅ | - | Get feedback by mentor |
+| POST | `/feedback` | ✅ | - | Submit feedback |
+| PUT | `/feedback/:id` | ✅ | - | Update feedback |
+| DELETE | `/feedback/:id` | ✅ | - | Delete feedback |
 
 ### Notification
 
@@ -780,6 +790,8 @@ Swagger: http://localhost:3000/api/docs (if enabled)
 |--------|----------|------|------|-------------|
 | GET | `/notifications` | ✅ | - | Get own notifications |
 | GET | `/notifications/unread` | ✅ | - | Get unread count |
+| GET | `/notifications/:id` | ✅ | - | Get notification by ID |
+| POST | `/notifications` | ✅ | - | Create notification |
 | PUT | `/notifications/:id/read` | ✅ | - | Mark as read |
 | DELETE | `/notifications/:id` | ✅ | - | Delete notification |
 
@@ -792,8 +804,37 @@ Swagger: http://localhost:3000/api/docs (if enabled)
 | GET | `/admin/mentors` | ✅ | ADMIN | Get all mentors |
 | GET | `/admin/mentees` | ✅ | ADMIN | Get all mentees |
 | POST | `/admin/users/:id/deactivate` | ✅ | ADMIN | Deactivate user |
+| POST | `/admin/users/:id/reset-password` | ✅ | ADMIN | Reset user password |
 | DELETE | `/admin/users/:id` | ✅ | ADMIN | Delete user |
-| GET | `/admin/activity-logs` | ✅ | ADMIN | Get activity logs |
+| DELETE | `/admin/feedback/:id` | ✅ | ADMIN | Moderate/delete feedback |
+
+### Activity Logs
+
+| Method | Endpoint | Auth | Role | Description |
+|--------|----------|------|------|-------------|
+| GET | `/activity-logs` | ✅ | ADMIN | Get all activity logs |
+| GET | `/activity-logs/:id` | ✅ | ADMIN | Get activity log by ID |
+| POST | `/activity-logs` | ✅ | ADMIN | Create activity log |
+
+### Availability
+
+| Method | Endpoint | Auth | Role | Description |
+|--------|----------|------|------|-------------|
+| GET | `/availabilities/:mentorId` | ❌ | - | Get mentor availability |
+| GET | `/availabilities/:mentorId/slots` | ❌ | - | Get slots by date |
+| POST | `/availabilities` | ✅ | MENTOR | Set availability |
+| PUT | `/availabilities/:id` | ✅ | MENTOR | Update availability |
+| DELETE | `/availabilities/:id` | ✅ | MENTOR | Delete availability |
+| POST | `/availabilities/block` | ✅ | MENTOR | Block a date |
+| DELETE | `/availabilities/block/:id` | ✅ | MENTOR | Unblock a date |
+
+### Resources
+
+| Method | Endpoint | Auth | Role | Description |
+|--------|----------|------|------|-------------|
+| GET | `/resources/:mentorId` | ❌ | - | Get resources by mentor |
+| POST | `/resources` | ✅ | MENTOR | Upload resource |
+| DELETE | `/resources/:id` | ✅ | MENTOR | Delete resource |
 
 ---
 

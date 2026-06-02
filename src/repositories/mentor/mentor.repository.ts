@@ -6,6 +6,9 @@ import { MentorStatus } from '../../constants';
 
 @Injectable()
 export class MentorRepository {
+  delete(id: string) {
+    throw new Error('Method not implemented.');
+  }
   constructor(
     @InjectRepository(Mentor)
     private repository: Repository<Mentor>,

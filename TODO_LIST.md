@@ -1,509 +1,498 @@
-# 📋 Mentor Managenent System - Copy-Paste Task List for GitHub Projects
+# 📋 Mentor Management System — Master Task List
 
-## How to Use This List
+## 🗓️ DAY 4: User Module (~480 mins)
+### Person A: User Repository & Service (190 mins)
+- [ ] 4.1 Create repositories/user folder
+- [ ] 4.2 Create user.repository.ts file
+- [ ] 4.3 Add findAll() method
+- [ ] 4.4 Add findById() method
+- [ ] 4.5 Add findByEmail() method
+- [ ] 4.6 Add update() method
+- [ ] 4.7 Add delete() method
+- [ ] 4.8 Create services/user folder
+- [ ] 4.9 Create user.service.ts file
+- [ ] 4.10 Add findAll() method
+- [ ] 4.11 Add findById() with NotFoundException
+- [ ] 4.12 Add update() method
+- [ ] 4.13 Add delete() method
 
-1. Open your GitHub Projects: https://github.com/users/ChetDevelopment/projects/1
-2. Click **"+ Add item"** in the **Todo** column
-3. Copy each task below and paste as a new item
-4. Start with **Day 1** tasks only!
+### Person B: User Controller & DTOs (190 mins)
+- [ ] 4.14 Create dto/user/update-user.dto.ts
+- [ ] 4.15 Add firstName, lastName validations
+- [ ] 4.16 Add phone, avatar validations
+- [ ] 4.17 Create controllers/user folder
+- [ ] 4.18 Create user.controller.ts file
+- [ ] 4.19 Add @Controller('users') decorator
+- [ ] 4.20 Add @UseGuards(AuthGuard)
+- [ ] 4.21 Create @Get('profile') endpoint
+- [ ] 4.22 Create @Put('profile') endpoint
+- [ ] 4.23 Create @Get() endpoint — admin only
+- [ ] 4.24 Create @Get(':id') endpoint — admin only
+- [ ] 4.25 Create @Put(':id') endpoint — admin only
+- [ ] 4.26 Create @Delete(':id') endpoint — admin only
 
----
-
-## 🗓️ DAY 1: Setup (6 tasks, ~8 hours total)
-
-```
-1.1 Install Node.js v20+ if not installed [15m] 
-1.2 Install VS Code if not installed [15m]
-1.3 Install PostgreSQL (or use Docker) [1h]
-1.4 Create database named 'mentorkhet' [30m]
-1.5 Clone repository from GitHub [15m]
-1.6 Open project in VS Code [5m]
-1.7 Run 'npm install' in terminal [30m]
-1.8 Copy .env.example to .env [5m]
-1.9 Update DB_PASSWORD in .env file [5m]
-1.10 Update DB_DATABASE in .env file [5m]
-1.11 Test database connection (npm run start:dev) [30m]
-1.12 Check entities folder exists [5m]
-1.13 Create User entity class [1h]
-1.14 Add @Entity('users') decorator [10m]
-1.15 Add id column with @PrimaryGeneratedColumn [15m]
-1.16 Add email column with @Column [10m]
-1.17 Add password column with @Column [10m]
-1.18 Add firstName, lastName columns [10m]
-1.19 Add role column with enum [15m]
-1.20 Add createdAt, updatedAt columns [10m]
-1.21 Create Mentor entity class [1h]
-1.22 Add @Entity('mentors') decorator [10m]
-1.23 Add userId column with @Column [10m]
-1.24 Add bio, title, company columns [15m]
-1.25 Add yearsOfExperience column [10m]
-1.26 Add rating, totalSessions columns [15m]
-1.27 Add isAvailable column [10m]
-1.28 Create Mentee entity class [1h]
-1.29 Add @Entity('mentees') decorator [10m]
-1.30 Add userId column with @Column [10m]
-1.31 Add occupation, organization columns [15m]
-1.32 Add goals, interests columns [15m]
-1.33 Save all entity files [5m]
-1.34 Restart server to test entities load [15m]
-1.35 Check database for new tables [15m]
-1.36 Commit Day 1 work to Git [30m]
-```
+### Person C: Testing & Integration (180 mins)
+- [ ] 4.27 Test GET /users/profile with valid token
+- [ ] 4.28 Test PUT /users/profile update fields
+- [ ] 4.29 Test GET /users as admin
+- [ ] 4.30 Test GET /users/:id as admin
+- [ ] 4.31 Test PUT /users/:id as admin
+- [ ] 4.32 Test DELETE /users/:id as admin
+- [ ] 4.33 Fix any bugs found
+- [ ] 4.34 Commit user module to Git
 
 ---
 
-## 🗓️ DAY 2: Authentication Part 1 (8 tasks, ~8 hours)
+## 🗓️ DAY 5: Mentor Entity, Extended Fields & Approval (~480 mins)
+### Person A: Mentor Entity & Extended Columns (190 mins)
+- [ ] 5.1 Add NID column to Mentor entity
+- [ ] 5.2 Add phone column to Mentor entity
+- [ ] 5.3 Add avatar (profile photo URL) column
+- [ ] 5.4 Add cvUrl (resume PDF URL) column
+- [ ] 5.5 Add portfolioUrl column
+- [ ] 5.6 Add shortDescription column (max 160 chars)
+- [ ] 5.7 Add fullBio column (max 1000 chars)
+- [ ] 5.8 Add status column — enum: pending/approved/rejected/suspended
+- [ ] 5.9 Add rejectionReason column (nullable)
+- [ ] 5.10 Add approvedAt column (nullable)
+- [ ] 5.11 Create repositories/mentor folder
+- [ ] 5.12 Create mentor.repository.ts
+- [ ] 5.13 Add findAll() with user relation
+- [ ] 5.14 Add findById() with user relation
+- [ ] 5.15 Add findPending() — pending approvals only
 
-```
-2.1 Create constants/index.ts file [5m] ❤️
-2.2 Add UserRole enum (ADMIN, MENTOR, MENTEE) [15m] ❤️
-2.3 Create config/index.ts file [5m] ❤️
-2.4 Add databaseConfig object [15m] ❤️
-2.5 Add jwtConfig object [10m] ❤️
-2.6 Create dto/auth/login.dto.ts [10m] 
-2.7 Add email validation with @IsEmail [15m] 
-2.8 Add password validation with @MinLength [10m]
-2.9 Create dto/auth/register.dto.ts [15m]
-2.10 Add firstName, lastName validations [15m]
-2.11 Add role validation with @IsEnum [10m]
-2.12 Create repositories/auth folder [5m]
-2.13 Create auth.repository.ts file [10m]
-2.14 Add @InjectRepository decorator [15m]
-2.15 Add create() method [20m]
-2.16 Add findByUserId() method [20m]
-2.17 Create services/auth folder [5m] 
-2.18 Create auth.service.ts file [10m] 
-2.19 Import bcrypt package [10m]
-2.20 Install bcrypt: npm install bcrypt [15m] ❤️
-2.21 Install @types/bcrypt: npm install -D @types/bcrypt [10m] ❤️
-2.22 Create hashPassword() method [20m] ❤️
-2.23 Create comparePassword() method [20m] ❤️
-2.24 Install @nestjs/jwt: npm install @nestjs/jwt [15m]ad
-2.25 Install @nestjs/passport: npm install @nestjs/passport [10m]
-2.26 Install passport-jwt: npm install passport-jwt [10m]
-2.27 Install passport-local: npm install passport-local [10m]
-2.28 Create generateTokens() method [30m]
-2.29 Commit auth setup to Git [20m]
-```
+### Person B: Mentor Service & Approval Logic (195 mins)
+- [ ] 5.16 Add create() method to mentor.repository.ts
+- [ ] 5.17 Add update() method to mentor.repository.ts
+- [ ] 5.18 Add updateStatus() method to mentor.repository.ts
+- [ ] 5.19 Create services/mentor folder
+- [ ] 5.20 Create mentor.service.ts
+- [ ] 5.21 Add findAll() with filters
+- [ ] 5.22 Add findById() method
+- [ ] 5.23 Add create() method
+- [ ] 5.24 Add update() method
+- [ ] 5.25 Add approve() — set status approved, save approvedAt
 
----
-
-## 🗓️ DAY 3: Authentication Part 2 (7 tasks, ~8 hours)
-
-```
-3.1 Create controllers/auth folder [5m]
-3.2 Create auth.controller.ts file [10m]
-3.3 Add @Controller('auth') decorator [5m]
-3.4 Import AuthService [5m]
-3.5 Create constructor with dependency injection [10m]
-3.6 Create @Post('register') endpoint [20m]
-3.7 Add @Body() registerDto parameter [10m]
-3.8 Call authService.register() [15m]
-3.9 Create @Post('login') endpoint [20m]
-3.10 Add @Body() loginDto parameter [10m]
-3.11 Call authService.login() [15m]
-3.12 Complete authService.register() method [45m]
-3.13 Complete authService.login() method [45m]
-3.14 Create guards/auth.guard.ts [30m]
-3.15 Add JwtService injection [15m]
-3.16 Add canActivate() method [30m]
-3.17 Extract token from Authorization header [20m]
-3.18 Verify JWT token with jwtService [20m]
-3.19 Create guards/roles.guard.ts [30m]
-3.20 Add role checking logic [30m]
-3.21 Create decorators/public.decorator.ts [20m]
-3.22 Add @Public() decorator for public routes [15m]
-3.23 Test register endpoint with Postman [1h]
-3.24 Test login endpoint with Postman [1h]
-3.25 Commit auth completion to Git [20m]
-```
+### Person C: Mentor DTOs & Reject/Suspend Logic (190 mins)
+- [ ] 5.26 Add reject() — set status rejected, save reason
+- [ ] 5.27 Add suspend() method
+- [ ] 5.28 Create dto/mentor/create-mentor.dto.ts
+- [ ] 5.29 Create dto/mentor/update-mentor.dto.ts
+- [ ] 5.30 Add NID validation
+- [ ] 5.31 Add phone validation
+- [ ] 5.32 Add shortDescription max 160 chars validation
+- [ ] 5.33 Add fullBio max 1000 chars validation
+- [ ] 5.34 Add status enum validation
+- [ ] 5.35 Block pending/suspended mentor login in AuthGuard
 
 ---
 
-## 🗓️ DAY 4: User Module (7 tasks, ~8 hours)
+## 🗓️ DAY 6: Mentor Controller, File Upload & Password Reset (~480 mins)
+### Person A: File Upload Setup & Mentor Controller (200 mins)
+- [ ] 6.1 Install multer
+- [ ] 6.2 Install @types/multer
+- [ ] 6.3 Create uploads/avatars/ folder
+- [ ] 6.4 Create uploads/cvs/ folder
+- [ ] 6.5 Create uploads/resources/ folder
+- [ ] 6.6 Create common/upload.config.ts — multer config
+- [ ] 6.7 Add file size limit — images 5MB, PDFs 10MB
+- [ ] 6.8 Add allowed file type validation
+- [ ] 6.9 Create controllers/mentor folder
+- [ ] 6.10 Create mentor.controller.ts
+- [ ] 6.11 Add @Controller('mentors')
+- [ ] 6.12 Add @Get() — all mentors with filters
+- [ ] 6.13 Add @Get(':id') — single mentor
+- [ ] 6.14 Add @Post() — admin only
 
-```
-4.1 Create repositories/user folder [5m]
-4.2 Create user.repository.ts file [10m]
-4.3 Add @InjectRepository(User) [15m]
-4.4 Add findAll() method [20m]
-4.5 Add findById() method [20m]
-4.6 Add findByEmail() method [20m]
-4.7 Add update() method [20m]
-4.8 Create services/user folder [5m]
-4.9 Create user.service.ts file [10m]
-4.10 Inject UserRepository [10m]
-4.11 Create findAll() method [15m]
-4.12 Create findById() method [20m]
-4.13 Create findByEmail() method [20m]
-4.14 Create update() method [20m]
-4.15 Add NotFoundException handling [15m]
-4.16 Create controllers/user folder [5m]
-4.17 Create user.controller.ts file [10m]
-4.18 Add @Controller('users') decorator [5m]
-4.19 Add @UseGuards(AuthGuard) [10m]
-4.20 Create @Get('profile') endpoint [20m]
-4.21 Add @User() decorator to get current user [15m]
-4.22 Create @Put('profile') endpoint [30m]
-4.23 Create dto/user/index.ts file [10m]
-4.24 Add UpdateUserDto class [20m]
-4.25 Add validation decorators [20m]
-4.26 Test GET /users/profile [30m]
-4.27 Test PUT /users/profile [30m]
-4.28 Commit user module to Git [20m]
-```
+### Person B: Mentor Approval Endpoints & Upload Routes (185 mins)
+- [ ] 6.15 Add @Put(':id') — update mentor
+- [ ] 6.16 Add @Delete(':id') — admin only
+- [ ] 6.17 Add @Post(':id/approve') — admin only
+- [ ] 6.18 Add @Post(':id/reject') — admin only, body: { reason }
+- [ ] 6.19 Add @Post(':id/suspend') — admin only
+- [ ] 6.20 Add @Post('upload/avatar') — mentor uploads photo
+- [ ] 6.21 Add @Post('upload/cv') — mentor uploads PDF resume
 
----
-
-## 🗓️ DAY 5: Mentor Module (7 tasks, ~8 hours)
-
-```
-5.1 Create repositories/mentor folder [5m]
-5.2 Create mentor.repository.ts file [10m]
-5.3 Add @InjectRepository(Mentor) [15m]
-5.4 Add findAll() method with relations [25m]
-5.5 Add findById() method [20m]
-5.6 Add create() method [20m]
-5.7 Add update() method [20m]
-5.8 Create services/mentor folder [5m]
-5.9 Create mentor.service.ts file [10m]
-5.10 Inject MentorRepository [10m]
-5.11 Create findAll() method [20m]
-5.12 Create findById() method [20m]
-5.13 Create create() method [25m]
-5.14 Create update() method [25m]
-5.15 Create dto/mentor/index.ts file [10m]
-5.16 Add CreateMentorDto class [20m]
-5.17 Add UpdateMentorDto class [20m]
-5.18 Add validation decorators [20m]
-5.19 Create controllers/mentor folder [5m]
-5.20 Create mentor.controller.ts file [10m]
-5.21 Add @Controller('mentors') decorator [5m]
-5.22 Create @Get() endpoint [15m]
-5.23 Create @Get(':id') endpoint [15m]
-5.24 Create @Post() endpoint [20m]
-5.25 Create @Put(':id') endpoint [20m]
-5.26 Add @Roles(UserRole.ADMIN) where needed [15m]
-5.27 Test all mentor endpoints [1h]
-5.28 Commit mentor module to Git [20m]
-```
+### Person C: Password Reset Flow & Testing (190 mins)
+- [ ] 6.22 Add resetToken column to User entity
+- [ ] 6.23 Add resetTokenExpiry column to User entity
+- [ ] 6.24 Create generateResetToken() in auth.service.ts
+- [ ] 6.25 Create forgotPassword() — save token + expiry
+- [ ] 6.26 Create resetPassword() — validate token, update password, clear token
+- [ ] 6.27 Add @Post('forgot-password') to auth.controller.ts
+- [ ] 6.28 Add @Post('reset-password') to auth.controller.ts
+- [ ] 6.29 Test forgot password flow in Postman
+- [ ] 6.30 Test reset password flow in Postman
 
 ---
 
-## 🗓️ DAY 6: Mentee & Skill Modules (8 tasks, ~8 hours)
+## 🗓️ DAY 7: Mentee, Category & Skill Modules (~480 mins)
+### Person A: Mentee Module (195 mins)
+- [ ] 7.1 Create repositories/mentee folder
+- [ ] 7.2 Create mentee.repository.ts
+- [ ] 7.3 Add findAll() method
+- [ ] 7.4 Add findById() with user relation
+- [ ] 7.5 Add findByUserId() method
+- [ ] 7.6 Add create() method
+- [ ] 7.7 Add update() method
+- [ ] 7.8 Create services/mentee folder
+- [ ] 7.9 Create mentee.service.ts
+- [ ] 7.10 Add all CRUD methods with NotFoundException
+- [ ] 7.11 Create controllers/mentee folder
+- [ ] 7.12 Create mentee.controller.ts
+- [ ] 7.13 Add all endpoints with role guards
+- [ ] 7.14 Create dto/mentee/index.ts
+- [ ] 7.15 Add CreateMenteeDto, UpdateMenteeDto with validations
 
-```
-6.1 Create repositories/mentee folder [5m]
-6.2 Create mentee.repository.ts [30m]
-6.3 Add findAll, findById, create, update methods [45m]
-6.4 Create services/mentee folder [5m]
-6.5 Create mentee.service.ts [30m]
-6.6 Add all CRUD methods [45m]
-6.7 Create controllers/mentee folder [5m]
-6.8 Create mentee.controller.ts [30m]
-6.9 Add all endpoints [45m]
-6.10 Create repositories/skill folder [5m]
-6.11 Create skill.repository.ts [30m]
-6.12 Add findAll, findById, findByName methods [30m]
-6.13 Create services/skill folder [5m]
-6.14 Create skill.service.ts [30m]
-6.15 Add all CRUD methods [45m]
-6.16 Create controllers/skill folder [5m]
-6.17 Create skill.controller.ts [30m]
-6.18 Add all endpoints [45m]
-6.19 Create dto/skill/index.ts [15m]
-6.20 Add CreateSkillDto, UpdateSkillDto [30m]
-6.21 Test mentee endpoints [30m]
-6.22 Test skill endpoints [30m]
-6.23 Commit both modules to Git [20m]
-```
+### Person B: Category Module (185 mins)
+- [ ] 7.16 Create entities/category.entity.ts
+- [ ] 7.17 Add id, name, description columns
+- [ ] 7.18 Add slug column (auto-generated from name)
+- [ ] 7.19 Add isActive, createdAt, updatedAt columns
+- [ ] 7.20 Create category.repository.ts
+- [ ] 7.21 Add findAll(), findById(), findBySlug() methods
+- [ ] 7.22 Create category.service.ts
+- [ ] 7.23 Add full CRUD methods
+- [ ] 7.24 Create category.controller.ts
+- [ ] 7.25 Add @Get(), @Get(':id') — public
+- [ ] 7.26 Add @Post(), @Put(':id'), @Delete(':id') — admin only
+- [ ] 7.27 Create dto/category/index.ts with validations
 
----
-
-## 🗓️ DAY 7: Week 1 Review & Catch-up (5 tasks, ~8 hours)
-
-```
-7.1 Review all endpoints work [1h]
-7.2 Test register → login → get profile flow [1h]
-7.3 Test create mentor profile [30m]
-7.4 Test create mentee profile [30m]
-7.5 Test skill CRUD operations [30m]
-7.6 Fix any bugs found [2h]
-7.7 Update README.md with working endpoints [1h]
-7.8 Write simple API test documentation [1h]
-7.9 Commit Week 1 final code [30m]
-7.10 Push to GitHub [15m]
-7.11 Move all Week 1 tasks to Done [15m]
-7.12 Rest and prepare for Week 2 [30m]
-```
-
----
-
-## 🗓️ DAY 8: Session Module Part 1 (7 tasks, ~8 hours)
-
-```
-8.1 Create constants for SessionStatus enum [20m]
-8.2 Add PENDING, CONFIRMED, COMPLETED, CANCELLED [15m]
-8.3 Create entities/session folder [5m]
-8.4 Create session.entity.ts [45m]
-8.5 Add mentorId, menteeId columns [15m]
-8.6 Add topic, description columns [15m]
-8.7 Add scheduledAt, duration columns [15m]
-8.8 Add status column with enum [15m]
-8.9 Add meetingLink, notes columns [15m]
-8.10 Save and verify entity loads [15m]
-8.11 Create repositories/session folder [5m]
-8.12 Create session.repository.ts [30m]
-8.13 Add findById() method [20m]
-8.14 Add findByMentorId() method [20m]
-8.15 Add findByMenteeId() method [20m]
-8.16 Add create() method [20m]
-8.17 Add updateStatus() method [20m]
-8.18 Create services/session folder [5m]
-8.19 Create session.service.ts [30m]
-8.20 Inject SessionRepository [10m]
-8.21 Create requestSession() method [30m]
-8.22 Create getSessions() method [30m]
-8.23 Create dto/session/index.ts [15m]
-8.24 Add CreateSessionDto [30m]
-8.25 Add validation decorators [20m]
-8.26 Commit session part 1 [20m]
-```
+### Person C: Skill Module & Relations (185 mins)
+- [ ] 7.28 Create entities/skill.entity.ts
+- [ ] 7.29 Add id, name, description columns
+- [ ] 7.30 Add category relation — ManyToOne to Category
+- [ ] 7.31 Add isActive, createdAt, updatedAt columns
+- [ ] 7.32 Create skill.repository.ts
+- [ ] 7.33 Add findAll(), findById(), findByCategory() methods
+- [ ] 7.34 Create skill.service.ts
+- [ ] 7.35 Add full CRUD methods
+- [ ] 7.36 Create skill.controller.ts
+- [ ] 7.37 Add @Get(), @Get(':id'), @Get('category/:id') — public
+- [ ] 7.38 Add @Post(), @Put(':id'), @Delete(':id') — admin only
+- [ ] 7.39 Add ManyToMany relation — Mentor ↔ Skill
+- [ ] 7.40 Commit day 7 to Git
 
 ---
 
-## 🗓️ DAY 9: Session Module Part 2 (7 tasks, ~8 hours)
+## 🗓️ DAY 8: Availability Module (~480 mins)
+### Person A: Availability Entity & Repository (190 mins)
+- [ ] 8.1 Create entities/availability.entity.ts
+- [ ] 8.2 Add mentorId column
+- [ ] 8.3 Add dayOfWeek — enum: Mon/Tue/Wed/Thu/Fri/Sat/Sun
+- [ ] 8.4 Add startTime, endTime columns (HH:mm)
+- [ ] 8.5 Add isActive column
+- [ ] 8.6 Create entities/blocked-date.entity.ts
+- [ ] 8.7 Add mentorId, blockedDate, reason columns
+- [ ] 8.8 Create repositories/availability folder
+- [ ] 8.9 Create availability.repository.ts
+- [ ] 8.10 Add findByMentorId(), create(), update(), delete()
+- [ ] 8.11 Create blocked-date.repository.ts
+- [ ] 8.12 Add findByMentorId(), create(), delete() methods
 
-```
-9.1 Create controllers/session folder [5m]
-9.2 Create session.controller.ts [30m]
-9.3 Add @Controller('sessions') [5m]
-9.4 Create @Post('request') endpoint [30m]
-9.5 Create @Get() endpoint [20m]
-9.6 Create @Get(':id') endpoint [20m]
-9.7 Create @Patch(':id/approve') endpoint [45m]
-9.8 Add mentor ownership check [30m]
-9.9 Create @Patch(':id/decline') endpoint [30m]
-9.10 Add decline reason handling [20m]
-9.11 Create @Patch(':id/complete') endpoint [30m]
-9.12 Create @Patch(':id/cancel') endpoint [30m]
-9.13 Add status transition validation [45m]
-9.14 Test request session flow [1h]
-9.15 Test approve session flow [1h]
-9.16 Test decline session flow [45m]
-9.17 Test complete session flow [45m]
-9.18 Fix any bugs [1h]
-9.19 Commit session completion [20m]
-```
+### Person B: Availability Service (195 mins)
+- [ ] 8.13 Create services/availability folder
+- [ ] 8.14 Create availability.service.ts
+- [ ] 8.15 Add getAvailability() method
+- [ ] 8.16 Add setSchedule() method
+- [ ] 8.17 Add updateSchedule() method
+- [ ] 8.18 Add blockDate() method
+- [ ] 8.19 Add unblockDate() method
+- [ ] 8.20 Add getAvailableSlots() — return open slots for a given date
+- [ ] 8.21 Create dto/availability/index.ts with validations
 
----
-
-## 🗓️ DAY 10: Matching Algorithm (6 tasks, ~8 hours)
-
-```
-10.1 Create repositories/matching folder [5m]
-10.2 Create matching.repository.ts [30m]
-10.3 Add findRecommended() method stub [20m]
-10.4 Create services/matching folder [5m]
-10.5 Create matching.service.ts [30m]
-10.6 Inject repositories [15m]
-10.7 Create calculateMatchScore() method [1h]
-10.8 Implement skill match calculation (50%) [45m]
-10.9 Implement rating calculation (30%) [30m]
-10.10 Implement availability calculation (20%) [30m]
-10.11 Create getRecommendedMentors() method [45m]
-10.12 Add filtering by skill [30m]
-10.13 Add sorting by score [20m]
-10.14 Create controllers/matching folder [5m]
-10.15 Create matching.controller.ts [30m]
-10.16 Create @Get('recommended-mentors') endpoint [45m]
-10.17 Add @Roles(UserRole.MENTEE) guard [10m]
-10.18 Test matching algorithm [1h]
-10.19 Create test mentee with interests [30m]
-10.20 Create test mentors with skills [30m]
-10.21 Verify scores calculate correctly [45m]
-10.22 Commit matching module [20m]
-```
+### Person C: Availability Controller & Testing (185 mins)
+- [ ] 8.22 Create controllers/availability folder
+- [ ] 8.23 Create availability.controller.ts
+- [ ] 8.24 Add @Get(':mentorId') — public
+- [ ] 8.25 Add @Get(':mentorId/slots') — slots by date
+- [ ] 8.26 Add @Post() — mentor only
+- [ ] 8.27 Add @Put(':id') — mentor only
+- [ ] 8.28 Add @Delete(':id') — mentor only
+- [ ] 8.29 Add @Post('block') — mentor only
+- [ ] 8.30 Add @Delete('block/:id') — mentor only
+- [ ] 8.31 Test set availability
+- [ ] 8.32 Test get available slots by date
+- [ ] 8.33 Test block a date
+- [ ] 8.34 Commit availability module to Git
 
 ---
 
-## 🗓️ DAY 11: Feedback Module (7 tasks, ~8 hours)
+## 🗓️ DAY 9: Session Module (~480 mins)
+### Person A: Session Entity & Repository (190 mins)
+- [ ] 9.1 Add no_show to SessionStatus enum
+- [ ] 9.2 Create entities/session.entity.ts
+- [ ] 9.3 Add mentorId, menteeId columns
+- [ ] 9.4 Add title, description columns
+- [ ] 9.5 Add scheduledAt, duration columns
+- [ ] 9.6 Add status column — scheduled/completed/cancelled/no_show
+- [ ] 9.7 Add meetingLink column (nullable)
+- [ ] 9.8 Add notes column (nullable)
+- [ ] 9.9 Add mentor and mentee relations
+- [ ] 9.10 Create repositories/session folder
+- [ ] 9.11 Create session.repository.ts
+- [ ] 9.12 Add findAll(), findById() with relations
+- [ ] 9.13 Add findByMentorId(), findByMenteeId() methods
+- [ ] 9.14 Add create(), updateStatus() methods
 
-```
-11.1 Create entities/feedback folder [5m]
-11.2 Create feedback.entity.ts [45m]
-11.3 Add mentorId, menteeId columns [15m]
-11.4 Add sessionId column (unique) [15m]
-11.5 Add ratingKnowledge (1-5) [10m]
-11.6 Add ratingCommunication (1-5) [10m]
-11.7 Add ratingHelpfulness (1-5) [10m]
-11.8 Add overallRating calculation [20m]
-11.9 Add comment column [10m]
-11.10 Create repositories/feedback folder [5m]
-11.11 Create feedback.repository.ts [30m]
-11.12 Add create() method [20m]
-11.13 Add findByMentorId() method [20m]
-11.14 Add findBySessionId() method [20m]
-11.15 Create services/feedback folder [5m]
-11.16 Create feedback.service.ts [30m]
-11.17 Create submitFeedback() method [45m]
-11.18 Add session completed check [30m]
-11.19 Add duplicate feedback check [20m]
-11.20 Add calculateOverallRating() [20m]
-11.21 Create updateMentorRating() [30m]
-11.22 Create controllers/feedback folder [5m]
-11.23 Create feedback.controller.ts [30m]
-11.24 Create @Post() endpoint [30m]
-11.25 Create @Get('mentor/:mentorId') endpoint [30m]
-11.26 Test feedback submission [1h]
-11.27 Verify mentor rating updates [30m]
-11.28 Commit feedback module [20m]
-```
+### Person B: Session Service & Business Logic (195 mins)
+- [ ] 9.15 Create services/session folder
+- [ ] 9.16 Create session.service.ts
+- [ ] 9.17 Add createSession() — check availability before booking
+- [ ] 9.18 Add getSessions() — auto-filter by logged-in user role
+- [ ] 9.19 Add getSessionById() method
+- [ ] 9.20 Add acceptSession() — mentor only
+- [ ] 9.21 Add declineSession() — mentor only
+- [ ] 9.22 Add completeSession() method
+- [ ] 9.23 Add cancelSession() method
+- [ ] 9.24 Add markNoShow() method
 
----
-
-## ️ DAY 12: Admin Dashboard (5 tasks, ~8 hours)
-
-```
-12.1 Create services/admin folder [5m]
-12.2 Create admin.service.ts [30m]
-12.3 Inject UserRepository [10m]
-12.4 Inject MentorRepository [10m]
-12.5 Inject MenteeRepository [10m]
-12.6 Create getDashboardStats() method [1h]
-12.7 Add totalUsers count [15m]
-12.8 Add totalMentors count [15m]
-12.9 Add totalMentees count [15m]
-12.10 Add totalSessions count [30m]
-12.11 Add sessionsByStatus breakdown [45m]
-12.12 Add completionRate calculation [30m]
-12.13 Add averagePlatformRating [30m]
-12.14 Create controllers/admin folder [5m]
-12.15 Create admin.controller.ts [30m]
-12.16 Add @Controller('admin') [5m]
-12.17 Add @Roles(UserRole.ADMIN) guard [10m]
-12.18 Create @Get('dashboard') endpoint [30m]
-12.19 Create @Get('users') endpoint [20m]
-12.20 Create @Get('mentors') endpoint [20m]
-12.21 Create @Get('mentees') endpoint [20m]
-12.22 Test admin dashboard [1h]
-12.23 Verify all statistics correct [45m]
-12.24 Commit admin module [20m]
-```
+### Person C: Session Controller & Testing (185 mins)
+- [ ] 9.25 Create controllers/session folder
+- [ ] 9.26 Create session.controller.ts
+- [ ] 9.27 Add @Get(), @Get(':id') endpoints
+- [ ] 9.28 Add @Post(), @Put(':id'), @Delete(':id') endpoints
+- [ ] 9.29 Add @Post(':id/accept') — mentor only
+- [ ] 9.30 Add @Post(':id/decline') — mentor only
+- [ ] 9.31 Add @Post(':id/complete'), @Post(':id/cancel')
+- [ ] 9.32 Add @Post(':id/no-show')
+- [ ] 9.33 Create dto/session/index.ts with validations
+- [ ] 9.34 Test full session lifecycle in Postman
+- [ ] 9.35 Commit session module to Git
 
 ---
 
-## 🗓️ DAY 13: Notifications (6 tasks, ~8 hours)
+## 🗓️ DAY 10: Matching & Feedback Modules (~480 mins)
+### Person A: Matching Algorithm (200 mins)
+- [ ] 10.1 Create repositories/matching folder
+- [ ] 10.2 Create matching.repository.ts
+- [ ] 10.3 Add findRecommended() method stub
+- [ ] 10.4 Create services/matching folder
+- [ ] 10.5 Create matching.service.ts
+- [ ] 10.6 Create calculateMatchScore() method
+- [ ] 10.7 Implement skill match scoring — 50% weight
+- [ ] 10.8 Implement rating scoring — 30% weight
+- [ ] 10.9 Implement availability scoring — 20% weight
+- [ ] 10.10 Create matching.controller.ts
+- [ ] 10.11 Add @Get('recommended') — mentee only
+- [ ] 10.12 Create dto/matching/index.ts with validations
 
-```
-13.1 Create constants for NotificationType [15m]
-13.2 Add EMAIL, SMS, PUSH, IN_APP [10m]
-13.3 Create entities/notification folder [5m]
-13.4 Create notification.entity.ts [45m]
-13.5 Add userId, title, message columns [20m]
-13.6 Add type, isRead columns [15m]
-13.7 Add readAt, actionUrl columns [15m]
-13.8 Create repositories/notification folder [5m]
-13.9 Create notification.repository.ts [30m]
-13.10 Add findByUserId() method [20m]
-13.11 Add findUnread() method [20m]
-13.12 Add markAsRead() method [20m]
-13.13 Create services/notification folder [5m]
-13.14 Create notification.service.ts [30m]
-13.15 Create findAll() method [20m]
-13.16 Create findUnread() method [20m]
-13.17 Create markAsRead() method [20m]
-13.18 Create createNotification() helper [30m]
-13.19 Create controllers/notification folder [5m]
-13.20 Create notification.controller.ts [30m]
-13.21 Create @Get() endpoint [20m]
-13.22 Create @Get('unread') endpoint [20m]
-13.23 Create @Put(':id/read') endpoint [20m]
-13.24 Test all notification endpoints [1h]
-13.25 Commit notifications [20m]
-```
+### Person B: Feedback Entity & Service (185 mins)
+- [ ] 10.13 Create entities/feedback.entity.ts
+- [ ] 10.14 Add mentorId, menteeId, sessionId columns
+- [ ] 10.15 Add rating column (1–5)
+- [ ] 10.16 Add comment column (nullable)
+- [ ] 10.17 Add isAnonymous column
+- [ ] 10.18 Create repositories/feedback folder
+- [ ] 10.19 Create feedback.repository.ts
+- [ ] 10.20 Add findAll(), findById() methods
+- [ ] 10.21 Add findByMentorId(), findBySessionId() methods
+- [ ] 10.22 Create services/feedback folder
+- [ ] 10.23 Create feedback.service.ts
+- [ ] 10.24 Add submitFeedback() — check session completed first
+- [ ] 10.25 Add duplicate feedback check
+- [ ] 10.26 Add updateMentorRating() — recalculate average
 
----
-
-## 🗓️ DAY 14: Final Testing & Demo Prep (6 tasks, ~8 hours)
-
-```
-14.1 Create test data script [1h]
-14.2 Seed 5 test users [30m]
-14.3 Seed 3 test mentors [30m]
-14.4 Seed 2 test mentees [30m]
-14.5 Seed 10 test skills [30m]
-14.6 Run full API test suite [2h]
-14.7 Test: Register → Login → Create Profile [30m]
-14.8 Test: Request Session → Approve → Complete [45m]
-14.9 Test: Submit Feedback → Check Rating [30m]
-14.10 Test: Get Recommended Mentors [30m]
-14.11 Test: Admin Dashboard [30m]
-14.12 Fix critical bugs only [1h]
-14.13 Update README with final API list [1h]
-14.14 Create Postman collection [45m]
-14.15 Export and save Postman collection [15m]
-14.16 Final git commit [30m]
-14.17 Push to GitHub [15m]
-14.18 Move all tasks to Done [15m]
-14.19 Celebrate! 🎉 [30m]
-```
+### Person C: Feedback Controller & Testing (185 mins)
+- [ ] 10.27 Add getFeedbackByMentor() method
+- [ ] 10.28 Add deleteFeedback() method
+- [ ] 10.29 Create controllers/feedback folder
+- [ ] 10.30 Create feedback.controller.ts
+- [ ] 10.31 Add @Get(), @Get(':id') endpoints
+- [ ] 10.32 Add @Get('mentor/:mentorId') endpoint
+- [ ] 10.33 Add @Post(), @Put(':id'), @Delete(':id') endpoints
+- [ ] 10.34 Create dto/feedback/index.ts with validations
+- [ ] 10.35 Test matching algorithm with seeded data
+- [ ] 10.36 Test full feedback flow in Postman
+- [ ] 10.37 Commit matching and feedback to Git
 
 ---
 
-## ✅ Quick Start Checklist
+## 🗓️ DAY 11: Chat & Learning Resources (~480 mins)
+### Person A: Message Entity & Repository (190 mins)
+- [ ] 11.1 Create entities/message.entity.ts
+- [ ] 11.2 Add senderId, receiverId columns
+- [ ] 11.3 Add content column
+- [ ] 11.4 Add isRead, readAt columns
+- [ ] 11.5 Add sender and receiver relations to User
+- [ ] 11.6 Create repositories/message folder
+- [ ] 11.7 Create message.repository.ts
+- [ ] 11.8 Add findConversation() — messages between two users
+- [ ] 11.9 Add findConversationList() — all unique conversations
+- [ ] 11.10 Add create() method
+- [ ] 11.11 Add markAsRead() method
+- [ ] 11.12 Create dto/message/index.ts with validations
 
-**RIGHT NOW - Do these 5 tasks:**
+### Person B: Message Service & Controller (190 mins)
+- [ ] 11.13 Create services/message folder
+- [ ] 11.14 Create message.service.ts
+- [ ] 11.15 Add sendMessage() method
+- [ ] 11.16 Add getConversation() method
+- [ ] 11.17 Add getConversationList() method
+- [ ] 11.18 Add markAsRead() method
+- [ ] 11.19 Create controllers/message folder
+- [ ] 11.20 Create message.controller.ts
+- [ ] 11.21 Add @Post() — send message
+- [ ] 11.22 Add @Get('conversations') — list all conversations
+- [ ] 11.23 Add @Get(':userId') — thread with specific user
+- [ ] 11.24 Add @Put(':id/read') — mark as read
+- [ ] 11.25 Test all chat endpoints in Postman
 
-```
-□ Open GitHub Projects
-□ Click "+ Add item" in Todo column
-□ Copy task 1.1 and paste
-□ Copy task 1.2 and paste
-□ Copy task 1.3 and paste
-□ Copy task 1.4 and paste
-□ Copy task 1.5 and paste
-□ Start task 1.1 - Move to In Progress
-```
-
-**Don't add all tasks at once!** Add only:
-- **Day 1 tasks** today (1.1 to 1.36)
-- **Day 2 tasks** tomorrow morning
-- And so on...
-
----
-
-## 📊 Progress Tracking
-
-After each task:
-1. ✅ Mark as done in your head
-2. 🔄 Move card from **In Progress** → **Done**
-3.  Check off in this list
-4.  Commit code every 2-3 tasks
-
----
-
-## 🎯 Daily Goals
-
-| Day | Tasks | Hours | Must Complete |
-|-----|-------|-------|---------------|
-| 1 | 1.1-1.36 | 8h | Database + Entities ✅ |
-| 2 | 2.1-2.29 | 8h | Auth Setup ✅ |
-| 3 | 3.1-3.25 | 8h | Auth Endpoints ✅ |
-| 4 | 4.1-4.28 | 8h | User Module ✅ |
-| 5 | 5.1-5.28 | 8h | Mentor Module ✅ |
-| 6 | 6.1-6.23 | 8h | Mentee + Skill ✅ |
-| 7 | 7.1-7.12 | 8h | Review & Catch-up ✅ |
-| 8 | 8.1-8.26 | 8h | Session Part 1 ✅ |
-| 9 | 9.1-9.19 | 8h | Session Part 2 ✅ |
-| 10 | 10.1-10.22 | 8h | Matching ✅ |
-| 11 | 11.1-11.28 | 8h | Feedback ✅ |
-| 12 | 12.1-12.24 | 8h | Admin ✅ |
-| 13 | 13.1-13.25 | 8h | Notifications ✅ |
-| 14 | 14.1-14.19 | 8h | Final Testing ✅ |
+### Person C: Learning Resources Module (185 mins)
+- [ ] 11.26 Create entities/resource.entity.ts
+- [ ] 11.27 Add mentorId, sessionId (nullable) columns
+- [ ] 11.28 Add title, description columns
+- [ ] 11.29 Add type column — enum: document/link/task
+- [ ] 11.30 Add fileUrl / linkUrl column
+- [ ] 11.31 Create repositories/resource folder
+- [ ] 11.32 Create resource.repository.ts
+- [ ] 11.33 Add findByMentorId(), create(), delete() methods
+- [ ] 11.34 Create resource.service.ts
+- [ ] 11.35 Add uploadResource(), getResources(), deleteResource()
+- [ ] 11.36 Create resource.controller.ts
+- [ ] 11.37 Add @Get(':mentorId') — public
+- [ ] 11.38 Add @Post() — mentor only
+- [ ] 11.39 Add @Delete(':id') — mentor only
+- [ ] 11.40 Commit chat and resources to Git
 
 ---
 
-**You got this! One small task at a time! 💪**
+## 🗓️ DAY 12: Notifications & Activity Logs (~480 mins)
+### Person A: Notification Entity & Repository (190 mins)
+- [ ] 12.1 Create entities/notification.entity.ts
+- [ ] 12.2 Add userId, title, message columns
+- [ ] 12.3 Add type column — enum: email/sms/push/in_app
+- [ ] 12.4 Add isRead, readAt columns
+- [ ] 12.5 Add actionUrl, metadata columns (nullable)
+- [ ] 12.6 Create repositories/notification folder
+- [ ] 12.7 Create notification.repository.ts
+- [ ] 12.8 Add findByUserId() method
+- [ ] 12.9 Add findUnread() method
+- [ ] 12.10 Add markAsRead(), markAllAsRead() methods
+- [ ] 12.11 Create notification.service.ts
+- [ ] 12.12 Add findAll(), findUnread() methods
+- [ ] 12.13 Add markAsRead(), markAllAsRead() methods
+- [ ] 12.14 Add createNotification() helper — reusable
 
-Start with task **1.1** RIGHT NOW!
+### Person B: Notification Controller & Plugging Events (185 mins)
+- [ ] 12.15 Create notification.controller.ts
+- [ ] 12.16 Add @Get(), @Get('unread'), @Get(':id') endpoints
+- [ ] 12.17 Add @Post() — admin only
+- [ ] 12.18 Add @Put(':id/read'), @Put('read-all') endpoints
+- [ ] 12.19 Add @Delete(':id') endpoint
+- [ ] 12.20 Plug createNotification() into session accept event
+- [ ] 12.21 Plug createNotification() into session decline event
+- [ ] 12.22 Plug createNotification() into mentor approval event
+- [ ] 12.23 Plug createNotification() into mentor rejection event
+- [ ] 12.24 Test all notification endpoints
+- [ ] 12.25 Commit notifications to Git
+
+### Person C: Activity Log Module (190 mins)
+- [ ] 12.26 Create entities/activity-log.entity.ts
+- [ ] 12.27 Add userId, action columns — enum: login/logout/create/update/delete/view
+- [ ] 12.28 Add entity, entityId, description columns
+- [ ] 12.29 Add ipAddress, userAgent, metadata columns (nullable)
+- [ ] 12.30 Create activity-log.repository.ts
+- [ ] 12.31 Add findAll() with pagination, findById(), create()
+- [ ] 12.32 Create activity-log.service.ts
+- [ ] 12.33 Add log() helper — reusable across modules
+- [ ] 12.34 Plug log() into login event
+- [ ] 12.35 Plug log() into logout event
+- [ ] 12.36 Create activity-log.controller.ts
+- [ ] 12.37 Add @Get(), @Get(':id') — admin only
+- [ ] 12.38 Test activity log auto-logging
+- [ ] 12.39 Commit activity logs to Git
+
+---
+
+## 🗓️ DAY 13: Admin Module & Reports (~480 mins)
+### Person A: Admin Service & Dashboard Stats (200 mins)
+- [ ] 13.1 Create services/admin folder
+- [ ] 13.2 Create admin.service.ts
+- [ ] 13.3 Add getDashboardStats() method
+- [ ] 13.4 Add totalUsers, totalMentors, totalMentees counts
+- [ ] 13.5 Add activeSessions count
+- [ ] 13.6 Add sessionsByStatus breakdown
+- [ ] 13.7 Add completionRate calculation
+- [ ] 13.8 Add averagePlatformRating
+- [ ] 13.9 Add top 5 mentors by rating
+- [ ] 13.10 Add top 5 mentors by total sessions
+- [ ] 13.11 Add most requested skills
+- [ ] 13.12 Add pending mentor approval count
+
+### Person B: Admin Controller & User Management (185 mins)
+- [ ] 13.13 Create controllers/admin folder
+- [ ] 13.14 Create admin.controller.ts
+- [ ] 13.15 Add @Controller('admin') with @Roles(ADMIN) guard
+- [ ] 13.16 Add @Get('dashboard') endpoint
+- [ ] 13.17 Add @Get('users') with search + filter + pagination
+- [ ] 13.18 Add @Get('mentors') with pagination
+- [ ] 13.19 Add @Get('mentees') with pagination
+- [ ] 13.20 Add @Post('users/:id/deactivate')
+- [ ] 13.21 Add @Post('users/:id/reset-password')
+- [ ] 13.22 Add @Delete('users/:id')
+- [ ] 13.23 Add @Delete('feedback/:id') — moderate feedback
+
+### Person C: Report Module (185 mins)
+- [ ] 13.24 Create entities/report.entity.ts
+- [ ] 13.25 Add reporterId, reportedId columns
+- [ ] 13.26 Add reason, description columns
+- [ ] 13.27 Add status column — enum: pending/reviewed/dismissed
+- [ ] 13.28 Add adminNote column (nullable)
+- [ ] 13.29 Create report.repository.ts
+- [ ] 13.30 Add findAll(), findById(), create(), update() methods
+- [ ] 13.31 Create report.service.ts
+- [ ] 13.32 Add fileReport(), getReports() methods
+- [ ] 13.33 Add handleReport(), dismissReport() methods
+- [ ] 13.34 Add @Get('reports'), @Put('reports/:id') to admin.controller.ts
+- [ ] 13.35 Test admin dashboard stats
+- [ ] 13.36 Commit admin and reports to Git
+
+---
+
+## 🗓️ DAY 14: Seed Data, Final Testing & Documentation (~480 mins)
+### Person A: Seed Data (190 mins)
+- [ ] 14.1 Create seed/seed.ts file
+- [ ] 14.2 Seed 1 admin user
+- [ ] 14.3 Seed 3 approved mentor users with full profiles
+- [ ] 14.4 Seed 1 pending mentor (for approval testing)
+- [ ] 14.5 Seed 3 mentee users
+- [ ] 14.6 Seed 10 skills across 4 categories
+- [ ] 14.7 Seed availability for each mentor
+- [ ] 14.8 Seed sample sessions in various statuses
+- [ ] 14.9 Seed sample feedback with ratings
+- [ ] 14.10 Run npm run seed and verify database
+
+### Person B: Full Flow Testing (195 mins)
+- [ ] 14.11 Test: Register mentor → pending → admin approves
+- [ ] 14.12 Test: Mentee registers → browses mentors → books session
+- [ ] 14.13 Test: Mentor accepts → session completes → feedback submitted
+- [ ] 14.14 Test: Mentor rating recalculates after feedback
+- [ ] 14.15 Test: Mentee files report → admin handles
+- [ ] 14.16 Test: Forgot password → reset password
+- [ ] 14.17 Test: Matching algorithm returns ranked mentors
+- [ ] 14.18 Test: Admin dashboard stats are accurate
+- [ ] 14.19 Fix all critical bugs found
+- [ ] 14.20 Commit final fixes to Git
+
+### Person C: Documentation & Postman Collection (185 mins)
+- [ ] 14.21 Update README with full API endpoint list
+- [ ] 14.22 Document request body and response for each endpoint
+- [ ] 14.23 Create Postman collection — auth endpoints
+- [ ] 14.24 Add user, mentor, mentee endpoints to Postman
+- [ ] 14.25 Add session, feedback, matching endpoints to Postman
+- [ ] 14.26 Add admin, notification, chat endpoints to Postman
+- [ ] 14.27 Export Postman collection as JSON
+- [ ] 14.28 Push everything to GitHub
+- [ ] 14.29 Move all tasks to Done in GitHub Projects
+- [ ] 14.30 Celebrate! 🎉
+
+---
+
+## Progress Tracking
+
+| Person | Day 4 | Day 5 | Day 6 | Day 7 | Day 8 | Day 9 | Day 10 | Day 11 | Day 12 | Day 13 | Day 14 |
+|--------|-------|-------|-------|-------|-------|-------|--------|--------|--------|--------|--------|
+| **A (Nita)** | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ |
+| **B (Trea)** | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ |
+| **C (Vichet)** | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ |
