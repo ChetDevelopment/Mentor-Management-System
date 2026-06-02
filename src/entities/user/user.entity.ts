@@ -33,6 +33,12 @@ export class User {
   @Column({ nullable: true })
   lastLogin: Date;
 
+  @Column({ nullable: true })
+  resetToken: string;
+
+  @Column({ nullable: true, type: 'timestamp' })
+  resetTokenExpiry: Date;
+
   @CreateDateColumn()
   createdAt: Date;
 
