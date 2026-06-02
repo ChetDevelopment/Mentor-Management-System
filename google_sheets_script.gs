@@ -517,13 +517,22 @@ function createBugReportSheet(ss) {
   sheet.getRange('I2').setValue('401 Unauthorized: "Invalid credentials"');
   sheet.getRange('J2').setValue('500 Internal Server Error: "Cannot read property \'id\' of undefined"');
   sheet.getRange('K2').setValue('[Tester Name]');
-  sheet.getRange('L2').setValue(new Date().toISOString().split('T')[0]);
+  sheet.getRange('L2').setFormula('=IF(ROW()=1,"",IF(A2="","",TODAY()))');
   sheet.getRange('M2').setValue('[Dev Name]');
   sheet.getRange('N2').setValue('[Link or N/A]');
   sheet.getRange('O2').setValue('Local');
-  sheet.getRange('P2').setValue('');
+  sheet.getRange('P2').setFormula('=IF(ROW()=1,"",IF(C2="Fixed",TODAY(),""))');
   sheet.getRange('Q2').setValue('');
   sheet.getRange('R2').setValue('High priority — blocks login flow');
+
+  // Auto-date formula for all rows (L = Date Reported, P = Fixed Date)
+  const dateRange = sheet.getRange(2, 12, 100, 1);
+  dateRange.setFormula('=IF(ROW()=1,"",IF(A2="","",TODAY()))');
+  dateRange.setNumberFormat('yyyy-mm-dd');
+
+  const fixedRange = sheet.getRange(2, 16, 100, 1);
+  fixedRange.setFormula('=IF(ROW()=1,"",IF(C2="Fixed",TODAY(),""))');
+  fixedRange.setNumberFormat('yyyy-mm-dd');
 
   // Row styling
   sheet.getRange('A2:R2').setVerticalAlignment('top');
