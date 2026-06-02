@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Availability } from '../../entities/availability/availability.entity';
 
-
 @Injectable()
 export class AvailabilityRepository {
     constructor(
@@ -36,7 +35,4 @@ export class AvailabilityRepository {
     async remove(id: string): Promise<void> {
         await this.repository.delete(id);
     }
-
-
-
 }
