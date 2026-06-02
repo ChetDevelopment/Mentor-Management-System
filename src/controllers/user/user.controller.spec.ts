@@ -3,7 +3,6 @@ import { UserController } from './user.controller';
 import { UserService } from '../../services/user/user.service';
 import { AuthGuard } from '../../guards/auth.guard';
 import { RolesGuard } from '../../guards/roles.guard';
-import { UserRole } from '../../constants';
 
 describe('UserController', () => {
     let controller: UserController;
@@ -27,7 +26,7 @@ describe('UserController', () => {
             findById: jest.fn(),
             findAll: jest.fn(),
             update: jest.fn(),
-            remove: jest.fn(),
+            delete: jest.fn(),
         };
 
         const module: TestingModule = await Test.createTestingModule({
@@ -101,10 +100,10 @@ describe('UserController', () => {
     });
 
     it('DELETE /users/:id — admin should delete a user', async () => {
-        userService.remove.mockResolvedValue({ affected: 1 });
+        userService.delete.mockResolvedValue(undefined);
 
         await controller.deleteUser(mockUser.id);
 
-        expect(userService.remove).toHaveBeenCalledWith(mockUser.id);
+        expect(userService.delete).toHaveBeenCalledWith(mockUser.id);
     });
 });
