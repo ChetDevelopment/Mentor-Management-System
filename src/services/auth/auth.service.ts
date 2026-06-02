@@ -20,10 +20,19 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.userService.findByEmail(email);
-    if (user && (await this.userService.comparePassword(password, user.password))) {
+    if (!user) return null;
+    if (user.lockedUntil && new Date() < user.lockedUntil) return null;
+    if (await this.userService.comparePassword(password, user.password)) {
+      await this.userService.update(user.id, { failedLoginCount: 0 } as any);
       const { password: _, ...result } = user;
       return result;
     }
+    const failed = (user.failedLoginCount || 0) + 1;
+    const update: any = { failedLoginCount: failed };
+    if (failed >= 5) {
+      update.lockedUntil = new Date(Date.now() + 15 * 60 * 1000);
+    }
+    await this.userService.update(user.id, update);
     return null;
   }
 
@@ -126,6 +135,27 @@ export class AuthService {
     const tokens = await this.generateTokens(user);
     await this.storeToken(user.userId, tokens);
     return tokens;
+  }
+
+  async verifyEmail(token: string) {
+    const users = await this.userService.findAll();
+    const user = users.find((u: any) => u.emailVerificationToken === token);
+    if (!user) throw new BadRequestException('Invalid verification token');
+    await this.userService.update(user.id, {
+      isEmailVerified: true,
+      emailVerificationToken: null,
+      emailVerifiedAt: new Date(),
+    } as any);
+    return { message: 'Email verified successfully' };
+  }
+
+  async resendVerification(email: string) {
+    const user = await this.userService.findByEmail(email);
+    if (!user) throw new BadRequestException('Email not found');
+    if (user.isEmailVerified) throw new BadRequestException('Email already verified');
+    const rawToken = this.generateResetToken();
+    await this.userService.update(user.id, { emailVerificationToken: rawToken } as any);
+    return { message: 'Verification email sent', verificationToken: rawToken };
   }
 
   private async generateTokens(user: any) {

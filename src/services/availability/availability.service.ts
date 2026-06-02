@@ -34,6 +34,12 @@ export class AvailabilityService {
     return this.blockedDateRepo.delete(id);
   }
 
+  async removeSchedule(id: string) {
+    const existing = await this.availabilityRepo.findById(id);
+    if (!existing) throw new NotFoundException(`Availability ${id} not found`);
+    return this.availabilityRepo.remove(id);
+  }
+
   async getAvailableSlots(mentorId: string, date: string) {
     // Step 1: Get mentor availability by day of week
     const dayOfWeek = new Date(date).toLocaleDateString('en-US', { weekday: 'short' });

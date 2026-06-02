@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConfig } from '../../config';
+import { RolesGuard } from '../../guards/roles.guard';
 
 @Global()
 @Module({
@@ -10,6 +11,7 @@ import { jwtConfig } from '../../config';
       signOptions: { expiresIn: jwtConfig.expiresIn },
     }),
   ],
-  exports: [JwtModule],
+  providers: [RolesGuard],
+  exports: [JwtModule, RolesGuard],
 })
 export class SharedModule {}

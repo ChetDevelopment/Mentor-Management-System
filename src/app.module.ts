@@ -14,10 +14,16 @@ import { NotificationModule } from './modules/notification/notification.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { ActivityLogModule } from './modules/activity-log/activity-log.module';
 import { ResourceModule } from './modules/resource/resource.module';
+import { ReportModule } from './modules/report/report.module';
+import { CategoryModule } from './modules/category/category.module';
+import { AvailabilityModule } from './modules/availability/availability.module';
+import { MessageModule } from './modules/message/message.module';
 import { SharedModule } from './modules/shared/shared.module';
+import { HealthController } from './controllers/health.controller';
 import { AuthGuard } from './guards/auth.guard';
 
 @Module({
+  controllers: [HealthController],
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
@@ -36,6 +42,10 @@ import { AuthGuard } from './guards/auth.guard';
     AdminModule,
     ActivityLogModule,
     ResourceModule,
+    ReportModule,
+    CategoryModule,
+    AvailabilityModule,
+    MessageModule,
     SharedModule,
   ],
   providers: [

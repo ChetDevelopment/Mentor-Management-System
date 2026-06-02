@@ -1,13 +1,19 @@
-import { IsString, IsNotEmpty, IsOptional, IsArray, IsBoolean } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsArray, IsBoolean, IsEnum } from 'class-validator';
+
+export enum MenteeLevel {
+  BEGINNER = 'beginner',
+  INTERMEDIATE = 'intermediate',
+  ADVANCED = 'advanced',
+}
 
 export class CreateMenteeDto {
   @IsString()
   @IsNotEmpty()
   userId: string;
 
-  @IsString()
+  @IsEnum(MenteeLevel)
   @IsOptional()
-  occupation?: string;
+  currentLevel?: MenteeLevel;
 
   @IsString()
   @IsOptional()
@@ -15,7 +21,7 @@ export class CreateMenteeDto {
 
   @IsString()
   @IsOptional()
-  goals?: string;
+  careerGoal?: string;
 
   @IsArray()
   @IsOptional()
@@ -23,9 +29,9 @@ export class CreateMenteeDto {
 }
 
 export class UpdateMenteeDto {
-  @IsString()
+  @IsEnum(MenteeLevel)
   @IsOptional()
-  occupation?: string;
+  currentLevel?: MenteeLevel;
 
   @IsString()
   @IsOptional()
@@ -33,7 +39,7 @@ export class UpdateMenteeDto {
 
   @IsString()
   @IsOptional()
-  goals?: string;
+  careerGoal?: string;
 
   @IsArray()
   @IsOptional()

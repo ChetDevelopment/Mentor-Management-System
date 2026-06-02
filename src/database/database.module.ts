@@ -14,7 +14,7 @@ import { databaseConfig } from '../config';
       password: databaseConfig.password,
       database: databaseConfig.database,
       autoLoadEntities: true,
-      synchronize: false,
+      synchronize: true,
     }),
   ],
   exports: [TypeOrmModule],

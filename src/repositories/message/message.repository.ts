@@ -5,8 +5,8 @@ import { Message } from '../../entities/message.entity';
 
 @Injectable()
 export class MessageRepository {
-  findById(id: string) {
-    throw new Error('Method not implemented.');
+  async findById(id: string): Promise<Message | null> {
+    return this.repository.findOne({ where: { id } });
   }
   constructor(
     @InjectRepository(Message)

@@ -32,7 +32,23 @@ export class FeedbackService {
       }
     }
 
-    const feedback = await this.feedbackRepository.create(createFeedbackDto);
+    const ratings = [
+      createFeedbackDto.ratingKnowledge,
+      createFeedbackDto.ratingCommunication,
+      createFeedbackDto.ratingHelpfulness,
+    ].filter((r) => r != null);
+    const overallRating =
+      ratings.length > 0
+        ? Math.round((ratings.reduce((a, b) => a + b, 0) / ratings.length) * 10) / 10
+        : createFeedbackDto.rating;
+
+    const feedbackData = {
+      ...createFeedbackDto,
+      overallRating,
+      rating: createFeedbackDto.rating || Math.round(overallRating),
+    };
+
+    const feedback = await this.feedbackRepository.create(feedbackData);
 
     await this.updateMentorRating(mentorId);
 
@@ -41,9 +57,15 @@ export class FeedbackService {
 
   async updateMentorRating(mentorId: string) {
     const feedbacks = await this.feedbackRepository.findByMentorId(mentorId);
-    const total = feedbacks.reduce((sum, f) => sum + f.rating, 0);
+    const total = feedbacks.reduce((sum, f) => sum + (f.overallRating || f.rating), 0);
     const average = feedbacks.length > 0 ? Math.round((total / feedbacks.length) * 100) / 100 : 0;
     await this.mentorRepository.update(mentorId, { rating: average });
+  }
+
+  async respondToFeedback(id: string, response: string) {
+    const feedback = await this.feedbackRepository.findById(id);
+    if (!feedback) throw new NotFoundException('Feedback not found');
+    return this.feedbackRepository.update(id, { mentorResponse: response });
   }
 
   async findAll(query?: any) {
@@ -63,8 +85,18 @@ export class FeedbackService {
   }
 
   async deleteFeedback(id: string) {
-    const feedback = await this.feedbackRepo.findById(id);
+    const feedback = await this.feedbackRepository.findById(id);
     if (!feedback) throw new NotFoundException('Feedback not found');
-    return this.feedbackRepo.delete(id);
+    return this.feedbackRepository.remove(id);
+  }
+
+  async update(id: string, updateFeedbackDto: UpdateFeedbackDto) {
+    const feedback = await this.feedbackRepository.findById(id);
+    if (!feedback) throw new NotFoundException('Feedback not found');
+    return this.feedbackRepository.update(id, updateFeedbackDto);
+  }
+
+  async remove(id: string) {
+    return this.deleteFeedback(id);
   }
 }

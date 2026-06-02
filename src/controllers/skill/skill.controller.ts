@@ -2,6 +2,7 @@ import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Query } fro
 import { SkillService } from '../../services/skill/skill.service';
 import { CreateSkillDto, UpdateSkillDto } from '../../dto/skill';
 import { AuthGuard } from '../../guards/auth.guard';
+import { RolesGuard } from '../../guards/roles.guard';
 import { Roles } from '../../decorators/roles.decorator';
 import { Public } from '../../decorators/public.decorator';
 import { UserRole } from '../../constants';
@@ -29,21 +30,21 @@ export class SkillController {
     return this.skillService.findByCategory(categoryId);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   @Post()
   async create(@Body() createSkillDto: CreateSkillDto) {
     return this.skillService.create(createSkillDto);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateSkillDto: UpdateSkillDto) {
     return this.skillService.update(id, updateSkillDto);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   @Delete(':id')
   async remove(@Param('id') id: string) {

@@ -3,10 +3,16 @@ import { MentorRepository } from '../../repositories/mentor/mentor.repository';
 import { CreateMentorDto, UpdateMentorDto } from '../../dto/mentor';
 import { MentorStatus } from '../../constants';
 import { Skill } from '../../entities/skill/skill.entity';
+import { NotificationService } from '../notification/notification.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class MentorService {
-  constructor(private mentorRepository: MentorRepository) {}
+  constructor(
+    private mentorRepository: MentorRepository,
+    private notificationService: NotificationService,
+    private userService: UserService,
+  ) {}
 
   async create(createMentorDto: CreateMentorDto) {
     return this.mentorRepository.create(createMentorDto as any);
@@ -33,16 +39,29 @@ export class MentorService {
   }
 
   async approve(id: string) {
-    await this.findById(id);
-    return this.mentorRepository.updateStatus(id, MentorStatus.APPROVED);
+    const mentor = await this.findById(id);
+    await this.mentorRepository.updateStatus(id, MentorStatus.APPROVED);
+    await this.notificationService.createNotification({
+      userId: mentor.userId,
+      title: 'Mentor Approved',
+      message: 'Your mentor application has been approved!',
+      type: 'in_app' as any,
+    });
+    return mentor;
   }
 
   async reject(id: string, reason: string) {
-    await this.findById(id);
+    const mentor = await this.findById(id);
     if (!reason || reason.trim().length === 0) {
       throw new BadRequestException('Rejection reason is required');
     }
     await this.mentorRepository.updateStatus(id, MentorStatus.REJECTED, reason);
+    await this.notificationService.createNotification({
+      userId: mentor.userId,
+      title: 'Mentor Rejected',
+      message: `Your mentor application has been rejected. Reason: ${reason}`,
+      type: 'in_app' as any,
+    });
     return { message: 'Mentor rejected' };
   }
 

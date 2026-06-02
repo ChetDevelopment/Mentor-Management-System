@@ -3,6 +3,10 @@ import { IsString, IsNotEmpty, IsOptional, IsUUID, MaxLength } from 'class-valid
 export class CreateMessageDto {
   @IsUUID()
   @IsNotEmpty()
+  senderId: string;
+
+  @IsUUID()
+  @IsNotEmpty()
   receiverId: string;
 
   @IsString()

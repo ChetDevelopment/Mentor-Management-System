@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 import { UserRole } from '../../constants';
 
 @Entity('users')
@@ -30,6 +30,21 @@ export class User {
   @Column({ default: true })
   isActive: boolean;
 
+  @Column({ default: false })
+  isEmailVerified: boolean;
+
+  @Column({ nullable: true })
+  emailVerificationToken: string;
+
+  @Column({ nullable: true, type: 'timestamp' })
+  emailVerifiedAt: Date;
+
+  @Column({ default: 0 })
+  failedLoginCount: number;
+
+  @Column({ nullable: true, type: 'timestamp' })
+  lockedUntil: Date;
+
   @Column({ nullable: true })
   lastLogin: Date;
 
@@ -38,6 +53,9 @@ export class User {
 
   @Column({ nullable: true, type: 'timestamp' })
   resetTokenExpiry: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 
   @CreateDateColumn()
   createdAt: Date;

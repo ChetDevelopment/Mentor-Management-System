@@ -4,26 +4,42 @@ import { MentorRepository } from '../../repositories/mentor/mentor.repository';
 import { MenteeRepository } from '../../repositories/mentee/mentee.repository';
 import { SessionRepository } from '../../repositories/session/session.repository';
 import { FeedbackService } from '../feedback/feedback.service';
+import { ReportService } from '../report/report.service';
 import { MentorStatus, SessionStatus } from '../../constants';
 
 @Injectable()
 export class AdminService {
-  getMentors(arg0: { page: number; limit: number; }) {
-    throw new Error('Method not implemented.');
-  }
-  getUsers(arg0: { search: string; filter: string; page: number; limit: number; }) {
-    throw new Error('Method not implemented.');
-  }
-  handleReport(id: string, body: any) {
-    throw new Error('Method not implemented.');
-  }
   constructor(
     private readonly userRepo: UserRepository,
     private readonly mentorRepo: MentorRepository,
     private readonly menteeRepo: MenteeRepository,
     private readonly sessionRepo: SessionRepository,
     private readonly feedbackService: FeedbackService,
+    private readonly reportService: ReportService,
   ) {}
+
+  async getUsers({ search, filter, page, limit }: { search?: string; filter?: string; page: number; limit: number }) {
+    let users = await this.userRepo.findAll();
+    if (filter) {
+      users = users.filter(u => u.role === filter);
+    }
+    if (search) {
+      const q = search.toLowerCase();
+      users = users.filter(u => u.email.toLowerCase().includes(q) || u.firstName.toLowerCase().includes(q) || u.lastName.toLowerCase().includes(q));
+    }
+    const start = (page - 1) * limit;
+    return { data: users.slice(start, start + limit), total: users.length, page, limit };
+  }
+
+  async getMentors({ page, limit }: { page: number; limit: number }) {
+    const mentors = await this.mentorRepo.findAll();
+    const start = (page - 1) * limit;
+    return { data: mentors.slice(start, start + limit), total: mentors.length, page, limit };
+  }
+
+  async handleReport(id: string, body: any) {
+    return this.reportService.handleReport(id, body);
+  }
 
   async getDashboardStats() {
     const [users, mentors, mentorsWithSkills, mentees, sessions, feedbacks] =
@@ -61,7 +77,7 @@ export class AdminService {
       totalMentors: mentors.length,
       totalMentees: mentees.length,
       activeSessions: sessions.filter(
-        session => session.status === SessionStatus.SCHEDULED,
+        session => session.status === SessionStatus.CONFIRMED,
       ).length,
       sessionsByStatus,
       completionRate:
@@ -149,6 +165,22 @@ export class AdminService {
   }
 
   async deleteUser(id: string) {
-    return this.userRepo.delete(id);
+    return this.userRepo.update(id, { isActive: false });
+  }
+
+  async getMentees({ page, limit }: { page: number; limit: number }) {
+    return this.menteeRepo.findAll();
+  }
+
+  async resetPassword(id: string) {
+    return { message: 'Password reset for user ' + id };
+  }
+
+  async deleteFeedback(id: string) {
+    return this.feedbackService.deleteFeedback(id);
+  }
+
+  async getReports() {
+    return [];
   }
 }

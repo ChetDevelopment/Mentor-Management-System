@@ -34,7 +34,7 @@ export class Session {
   @Column({ nullable: true })
   duration: number;
 
-  @Column({ type: 'enum', enum: SessionStatus, default: SessionStatus.SCHEDULED })
+  @Column({ type: 'enum', enum: SessionStatus, default: SessionStatus.PENDING })
   status: SessionStatus;
 
   @Column({ nullable: true })
@@ -42,6 +42,9 @@ export class Session {
 
   @Column('text', { nullable: true })
   notes: string;
+
+  @Column({ nullable: true, type: 'timestamp' })
+  completedAt: Date;
 
   @CreateDateColumn()
   createdAt: Date;

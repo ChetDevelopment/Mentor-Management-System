@@ -16,8 +16,26 @@ export class CreateFeedbackDto {
   @IsNumber()
   @Min(1)
   @Max(5)
-  @IsNotEmpty()
-  rating: number;
+  @IsOptional()
+  ratingKnowledge?: number;
+
+  @IsNumber()
+  @Min(1)
+  @Max(5)
+  @IsOptional()
+  ratingCommunication?: number;
+
+  @IsNumber()
+  @Min(1)
+  @Max(5)
+  @IsOptional()
+  ratingHelpfulness?: number;
+
+  @IsNumber()
+  @Min(1)
+  @Max(5)
+  @IsOptional()
+  rating?: number;
 
   @IsString()
   @IsOptional()
@@ -38,4 +56,10 @@ export class UpdateFeedbackDto {
   @IsString()
   @IsOptional()
   comment?: string;
+}
+
+export class RespondFeedbackDto {
+  @IsString()
+  @IsNotEmpty()
+  mentorResponse: string;
 }

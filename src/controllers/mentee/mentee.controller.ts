@@ -2,6 +2,7 @@ import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Query } fro
 import { MenteeService } from '../../services/mentee/mentee.service';
 import { CreateMenteeDto, UpdateMenteeDto } from '../../dto/mentee';
 import { AuthGuard } from '../../guards/auth.guard';
+import { RolesGuard } from '../../guards/roles.guard';
 import { Roles } from '../../decorators/roles.decorator';
 import { UserRole } from '../../constants';
 
@@ -31,6 +32,7 @@ export class MenteeController {
   }
 
   @Delete(':id')
+  @UseGuards(RolesGuard)
   @Roles(UserRole.ADMIN)
   async remove(@Param('id') id: string) {
     return this.menteeService.remove(id);

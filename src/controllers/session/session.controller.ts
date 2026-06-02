@@ -2,6 +2,7 @@ import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Query } fro
 import { SessionService } from '../../services/session/session.service';
 import { CreateSessionDto, UpdateSessionDto } from '../../dto/session';
 import { AuthGuard } from '../../guards/auth.guard';
+import { RolesGuard } from '../../guards/roles.guard';
 import { User } from '../../decorators/user.decorator';
 import { Roles } from '../../decorators/roles.decorator';
 import { UserRole } from '../../constants';
@@ -36,14 +37,16 @@ export class SessionController {
     return this.sessionService.remove(id);
   }
 
-  @Roles(UserRole.MENTOR)
   @Post(':id/accept')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UserRole.MENTOR)
   async accept(@Param('id') id: string, @User() user: any) {
     return this.sessionService.accept(id, user);
   }
 
-  @Roles(UserRole.MENTOR)
   @Post(':id/decline')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UserRole.MENTOR)
   async decline(@Param('id') id: string, @User() user: any) {
     return this.sessionService.decline(id, user);
   }

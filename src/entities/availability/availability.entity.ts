@@ -26,11 +26,4 @@ export class Availability {
 
     @UpdateDateColumn()
     updatedAt: Date;
-<<<<<<< HEAD
 }
-=======
-    dayOfWeek: string;
-    isActive: boolean;
-
-}
->>>>>>> Develop

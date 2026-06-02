@@ -27,6 +27,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     console.error(`[${new Date().toISOString()}] ${request.method} ${request.url} - ${status}`);
 
     response.status(status).json({
+      success: false,
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,

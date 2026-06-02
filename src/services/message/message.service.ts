@@ -23,7 +23,8 @@ export class MessageService {
 
   // 11.18 Mark message as read
   async markAsRead(id: string) {
-    await this.messageRepo.findById(id);
-    return this.messageRepo.markAsRead(id, 'true');
+    const message = await this.messageRepo.findById(id);
+    if (!message) throw new NotFoundException('Message not found');
+    return this.messageRepo.markAsRead(message.senderId, message.receiverId);
   }
 }

@@ -17,14 +17,29 @@ export class Feedback {
   @Column()
   sessionId: string;
 
-  @Column({ type: 'int', width: 1 })
-  rating: number; // 1–5
+  @Column({ type: 'int', width: 1, nullable: true })
+  ratingKnowledge: number;
+
+  @Column({ type: 'int', width: 1, nullable: true })
+  ratingCommunication: number;
+
+  @Column({ type: 'int', width: 1, nullable: true })
+  ratingHelpfulness: number;
+
+  @Column({ type: 'decimal', precision: 3, scale: 1, nullable: true })
+  overallRating: number;
 
   @Column({ nullable: true })
   comment?: string;
 
   @Column({ default: false })
   isAnonymous: boolean;
+
+  @Column({ type: 'int', width: 1 })
+  rating: number; // 1–5
+
+  @Column('text', { nullable: true })
+  mentorResponse: string;
 
   @CreateDateColumn()
   createdAt: Date;

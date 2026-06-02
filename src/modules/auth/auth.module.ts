@@ -10,6 +10,7 @@ import { AuthRepository } from '../../repositories/auth/auth.repository';
 import { AuthToken } from '../../entities/auth/auth-token.entity';
 
 import { UserModule } from '../user/user.module';
+import { ActivityLogModule } from '../activity-log/activity-log.module';
 import { jwtConfig } from '../../config';
 
 @Global()
@@ -17,6 +18,7 @@ import { jwtConfig } from '../../config';
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     UserModule,
+    ActivityLogModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: jwtConfig.secret,

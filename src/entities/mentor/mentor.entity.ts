@@ -3,6 +3,12 @@ import { User } from '../user/user.entity';
 import { MentorStatus } from '../../constants';
 import{Skill} from '../skill/skill.entity'
 
+export enum AvailabilityStatus {
+  AVAILABLE = 'available',
+  BUSY = 'busy',
+  UNAVAILABLE = 'unavailable',
+}
+
 @Entity('mentors')
 export class Mentor {
   @PrimaryGeneratedColumn('uuid')
@@ -29,6 +35,12 @@ export class Mentor {
 
   @Column({ nullable: true })
   portfolioUrl: string;
+
+  @Column({ nullable: true, length: 160 })
+  shortDescription: string;
+
+  @Column({ nullable: true, length: 1000 })
+  fullBio: string;
 
   @Column({ type: 'enum', enum: MentorStatus, default: MentorStatus.PENDING })
   status: MentorStatus;
@@ -58,8 +70,11 @@ export class Mentor {
   @Column({ default: 0 })
   totalSessions: number;
 
-  @Column({ default: true })
-  isAvailable: boolean;
+  @Column({ type: 'enum', enum: AvailabilityStatus, default: AvailabilityStatus.AVAILABLE })
+  availabilityStatus: AvailabilityStatus;
+
+  @Column({ type: 'int', default: 0 })
+  profileCompleteness: number;
 
   @CreateDateColumn()
   createdAt: Date;

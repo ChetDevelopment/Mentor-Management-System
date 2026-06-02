@@ -2,6 +2,7 @@ import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Query } fro
 import { MatchingService } from '../../services/matching/matching.service';
 import { CreateMatchingDto, UpdateMatchingDto } from '../../dto/matching';
 import { AuthGuard } from '../../guards/auth.guard';
+import { RolesGuard } from '../../guards/roles.guard';
 import { Roles } from '../../decorators/roles.decorator';
 import { UserRole } from '../../constants';
 
@@ -9,6 +10,13 @@ import { UserRole } from '../../constants';
 @UseGuards(AuthGuard)
 export class MatchingController {
   constructor(private matchingService: MatchingService) {}
+
+  @UseGuards(RolesGuard)
+  @Get('recommended')
+  @Roles(UserRole.MENTEE)
+  async getRecommended(@Query('menteeId') menteeId: string, @Query('skill') skill?: string) {
+    return this.matchingService.getRecommendedMentors(menteeId, skill);
+  }
 
   @Get()
   async findAll(@Query() query: any) {
@@ -21,6 +29,7 @@ export class MatchingController {
   }
 
   @Post()
+  @UseGuards(RolesGuard)
   @Roles(UserRole.ADMIN)
   async create(@Body() createMatchingDto: CreateMatchingDto) {
     return this.matchingService.create(createMatchingDto);
@@ -32,6 +41,7 @@ export class MatchingController {
   }
 
   @Delete(':id')
+  @UseGuards(RolesGuard)
   @Roles(UserRole.ADMIN)
   async remove(@Param('id') id: string) {
     return this.matchingService.remove(id);
