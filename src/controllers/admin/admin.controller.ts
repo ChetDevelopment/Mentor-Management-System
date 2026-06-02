@@ -35,8 +35,18 @@ export class AdminController {
     return this.adminService.deactivateUser(id);
   }
 
+  @Post('users/:id/reset-password')
+  async resetUserPassword(@Param('id') id: string, @Body('password') password: string) {
+    return this.adminService.resetUserPassword(id, password);
+  }
+
   @Delete('users/:id')
   async deleteUser(@Param('id') id: string) {
     return this.adminService.deleteUser(id);
+  }
+
+  @Delete('feedback/:id')
+  async deleteFeedback(@Param('id') id: string) {
+    return this.adminService.deleteFeedback(id);
   }
 }
