@@ -35,6 +35,7 @@ export class SessionController {
   async remove(@Param('id') id: string) {
     return this.sessionService.remove(id);
   }
+
   @Roles(UserRole.MENTOR)
   @Post(':id/accept')
   async accept(@Param('id') id: string, @User() user: any) {

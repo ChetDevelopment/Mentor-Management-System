@@ -12,6 +12,7 @@ import { FeedbackModule } from './modules/feedback/feedback.module';
 import { NotificationModule } from './modules/notification/notification.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { ActivityLogModule } from './modules/activity-log/activity-log.module';
+import { ResourceModule } from './modules/resource/resource.module';
 import { SharedModule } from './modules/shared/shared.module';
 
 @Module({
@@ -32,6 +33,7 @@ import { SharedModule } from './modules/shared/shared.module';
     NotificationModule,
     AdminModule,
     ActivityLogModule,
+    ResourceModule,
     SharedModule,
   ],
 })
