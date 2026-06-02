@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './modules/auth/auth.module';
@@ -14,6 +15,7 @@ import { AdminModule } from './modules/admin/admin.module';
 import { ActivityLogModule } from './modules/activity-log/activity-log.module';
 import { ResourceModule } from './modules/resource/resource.module';
 import { SharedModule } from './modules/shared/shared.module';
+import { AuthGuard } from './guards/auth.guard';
 
 @Module({
   imports: [
@@ -35,6 +37,12 @@ import { SharedModule } from './modules/shared/shared.module';
     ActivityLogModule,
     ResourceModule,
     SharedModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
   ],
 })
 export class AppModule {}
