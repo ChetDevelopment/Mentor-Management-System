@@ -6,6 +6,7 @@ import { UserService } from '../user/user.service';
 import { LoginDto, RegisterDto, ForgotPasswordDto, ResetPasswordDto } from '../../dto/auth';
 import { jwtConfig } from '../../config';
 import * as crypto from 'crypto';
+import { ActivityLogService } from '../activity-log/activity-log.service';
 
 @Injectable()
 export class AuthService {
@@ -13,6 +14,7 @@ export class AuthService {
     private authRepository: AuthRepository,
     private jwtService: JwtService,
     private userService: UserService,
+    private activityLogService: ActivityLogService,
   ) { }
 
   async validateUser(email: string, password: string): Promise<any> {
@@ -32,6 +34,7 @@ export class AuthService {
 
     const tokens = await this.generateTokens(user);
     await this.storeToken(user.id, tokens);
+    await this.activityLogService.log(user.id, 'login', 'user', user.id);
 
     return {
       user: {
@@ -52,7 +55,7 @@ export class AuthService {
     const user = await this.userService.create(registerDto);
     const tokens = await this.generateTokens(user);
     await this.storeToken(user.id, tokens);
-
+    await this.activityLogService.log(user.id, 'login', 'user', user.id);
     return {
       user: {
         id: user.id,
@@ -114,6 +117,7 @@ export class AuthService {
 
   async logout(userId: string) {
     await this.authRepository.deactivateByUserId(userId);
+    await this.activityLogService.log(userId, 'logout', 'user', userId);
     return { message: 'Logout successful' };
   }
 

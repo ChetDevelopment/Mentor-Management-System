@@ -38,8 +38,9 @@ export class MentorRepository {
   }
 
   async update(id: string, data: Partial<Mentor>): Promise<Mentor> {
-    await this.repository.update(id, data);
-    return this.findById(id);
+    const mentor = await this.findById(id);
+    const entity = this.repository.merge(mentor, data);
+    return this.repository.save(entity);
   }
 
   async findPending(): Promise<Mentor[]> {

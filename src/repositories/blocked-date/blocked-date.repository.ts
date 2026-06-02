@@ -10,6 +10,10 @@ export class BlockedDateRepository {
     private repository: Repository<BlockedDate>,
   ) {}
 
+  async findById(id: string): Promise<BlockedDate | null> {
+    return this.repository.findOne({ where: { id } });
+  }
+
   async findByMentorId(mentorId: string): Promise<BlockedDate[]> {
     return this.repository.find({ where: { mentorId } });
   }

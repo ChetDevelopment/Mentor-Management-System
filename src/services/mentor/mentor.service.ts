@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { MentorRepository } from '../../repositories/mentor/mentor.repository';
 import { CreateMentorDto, UpdateMentorDto } from '../../dto/mentor';
 import { MentorStatus } from '../../constants';
+import { Skill } from '../../entities/skill/skill.entity';
 
 @Injectable()
 export class MentorService {
@@ -52,5 +53,13 @@ export class MentorService {
 
   async remove(id: string) {
     return this.mentorRepository.remove(id);
+  }
+
+  async delete(id: string) {
+    return this.remove(id);
+  }
+
+  private toSkillRefs(skillIds?: string[]): Skill[] | undefined {
+    return skillIds?.map((id) => ({ id }) as Skill);
   }
 }

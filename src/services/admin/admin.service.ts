@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../../repositories/user/user.repository';
 import { MentorRepository } from '../../repositories/mentor/mentor.repository';
 import { MenteeRepository } from '../../repositories/mentee/mentee.repository';
+import { MentorStatus } from '../../constants';
 
 @Injectable()
 export class AdminService {

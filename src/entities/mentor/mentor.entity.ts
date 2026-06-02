@@ -30,12 +30,6 @@ export class Mentor {
   @Column({ nullable: true })
   portfolioUrl: string;
 
-  @Column({ nullable: true })
-  shortDescription: string;
-
-  @Column('text', { nullable: true })
-  fullBio: string;
-
   @Column({ type: 'enum', enum: MentorStatus, default: MentorStatus.PENDING })
   status: MentorStatus;
 
