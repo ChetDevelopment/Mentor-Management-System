@@ -33,6 +33,16 @@ export enum MentorStatus {
   SUSPENDED = 'suspended',
 }
 
+export enum DayOfWeek {
+  MON = 'Mon',
+  TUE = 'Tue',
+  WED = 'Wed',
+  THU = 'Thu',
+  FRI = 'Fri',
+  SAT = 'Sat',
+  SUN = 'Sun',
+}
+
 export enum ActivityType {
   LOGIN = 'login',
   LOGOUT = 'logout',
