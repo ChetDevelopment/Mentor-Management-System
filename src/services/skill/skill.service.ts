@@ -7,7 +7,11 @@ export class SkillService {
   constructor(private skillRepository: SkillRepository) {}
 
   async create(createSkillDto: CreateSkillDto) {
-    return this.skillRepository.create(createSkillDto);
+    const { category, ...rest } = createSkillDto;
+    return this.skillRepository.create({
+      ...rest,
+      categoryId: category,
+    });
   }
 
   async findAll(query?: any) {
@@ -26,8 +30,16 @@ export class SkillService {
     return this.skillRepository.findByName(name);
   }
 
+  async findByCategory(categoryId: string) {
+    return this.skillRepository.findByCategory(categoryId);
+  }
+
   async update(id: string, updateSkillDto: UpdateSkillDto) {
-    return this.skillRepository.update(id, updateSkillDto);
+    const { category, ...rest } = updateSkillDto;
+    return this.skillRepository.update(id, {
+      ...rest,
+      categoryId: category,
+    });
   }
 
   async remove(id: string) {

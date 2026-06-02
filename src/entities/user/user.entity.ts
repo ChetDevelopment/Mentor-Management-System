@@ -1,9 +1,9 @@
-import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { UserRole } from '../../constants';
 
 @Entity('users')
 export class User {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
@@ -24,7 +24,7 @@ export class User {
   @Column({ nullable: true })
   phone: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'text' })
   avatar: string;
 
   @Column({ default: true })
@@ -32,6 +32,12 @@ export class User {
 
   @Column({ nullable: true })
   lastLogin: Date;
+
+  @Column({ nullable: true })
+  resetToken: string;
+
+  @Column({ nullable: true, type: 'timestamp' })
+  resetTokenExpiry: Date;
 
   @CreateDateColumn()
   createdAt: Date;
