@@ -66,4 +66,5 @@ export class Mentor {
 
   @UpdateDateColumn()
   updatedAt: Date;
+  feedbacks: any;
 }

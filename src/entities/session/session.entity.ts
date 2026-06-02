@@ -48,4 +48,5 @@ export class Session {
 
   @UpdateDateColumn()
   updatedAt: Date;
+  feedbacks: any;
 }

@@ -7,6 +7,7 @@ import { SessionStatus } from '../../constants';
 
 @Injectable()
 export class FeedbackService {
+  feedbackRepo: any;
   constructor(
     private feedbackRepository: FeedbackRepository,
     private sessionRepository: SessionRepository,
@@ -57,15 +58,13 @@ export class FeedbackService {
     return feedback;
   }
 
-  async findByMentorId(mentorId: string) {
+  async getFeedbackByMentor(mentorId: string) {
     return this.feedbackRepository.findByMentorId(mentorId);
   }
 
-  async update(id: string, updateFeedbackDto: UpdateFeedbackDto) {
-    return this.feedbackRepository.update(id, updateFeedbackDto);
-  }
-
-  async remove(id: string) {
-    return this.feedbackRepository.remove(id);
+  async deleteFeedback(id: string) {
+    const feedback = await this.feedbackRepo.findById(id);
+    if (!feedback) throw new NotFoundException('Feedback not found');
+    return this.feedbackRepo.delete(id);
   }
 }

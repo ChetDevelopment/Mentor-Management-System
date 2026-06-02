@@ -25,5 +25,7 @@ export class Availability{
 
     @UpdateDateColumn()
     updatedAt: Date;
+    dayOfWeek: string;
+    isActive: boolean;
 
 }
