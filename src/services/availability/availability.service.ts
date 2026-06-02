@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { AvailabilityRepository } from '../../repositories/availability/availability.repository';
-import { BlockedDateRepository } from '../../repositories/availability/blocked-date.repository';
+import { BlockedDateRepository } from '../../repositories/blocked-date/blocked-date.repository';
 import { CreateAvailabilityDto, UpdateAvailabilityDto, BlockDateDto } from '../../dto/availability/availability.entity';
 
 @Injectable()
