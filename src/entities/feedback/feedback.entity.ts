@@ -1,4 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne } from 'typeorm';
+import { Mentor } from '../mentor/mentor.entity';
+import { Mentee } from '../mentee/mentee.entity';
+import { Session } from '../session/session.entity';
 
 @Entity('feedback')
 export class Feedback {
@@ -11,14 +14,14 @@ export class Feedback {
   @Column()
   menteeId: string;
 
-  @Column({ nullable: true })
+  @Column()
   sessionId: string;
 
-  @Column()
-  rating: number;
+  @Column({ type: 'int', width: 1 })
+  rating: number; // 1–5
 
-  @Column('text', { nullable: true })
-  comment: string;
+  @Column({ nullable: true })
+  comment?: string;
 
   @Column({ default: false })
   isAnonymous: boolean;
@@ -26,6 +29,13 @@ export class Feedback {
   @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn()
-  updatedAt: Date;
+  // Relations
+  @ManyToOne(() => Mentor, mentor => mentor.feedbacks)
+  mentor: Mentor;
+
+  @ManyToOne(() => Mentee, mentee => mentee.feedbacks)
+  mentee: Mentee;
+
+  @ManyToOne(() => Session, session => session.feedbacks)
+  session: Session;
 }
