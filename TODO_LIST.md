@@ -1,4 +1,4 @@
-# 📋 MentorKhet - Copy-Paste Task List for GitHub Projects
+# 📋 Mentor Managenent System - Copy-Paste Task List for GitHub Projects
 
 ## How to Use This List
 

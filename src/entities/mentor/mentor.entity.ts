@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, ManyToMany, JoinTable } from 'typeorm';
 import { User } from '../user/user.entity';
 import { MentorStatus } from '../../constants';
+import{Skill} from '../skill/skill.entity'
 
 @Entity('mentors')
 export class Mentor {
@@ -50,14 +51,24 @@ export class Mentor {
   @Column({ nullable: true })
   company: string;
 
+  @Column({ length: 160, nullable: true })
+  shortDescription: string;
+
   @Column('text', { nullable: true })
-  bio: string;
+  fullBio: string;
+
+  @Column({ nullable: true })
+  nid: string;
+
+  @Column({ nullable: true })
+  phone: string;
 
   @Column('int', { default: 0 })
   yearsOfExperience: number;
 
-  @Column('simple-array', { nullable: true })
-  skills: string[];
+  @ManyToMany(() => Skill, skill => skill.mentors)
+  @JoinTable({name: 'mentor_skills'})
+  skills: Skill[];
 
   @Column({ default: 0 })
   rating: number;
@@ -67,6 +78,12 @@ export class Mentor {
 
   @Column({ default: true })
   isAvailable: boolean;
+
+  @Column({ type: 'enum', enum: MentorStatus, default: MentorStatus.PENDING })
+  status: MentorStatus;
+
+  @Column('text', { nullable: true })
+  rejectionReason: string;
 
   @CreateDateColumn()
   createdAt: Date;
