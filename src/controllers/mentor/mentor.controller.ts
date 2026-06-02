@@ -1,51 +1,77 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Body,
+  UseGuards,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { MentorService } from '../../services/mentor/mentor.service';
-import { CreateMentorDto, UpdateMentorDto } from '../../dto/mentor';
-import { AuthGuard } from '../../guards/auth.guard';
+import { UpdateMentorDto } from '../../dto/mentor/update-mentor.dto';
 import { Roles } from '../../decorators/roles.decorator';
 import { UserRole } from '../../constants';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { avatarUploadConfig, cvUploadConfig } from '../../common/upload.config';
 
 @Controller('mentors')
-@UseGuards(AuthGuard)
 export class MentorController {
-  constructor(private mentorService: MentorService) {}
+  constructor(private readonly mentorService: MentorService) {}
 
-  @Get()
-  async findAll(@Query() query: any) {
-    return this.mentorService.findAll(query);
-  }
-
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.mentorService.findById(id);
-  }
-
-  @Post()
-  @Roles(UserRole.ADMIN)
-  async create(@Body() createMentorDto: CreateMentorDto) {
-    return this.mentorService.create(createMentorDto);
-  }
-
+  // ✅ Update mentor profile
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateMentorDto: UpdateMentorDto) {
+  async updateMentor(
+    @Param('id') id: string,
+    @Body() updateMentorDto: UpdateMentorDto,
+  ) {
     return this.mentorService.update(id, updateMentorDto);
   }
 
+  // ✅ Delete mentor (admin only)
+  @Delete(':id')
+  @Roles(UserRole.ADMIN)
+  async deleteMentor(@Param('id') id: string) {
+    return this.mentorService.delete(id);
+  }
+
+  // ✅ Approve mentor (admin only)
+  @Post(':id/approve')
+  @Roles(UserRole.ADMIN)
+  async approveMentor(@Param('id') id: string) {
+    return this.mentorService.approve(id);
+  }
+
+  // ✅ Reject mentor (admin only, with reason)
   @Post(':id/reject')
   @Roles(UserRole.ADMIN)
-  async reject(@Param('id') id: string, @Body('reason') reason: string) {
+  async rejectMentor(
+    @Param('id') id: string,
+    @Body('reason') reason: string,
+  ) {
     return this.mentorService.reject(id, reason);
   }
 
+  // ✅ Suspend mentor (admin only)
   @Post(':id/suspend')
   @Roles(UserRole.ADMIN)
-  async suspend(@Param('id') id: string) {
+  async suspendMentor(@Param('id') id: string) {
     return this.mentorService.suspend(id);
   }
 
-  @Delete(':id')
-  @Roles(UserRole.ADMIN)
-  async remove(@Param('id') id: string) {
-    return this.mentorService.remove(id);
+  // ✅ Upload avatar (mentor uploads photo)
+  @Post('upload/avatar')
+  @UseInterceptors(FileInterceptor('file', avatarUploadConfig))
+  async uploadAvatar(@UploadedFile() file: Express.Multer.File) {
+    return { message: 'Avatar uploaded successfully', filePath: file.path };
+  }
+
+  // ✅ Upload CV (mentor uploads PDF resume)
+  @Post('upload/cv')
+  @UseInterceptors(FileInterceptor('file', cvUploadConfig))
+  async uploadCv(@UploadedFile() file: Express.Multer.File) {
+    return { message: 'CV uploaded successfully', filePath: file.path };
   }
 }
