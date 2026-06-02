@@ -26,12 +26,6 @@ export enum NotificationType {
   IN_APP = 'in_app',
 }
 
-export enum MentorStatus {
-  PENDING = 'pending',
-  APPROVED = 'approved',
-  REJECTED = 'rejected',
-  SUSPENDED = 'suspended',
-}
 
 export enum ActivityType {
   LOGIN = 'login',

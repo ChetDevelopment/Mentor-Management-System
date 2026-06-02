@@ -49,6 +49,22 @@ export class MentorRepository {
     });
   }
 
+  async updateStatus(
+    id: string,
+    status: MentorStatus,
+    rejectionReason?: string,
+  ): Promise<Mentor> {
+    const data: Partial<Mentor> = {
+      status,
+      rejectionReason:
+        status === MentorStatus.REJECTED ? rejectionReason : null,
+      approvedAt: status === MentorStatus.ACTIVE ? new Date() : null,
+    };
+
+    await this.repository.update(id, data);
+    return this.findById(id);
+  }
+
   async remove(id: string): Promise<void> {
     await this.repository.delete(id);
   }

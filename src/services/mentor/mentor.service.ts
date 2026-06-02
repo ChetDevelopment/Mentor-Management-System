@@ -31,6 +31,11 @@ export class MentorService {
     return this.mentorRepository.update(id, updateMentorDto);
   }
 
+  async approve(id: string) {
+    await this.findById(id);
+    return this.mentorRepository.updateStatus(id, MentorStatus.ACTIVE);
+  }
+
   async reject(id: string, reason: string) {
     const mentor = await this.findById(id);
     if (!reason || reason.trim().length === 0) {
@@ -46,5 +51,9 @@ export class MentorService {
 
   async remove(id: string) {
     return this.mentorRepository.remove(id);
+  }
+
+  async delete(id: string) {
+    return this.remove(id);
   }
 }
