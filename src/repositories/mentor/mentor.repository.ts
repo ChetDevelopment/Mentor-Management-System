@@ -49,6 +49,14 @@ export class MentorRepository {
     });
   }
 
+  async updateStatus(id: string, status: MentorStatus, reason?: string): Promise<Mentor> {
+    const data: any = { status };
+    if (reason) data.rejectionReason = reason;
+    if (status === MentorStatus.APPROVED) data.approvedAt = new Date();
+    await this.repository.update(id, data);
+    return this.findById(id);
+  }
+
   async remove(id: string): Promise<void> {
     await this.repository.delete(id);
   }

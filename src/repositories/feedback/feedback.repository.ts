@@ -27,6 +27,10 @@ export class FeedbackRepository {
     return this.repository.find({ where: { mentorId } });
   }
 
+  async findBySessionId(sessionId: string): Promise<Feedback | null> {
+    return this.repository.findOne({ where: { sessionId } });
+  }
+
   async update(id: string, data: Partial<Feedback>): Promise<Feedback> {
     await this.repository.update(id, data);
     return this.findById(id);

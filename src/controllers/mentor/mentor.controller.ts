@@ -34,7 +34,7 @@ export class MentorController {
   @Delete(':id')
   @Roles(UserRole.ADMIN)
   async deleteMentor(@Param('id') id: string) {
-    return this.mentorService.delete(id);
+    return this.mentorService.remove(id);
   }
 
   // ✅ Approve mentor (admin only)

@@ -52,9 +52,4 @@ export enum ActivityType {
   VIEW = 'view',
 }
 
-export enum MentorStatus {
-  PENDING = 'pending',
-  ACTIVE = 'active',
-  REJECTED = 'rejected',
-  SUSPENDED = 'suspended',
-}
+

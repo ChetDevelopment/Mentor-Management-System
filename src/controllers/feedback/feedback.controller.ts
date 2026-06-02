@@ -26,7 +26,7 @@ export class FeedbackController {
 
   @Post()
   async create(@Body() createFeedbackDto: CreateFeedbackDto, @User() user: any) {
-    return this.feedbackService.create(createFeedbackDto, user);
+    return this.feedbackService.submitFeedback(createFeedbackDto, user);
   }
 
   @Put(':id')

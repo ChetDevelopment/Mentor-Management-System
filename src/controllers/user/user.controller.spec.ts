@@ -48,7 +48,7 @@ describe('UserController', () => {
     it('GET /users/profile — should return the authenticated user profile', async () => {
         userService.findById.mockResolvedValue(mockUser);
 
-        const result = await controller.getProfile({ userId: mockUser.id, role: mockUser.role });
+        const result = await controller.getProfile(mockUser.id);
 
         expect(userService.findById).toHaveBeenCalledWith(mockUser.id);
         expect(result).toEqual(mockUser);
@@ -64,7 +64,7 @@ describe('UserController', () => {
         const updatedUser = { ...mockUser, ...updateUserDto };
         userService.update.mockResolvedValue(updatedUser);
 
-        const result = await controller.updateProfile({ userId: mockUser.id, role: mockUser.role }, updateUserDto);
+        const result = await controller.updateProfile(mockUser.id, updateUserDto);
 
         expect(userService.update).toHaveBeenCalledWith(mockUser.id, updateUserDto);
         expect(result).toEqual(updatedUser);
@@ -83,28 +83,27 @@ describe('UserController', () => {
     it('GET /users/:id — admin should get a user by ID', async () => {
         userService.findById.mockResolvedValue(mockUser);
 
-        const result = await controller.findOne(mockUser.id);
+        const result = await controller.findById(mockUser.id);
 
         expect(userService.findById).toHaveBeenCalledWith(mockUser.id);
         expect(result).toEqual(mockUser);
     });
 
     it('PUT /users/:id — admin should update any user', async () => {
-        const updateDto = { role: UserRole.MENTOR, isActive: false };
+        const updateDto = { firstName: 'Jane', phone: '0987654321' };
         const updated = { ...mockUser, ...updateDto };
         userService.update.mockResolvedValue(updated);
 
-        const result = await controller.update(mockUser.id, updateDto);
+        const result = await controller.updateUser(mockUser.id, updateDto);
 
         expect(userService.update).toHaveBeenCalledWith(mockUser.id, updateDto);
-        expect(result.role).toBe('mentor');
-        expect(result.isActive).toBe(false);
+        expect(result.firstName).toBe('Jane');
     });
 
     it('DELETE /users/:id — admin should delete a user', async () => {
         userService.remove.mockResolvedValue({ affected: 1 });
 
-        await controller.remove(mockUser.id);
+        await controller.deleteUser(mockUser.id);
 
         expect(userService.remove).toHaveBeenCalledWith(mockUser.id);
     });

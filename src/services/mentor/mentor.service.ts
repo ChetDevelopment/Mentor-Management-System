@@ -8,7 +8,7 @@ export class MentorService {
   constructor(private mentorRepository: MentorRepository) {}
 
   async create(createMentorDto: CreateMentorDto) {
-    return this.mentorRepository.create(createMentorDto);
+    return this.mentorRepository.create(createMentorDto as any);
   }
 
   async findAll(query?: any) {
@@ -28,15 +28,21 @@ export class MentorService {
   }
 
   async update(id: string, updateMentorDto: UpdateMentorDto) {
-    return this.mentorRepository.update(id, updateMentorDto);
+    return this.mentorRepository.update(id, updateMentorDto as any);
+  }
+
+  async approve(id: string) {
+    await this.findById(id);
+    return this.mentorRepository.updateStatus(id, MentorStatus.APPROVED);
   }
 
   async reject(id: string, reason: string) {
-    const mentor = await this.findById(id);
+    await this.findById(id);
     if (!reason || reason.trim().length === 0) {
       throw new BadRequestException('Rejection reason is required');
     }
-    return this.mentorRepository.updateStatus(id, MentorStatus.REJECTED, reason);
+    await this.mentorRepository.updateStatus(id, MentorStatus.REJECTED, reason);
+    return { message: 'Mentor rejected' };
   }
 
   async suspend(id: string) {
