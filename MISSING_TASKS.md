@@ -1,8 +1,83 @@
-# 📋 Missing Tasks — From Requirement PDF vs Current Project
+# 📋 Complete Missing Tasks — Original Incomplete + New Requirement Gaps
 
-## Priority: HIGH — Must Have for MVP
+## Priority: CRITICAL — Original Tasks Not Completed
 
-### 1. Email Verification System — Person A
+### 1. Message/Chat Module — Person A + B
+- [ ] Create entities/message.entity.ts (Person A)
+- [ ] Add senderId, receiverId, content, isRead, readAt columns (Person A)
+- [ ] Create message.repository.ts with findConversation(), create(), markAsRead() (Person A)
+- [ ] Create dto/message/index.ts with validations (Person A)
+- [ ] Create message.service.ts with sendMessage(), getConversation(), getConversationList() (Person B)
+- [ ] Create message.controller.ts with @Post(), @Get('conversations'), @Get(':userId'), @Put(':id/read') (Person B)
+- [ ] Test all chat endpoints in Postman (Person B)
+
+### 2. Report Module — Person C
+- [ ] Create entities/report.entity.ts with reporterId, reportedId, reason, description, status, adminNote
+- [ ] Create report.repository.ts with findAll(), findById(), create(), update()
+- [ ] Create report.service.ts with fileReport(), getReports(), handleReport(), dismissReport()
+- [ ] Add @Get('reports'), @Put('reports/:id') to admin.controller.ts
+- [ ] Test report flow in Postman
+
+### 3. Matching Algorithm — Person A
+- [ ] Implement calculateMatchScore(): Skill Match (50%) + Rating (30%) + Availability (20%)
+- [ ] Create getRecommendedMentors() method
+- [ ] Add filtering by skill
+- [ ] Add sorting by score descending
+- [ ] Create @Get('recommended') endpoint — mentee only
+- [ ] Test matching algorithm with seeded data
+
+### 4. Admin Dashboard Stats — Person A
+- [ ] Add getDashboardStats() method to admin.service.ts
+- [ ] Add totalUsers, totalMentors, totalMentees counts
+- [ ] Add activeSessions count
+- [ ] Add sessionsByStatus breakdown
+- [ ] Add completionRate calculation
+- [ ] Add averagePlatformRating
+- [ ] Add top 5 mentors by rating
+- [ ] Add top 5 mentors by total sessions
+- [ ] Add most requested skills
+- [ ] Add pending mentor approval count
+
+### 5. Availability Service — Person B
+- [ ] Create services/availability/availability.service.ts
+- [ ] Add getAvailability() method
+- [ ] Add setSchedule() method
+- [ ] Add updateSchedule() method
+- [ ] Add blockDate() method
+- [ ] Add unblockDate() method
+- [ ] Add getAvailableSlots() — return open slots for a given date
+- [ ] Create dto/availability/index.ts with validations
+- [ ] Wire controller to service
+
+### 6. Seed Data Script — Person A
+- [ ] Create seed/seed.ts file
+- [ ] Seed 1 admin user
+- [ ] Seed 3 approved mentor users with full profiles
+- [ ] Seed 1 pending mentor (for approval testing)
+- [ ] Seed 3 mentee users
+- [ ] Seed 10 skills across 4 categories
+- [ ] Seed availability for each mentor
+- [ ] Seed sample sessions in various statuses
+- [ ] Seed sample feedback with ratings
+- [ ] Add seed script to package.json
+- [ ] Test: npm run seed and verify database
+
+### 7. Full Flow Testing — Person B
+- [ ] Test: Register mentor → pending → admin approves
+- [ ] Test: Mentee registers → browses mentors → books session
+- [ ] Test: Mentor accepts → session completes → feedback submitted
+- [ ] Test: Mentor rating recalculates after feedback
+- [ ] Test: Mentee files report → admin handles
+- [ ] Test: Forgot password → reset password
+- [ ] Test: Matching algorithm returns ranked mentors
+- [ ] Test: Admin dashboard stats are accurate
+- [ ] Fix all critical bugs found
+
+---
+
+## Priority: HIGH — New Requirement Gaps
+
+### 8. Email Verification System — Person A
 - [ ] Add `isEmailVerified` column to User entity (boolean, default false)
 - [ ] Add `emailVerificationToken` column to User entity (nullable)
 - [ ] Add `emailVerifiedAt` column to User entity (nullable)
@@ -123,8 +198,8 @@
 
 ## Summary by Person
 
-| Person | HIGH | MEDIUM | LOW | Total |
-|--------|------|--------|-----|-------|
-| **A (Nita)** | 20 | 0 | 0 | 20 |
-| **B (Trea)** | 12 | 0 | 0 | 12 |
-| **C (Vichet)** | 10 | 30 | 0 | 40 |
+| Person | CRITICAL (Original) | HIGH (New) | MEDIUM | Total |
+|--------|-------------------|-----------|--------|-------|
+| **A (Nita)** | 28 | 10 | 0 | 38 |
+| **B (Trea)** | 18 | 7 | 0 | 25 |
+| **C (Vichet)** | 5 | 10 | 30 | 45 |
