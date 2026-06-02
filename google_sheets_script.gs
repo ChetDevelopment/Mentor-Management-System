@@ -19,7 +19,7 @@ function onOpen() {
 
 function generateAll() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  ['📋 Test Cases','📊 Dashboard','🐛 Bugs','📝 Plan'].forEach(n => {
+  ['📋 Test Cases','📊 Dashboard','🐛 Bug Report','📝 Plan'].forEach(n => {
     const s = ss.getSheetByName(n);
     if (s) ss.deleteSheet(s);
   });
@@ -129,15 +129,15 @@ function makeDashboard(ss) {
   // Bugs section on Dashboard
   const bRow=tRow+2;
   sh.getRange(`A${bRow}:G${bRow}`).merge();
-  sh.getRange(`A${bRow}`).setValue('🐛 BUGS').setFontSize(14).setFontWeight('bold').setFontColor(C.navy).setBackground(C.bg);
+  sh.getRange(`A${bRow}`).setValue('🐛 LATEST BUGS').setFontSize(14).setFontWeight('bold').setFontColor(C.navy).setBackground(C.bg);
   const bh=['Bug ID','Severity','Status','Module','Title','Assigned','Date'];
   sh.getRange(bRow+1,1,1,7).setValues([bh]).setBackground(C.blue).setFontColor(C.white).setFontWeight('bold');
-  for(let c=1;c<=7;c++) sh.getRange(bRow+2,c).setFormula(`=IFERROR('🐛 Bugs'!${String.fromCharCode(64+c)}2,"")`);
+  for(let c=1;c<=7;c++) sh.getRange(bRow+2,c).setFormula(`=IFERROR('🐛 Bug Report'!${String.fromCharCode(64+c)}2,"")`);
 }
 
 // ─── BUG REPORT ─────────────────────────────────────────
 function makeBugs(ss) {
-  const sh = ss.insertSheet('🐛 Bugs', 3);
+  const sh = ss.insertSheet('🐛 Bug Report', 3);
   sh.setFrozenRows(1);
   const h = ['Bug ID','Severity','Status','Module','TC Ref','Title','Description',
     'Steps to Reproduce','Expected','Actual','Reported By','Date Reported',
