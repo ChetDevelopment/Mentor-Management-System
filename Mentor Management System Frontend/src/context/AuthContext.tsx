@@ -47,18 +47,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(true);
     try {
       const response = await api.post('/auth/login', { email, password });
-      const { user: apiUser, accessToken } = response.data;
+      const body = response.data;
+      const apiUser = body.user || body;
+      const accessToken = body.accessToken || body.token || '';
 
       localStorage.setItem('mentorkhet_access_token', accessToken);
       localStorage.setItem('mentorkhet_user_profile', JSON.stringify(apiUser));
-
       setToken(accessToken);
       setUser(apiUser);
-      return apiUser;
-    } catch (err: any) {
-      throw new Error(err.response?.data?.message || 'Failed login verification.');
-    } finally {
       setLoading(false);
+      return apiUser;
+    } catch (error: any) {
+      setLoading(false);
+      throw new Error(error.response?.data?.message || 'Login failed. Please try again.');
     }
   };
 
@@ -66,7 +67,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(true);
     try {
       const response = await api.post('/auth/register', data);
-      const { user: apiUser, accessToken } = response.data;
+      const body = response.data;
+      const apiUser = body.user || body;
+      const accessToken = body.accessToken || body.token || '';
 
       localStorage.setItem('mentorkhet_access_token', accessToken);
       localStorage.setItem('mentorkhet_user_profile', JSON.stringify(apiUser));
