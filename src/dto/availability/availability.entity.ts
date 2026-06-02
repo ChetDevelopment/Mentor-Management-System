@@ -1,41 +1,59 @@
-import {IsString, IsNotEmpty, IsOptional, IsBoolean, IsDateString} from 'class-validator';
+import { IsString, IsEnum, IsOptional, IsBoolean, Matches } from 'class-validator';
+
+export enum DayOfWeek {
+  MON = 'Mon',
+  TUE = 'Tue',
+  WED = 'Wed',
+  THU = 'Thu',
+  FRI = 'Fri',
+  SAT = 'Sat',
+  SUN = 'Sun',
+}
 
 export class CreateAvailabilityDto {
-    @IsString()
-    @IsNotEmpty()
-    mentorId: string;
+  @IsString()
+  mentorId: string;
 
-    @IsDateString()
-    @IsNotEmpty()
-    date: string;
+  @IsEnum(DayOfWeek)
+  dayOfWeek: DayOfWeek;
 
-    @IsString()
-    @IsNotEmpty()
-    startTime: string;
+  @Matches(/^([01]\d|2[0-3]):([0-5]\d)$/)
+  startTime: string; // HH:mm
 
-    @IsString()
-    @IsNotEmpty()
-    endTime: string;
+  @Matches(/^([01]\d|2[0-3]):([0-5]\d)$/)
+  endTime: string; // HH:mm
 
-    @IsBoolean()
-    @IsOptional()
-    isBlocked?: boolean;
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
 }
 
 export class UpdateAvailabilityDto {
-    @IsDateString()
-    @IsOptional()
-    date?: string;
+  @IsOptional()
+  @IsEnum(DayOfWeek)
+  dayOfWeek?: DayOfWeek;
 
-    @IsString()
-    @IsOptional()
-    startTime?: string;
+  @IsOptional()
+  @Matches(/^([01]\d|2[0-3]):([0-5]\d)$/)
+  startTime?: string;
 
-    @IsString()
-    @IsOptional()
-    endTime?: string;
+  @IsOptional()
+  @Matches(/^([01]\d|2[0-3]):([0-5]\d)$/)
+  endTime?: string;
 
-    @IsBoolean()
-    @IsOptional()
-    isBlocked?: boolean;
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
+}
+
+export class BlockDateDto {
+  @IsString()
+  mentorId: string;
+
+  @IsString()
+  blockedDate: string; // YYYY-MM-DD
+
+  @IsOptional()
+  @IsString()
+  reason?: string;
 }
