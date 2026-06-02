@@ -4,9 +4,11 @@ import { AdminService } from '../../services/admin/admin.service';
 import { UserModule } from '../user/user.module';
 import { MentorModule } from '../mentor/mentor.module';
 import { MenteeModule } from '../mentee/mentee.module';
+import { SessionModule } from '../session/session.module';
+import { FeedbackModule } from '../feedback/feedback.module';
 
 @Module({
-  imports: [UserModule, MentorModule, MenteeModule],
+  imports: [UserModule, MentorModule, MenteeModule, SessionModule, FeedbackModule],
   controllers: [AdminController],
   providers: [AdminService],
 })

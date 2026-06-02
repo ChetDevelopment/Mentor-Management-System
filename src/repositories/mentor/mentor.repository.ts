@@ -23,6 +23,13 @@ export class MentorRepository {
     });
   }
 
+  async findAllWithSkills(query?: any): Promise<Mentor[]> {
+    return this.repository.find({
+      where: query,
+      relations: ['user', 'skills'],
+    });
+  }
+
   async findById(id: string): Promise<Mentor | null> {
     return this.repository.findOne({
       where: { id },
