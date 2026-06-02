@@ -1286,4 +1286,299 @@ describe('MentorKhet API — Full QA Test Suite', () => {
         .expect(201);
     });
   });
+
+  // ==========================================================================
+  // 15. NEGATIVE EDGE CASES — Comprehensive Validation & Security
+  // ==========================================================================
+  describe('[EDGE CASES] Validation, Security & Error Handling', () => {
+    // 15.1 AUTH: Register with empty body
+    it('POST /auth/register — should reject empty body', async () => {
+      await request(app.getHttpServer())
+        .post('/api/auth/register')
+        .send({})
+        .expect(400);
+    });
+
+    // 15.2 AUTH: Register with invalid role
+    it('POST /auth/register — should reject invalid role', async () => {
+      await request(app.getHttpServer())
+        .post('/api/auth/register')
+        .send({
+          email: 'badrole@test.com',
+          password: 'TestPass123!',
+          firstName: 'Bad',
+          lastName: 'Role',
+          role: 'superadmin',
+        })
+        .expect(400);
+    });
+
+    // 15.3 AUTH: Login with empty body
+    it('POST /auth/login — should reject empty body', async () => {
+      await request(app.getHttpServer())
+        .post('/api/auth/login')
+        .send({})
+        .expect(400);
+    });
+
+    // 15.4 AUTH: Forgot password with empty body
+    it('POST /auth/forgot-password — should reject empty body', async () => {
+      await request(app.getHttpServer())
+        .post('/api/auth/forgot-password')
+        .send({})
+        .expect(400);
+    });
+
+    // 15.5 AUTH: Reset password with empty body
+    it('POST /auth/reset-password — should reject empty body', async () => {
+      await request(app.getHttpServer())
+        .post('/api/auth/reset-password')
+        .send({})
+        .expect(400);
+    });
+
+    // 15.6 AUTH: Logout without token
+    it('POST /auth/logout — should reject without token', async () => {
+      await request(app.getHttpServer())
+        .post('/api/auth/logout')
+        .expect(401);
+    });
+
+    // 15.7 AUTH: Refresh token without token
+    it('POST /auth/refresh-token — should reject without token', async () => {
+      await request(app.getHttpServer())
+        .post('/api/auth/refresh-token')
+        .expect(401);
+    });
+
+    // 15.8 USERS: Get profile without token
+    it('GET /api/users/profile — should reject without token (unauthenticated)', async () => {
+      await request(app.getHttpServer())
+        .get('/api/users/profile')
+        .expect(401);
+    });
+
+    // 15.9 USERS: Update profile without token
+    it('PUT /api/users/profile — should reject without token', async () => {
+      await request(app.getHttpServer())
+        .put('/api/users/profile')
+        .send({ userId: 'test', firstName: 'Hacker' })
+        .expect(401);
+    });
+
+    // 15.10 USERS: Admin-only route accessed by mentor
+    it('GET /api/users — should reject non-admin (mentor)', async () => {
+      await request(app.getHttpServer())
+        .get('/api/users')
+        .set('Authorization', `Bearer ${mentorToken}`)
+        .expect(403);
+    });
+
+    // 15.11 USERS: Update non-existent user
+    it('PUT /api/users/:id — should return 404 for non-existent user', async () => {
+      await request(app.getHttpServer())
+        .put('/api/users/00000000-0000-0000-0000-000000000000')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ firstName: 'Ghost' })
+        .expect(404);
+    });
+
+    // 15.12 SKILLS: Create duplicate skill name
+    it('POST /api/skills — should create and then reject duplicate name', async () => {
+      const name = `Dup-Skill-${Date.now()}`;
+      await request(app.getHttpServer())
+        .post('/api/skills')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ name })
+        .expect(201);
+
+      await request(app.getHttpServer())
+        .post('/api/skills')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ name })
+        .expect(400);
+    });
+
+    // 15.13 SKILLS: Create skill with extra unknown fields (forbidNonWhitelisted)
+    it('POST /api/skills — should reject unknown fields', async () => {
+      await request(app.getHttpServer())
+        .post('/api/skills')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ name: 'ValidName', unknownField: 'should fail' })
+        .expect(400);
+    });
+
+    // 15.14 SKILLS: Update skill by non-admin
+    it('PUT /api/skills/:id — should reject non-admin', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/api/skills')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ name: `Temp-${Date.now()}` })
+        .expect(201);
+
+      await request(app.getHttpServer())
+        .put(`/api/skills/${res.body.id}`)
+        .set('Authorization', `Bearer ${menteeToken}`)
+        .send({ name: 'Hacked' })
+        .expect(403);
+    });
+
+    // 15.15 SESSIONS: Create session with duration > 180min
+    it('POST /api/sessions — should reject duration > 180', async () => {
+      await request(app.getHttpServer())
+        .post('/api/sessions')
+        .set('Authorization', `Bearer ${menteeToken}`)
+        .send({
+          mentorId: 'm1',
+          menteeId: 'e1',
+          title: 'Too Long',
+          scheduledAt: new Date(Date.now() + 86400000).toISOString(),
+          duration: 200,
+        })
+        .expect(400);
+    });
+
+    // 15.16 SESSIONS: Create session with duration < 15min
+    it('POST /api/sessions — should reject duration < 15', async () => {
+      await request(app.getHttpServer())
+        .post('/api/sessions')
+        .set('Authorization', `Bearer ${menteeToken}`)
+        .send({
+          mentorId: 'm1',
+          menteeId: 'e1',
+          title: 'Too Short',
+          scheduledAt: new Date(Date.now() + 86400000).toISOString(),
+          duration: 5,
+        })
+        .expect(400);
+    });
+
+    // 15.17 MENTORS: Approve non-existent mentor
+    it('POST /api/mentors/:id/approve — should reject non-existent mentor', async () => {
+      await request(app.getHttpServer())
+        .post('/api/mentors/00000000-0000-0000-0000-000000000000/approve')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(404);
+    });
+
+    // 15.18 MENTORS: Reject non-existent mentor
+    it('POST /api/mentors/:id/reject — should reject non-existent', async () => {
+      await request(app.getHttpServer())
+        .post('/api/mentors/00000000-0000-0000-0000-000000000000/reject')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ reason: 'Test' })
+        .expect(404);
+    });
+
+    // 15.19 FEEDBACK: Submit with rating < 1
+    it('POST /api/feedback — should reject rating < 1', async () => {
+      await request(app.getHttpServer())
+        .post('/api/feedback')
+        .set('Authorization', `Bearer ${menteeToken}`)
+        .send({ mentorId: 'm1', menteeId: 'e1', rating: 0 })
+        .expect(400);
+    });
+
+    // 15.20 FEEDBACK: Submit with empty body
+    it('POST /api/feedback — should reject empty body', async () => {
+      await request(app.getHttpServer())
+        .post('/api/feedback')
+        .set('Authorization', `Bearer ${menteeToken}`)
+        .send({})
+        .expect(400);
+    });
+
+    // 15.21 NOTIFICATIONS: Create for non-existent user (admin)
+    it('POST /api/notifications — should create notification for any userId (admin)', async () => {
+      await request(app.getHttpServer())
+        .post('/api/notifications')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          userId: '00000000-0000-0000-0000-000000000000',
+          title: 'Ghost Notification',
+          message: 'For non-existent user',
+        })
+        .expect(201);
+    });
+
+    // 15.22 NOTIFICATIONS: Delete non-existent notification
+    it('DELETE /api/notifications/:id — should reject non-existent', async () => {
+      await request(app.getHttpServer())
+        .delete('/api/notifications/00000000-0000-0000-0000-000000000000')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(404);
+    });
+
+    // 15.23 ADMIN: Deactivate non-existent user
+    it('POST /api/admin/users/:id/deactivate — should reject non-existent', async () => {
+      await request(app.getHttpServer())
+        .post('/api/admin/users/00000000-0000-0000-0000-000000000000/deactivate')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(404);
+    });
+
+    // 15.24 ADMIN: Delete non-existent user
+    it('DELETE /api/admin/users/:id — should reject non-existent', async () => {
+      await request(app.getHttpServer())
+        .delete('/api/admin/users/00000000-0000-0000-0000-000000000000')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(404);
+    });
+
+    // 15.25 ACTIVITY LOGS: Create without required fields
+    it('POST /api/activity-logs — should reject missing required fields', async () => {
+      await request(app.getHttpServer())
+        .post('/api/activity-logs')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ description: 'Incomplete' })
+        .expect(400);
+    });
+
+    // 15.26 RESOURCES: Create with invalid type enum
+    it('POST /api/resources — should reject invalid resource type', async () => {
+      await request(app.getHttpServer())
+        .post('/api/resources')
+        .set('Authorization', `Bearer ${mentorToken}`)
+        .send({
+          mentorId: 'm1',
+          title: 'Invalid Type',
+          type: 'invalid_type',
+        })
+        .expect(400);
+    });
+
+    // 15.27 RESOURCES: Delete non-existent resource
+    it('DELETE /api/resources/:id — should reject non-existent', async () => {
+      await request(app.getHttpServer())
+        .delete('/api/resources/00000000-0000-0000-0000-000000000000')
+        .set('Authorization', `Bearer ${mentorToken}`)
+        .expect(404);
+    });
+
+    // 15.28 MATCHINGS: Create matching by non-admin
+    it('POST /api/matchings — should reject non-admin (mentor)', async () => {
+      await request(app.getHttpServer())
+        .post('/api/matchings')
+        .set('Authorization', `Bearer ${mentorToken}`)
+        .send({ mentorId: 'm1', menteeId: 'e1' })
+        .expect(403);
+    });
+
+    // 15.29 SESSIONS: Accept session by non-mentor role
+    it('POST /api/sessions/:id/accept — should reject mentee', async () => {
+      await request(app.getHttpServer())
+        .post(`/api/sessions/${createdSessionId || '00000000-0000-0000-0000-000000000000'}/accept`)
+        .set('Authorization', `Bearer ${menteeToken}`)
+        .expect(403);
+    });
+
+    // 15.30 SKILLS: Get skills by non-existent category
+    it('GET /api/skills/category/:categoryId — should return empty array for non-existent', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/api/skills/category/00000000-0000-0000-0000-000000000000')
+        .expect(200);
+
+      expect(Array.isArray(res.body)).toBe(true);
+    });
+  });
 });
