@@ -5,6 +5,9 @@ import { Message } from '../../entities/message.entity';
 
 @Injectable()
 export class MessageRepository {
+  findById(id: string) {
+    throw new Error('Method not implemented.');
+  }
   constructor(
     @InjectRepository(Message)
     private repository: Repository<Message>,
