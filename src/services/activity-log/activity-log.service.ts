@@ -1,10 +1,22 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ActivityLogRepository } from '../../repositories/activity-log/activity-log.repository';
 import { CreateActivityLogDto } from '../../dto/activity-log';
+import {ActivityType} from '../../constants'
 
 @Injectable()
 export class ActivityLogService {
-  constructor(private activityLogRepository: ActivityLogRepository) {}
+  constructor(private activityLogRepository: ActivityLogRepository) { }
+
+  async log(userId: string, action: string, entity: string, entityId: string, description?: string, metadata?: any) {
+    return this.activityLogRepository.create({
+      userId,
+      action,
+      entity,
+      entityId,
+      description,
+      metadata: metadata ? JSON.stringify(metadata) : null,
+    })
+  }
 
   async create(createActivityLogDto: CreateActivityLogDto) {
     return this.activityLogRepository.create(createActivityLogDto);
