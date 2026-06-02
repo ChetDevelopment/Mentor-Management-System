@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Availability } from '../../entities/availability/availability.entity';
+import { DayOfWeek } from '../../constants';
 
 @Injectable()
 export class AvailabilityRepository {
@@ -20,7 +21,13 @@ export class AvailabilityRepository {
     }
 
     async findSlotsByDate(mentorId: string, date: string): Promise<Availability[]> {
-        return this.repository.find({ where: { mentorId, date } });
+        const dayOfWeek = new Date(date).toLocaleDateString('en-US', {
+            weekday: 'short',
+        }) as DayOfWeek;
+
+        return this.repository.find({
+            where: { mentorId, dayOfWeek, isActive: true },
+        });
     }
 
     async findById(id: string): Promise<Availability | null> {

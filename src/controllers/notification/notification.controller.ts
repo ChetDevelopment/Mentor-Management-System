@@ -37,6 +37,11 @@ export class NotificationController {
     return this.notificationService.markAsRead(id);
   }
 
+  @Put('read-all')
+  async markAllAsRead(@User() user: any) {
+    return this.notificationService.markAllAsRead(user.userId);
+  }
+
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return this.notificationService.remove(id);

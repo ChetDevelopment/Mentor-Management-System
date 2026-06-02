@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Notification } from '../../entities/notification/notification.entity';
+import { Notification } from '../../entities/notification.entity';
 
 @Injectable()
 export class NotificationRepository {
@@ -33,11 +33,30 @@ export class NotificationRepository {
     });
   }
 
-  async findUnreadByUserId(userId: string): Promise<Notification[]> {
+  async findUnread(userId: string): Promise<Notification[]> {
     return this.repository.find({
       where: { userId, isRead: false },
       order: { createdAt: 'DESC' },
     });
+  }
+
+  async findUnreadByUserId(userId: string): Promise<Notification[]> {
+    return this.findUnread(userId);
+  }
+
+  async markAsRead(id: string): Promise<Notification> {
+    await this.repository.update(id, {
+      isRead: true,
+      readAt: new Date(),
+    });
+    return this.findById(id);
+  }
+
+  async markAllAsRead(userId: string): Promise<void> {
+    await this.repository.update(
+      { userId, isRead: false },
+      { isRead: true, readAt: new Date() },
+    );
   }
 
   async update(id: string, data: Partial<Notification>): Promise<Notification> {

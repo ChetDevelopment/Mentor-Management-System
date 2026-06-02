@@ -1,29 +1,29 @@
-import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { DayOfWeek } from '../../constants';
 
 @Entity('availabilities')
-export class Availability{
+export class Availability {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @Column()
     mentorId: string;
 
-    @Column({type: 'date'})
-    date: string;
+    @Column({ type: 'enum', enum: DayOfWeek })
+    dayOfWeek: DayOfWeek;
 
-    @Column({type: 'time'})
+    @Column({ type: 'time' })
     startTime: string;
 
-    @Column({type: 'time'})
+    @Column({ type: 'time' })
     endTime: string;
 
-    @Column({default: false})
-    isBlocked: boolean;
+    @Column({ default: true })
+    isActive: boolean;
 
     @CreateDateColumn()
     createdAt: Date;
 
     @UpdateDateColumn()
     updatedAt: Date;
-
 }
