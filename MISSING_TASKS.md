@@ -67,41 +67,52 @@
 
 ## Priority: MEDIUM — Post-MVP
 
-### 9. Pagination for All List Endpoints
+### 9. Pagination for All List Endpoints — Person C
 - [ ] Create pagination interceptor
 - [ ] Add `meta` object to all list responses: totalItems, itemCount, itemsPerPage, totalPages, currentPage
 - [ ] Implement pagination on: /mentors, /mentees, /sessions, /feedback, /notifications, /activity-logs, /admin/users, /admin/mentors, /admin/mentees
 
-### 10. Rate Limiting
+### 10. Rate Limiting — Person C
 - [ ] Install `@nestjs/throttler`
 - [ ] Configure global rate limit: 100 requests/minute
 - [ ] Configure auth rate limit: 10 requests/minute on /auth/register and /auth/login
 
-### 11. Swagger/OpenAPI Documentation
+### 11. Swagger/OpenAPI Documentation — Person C
 - [ ] Install `@nestjs/swagger`
 - [ ] Configure Swagger at `/api/docs`
 - [ ] Add API tags and descriptions to all controllers
 - [ ] Add response models for all endpoints
 
-### 12. Refresh Token in HTTP-Only Cookie
+### 12. Refresh Token in HTTP-Only Cookie — Person C
 - [ ] Return refresh token in HTTP-only, SameSite=Strict cookie instead of response body
 - [ ] Update AuthService.login() to set cookie
 - [ ] Update AuthService.refreshToken() to read from cookie
 
-### 13. Full-Text Search & Sorting
+### 13. Full-Text Search & Sorting — Person C
 - [ ] Add search query param to: /mentors, /mentees, /sessions
 - [ ] Add sortBy query param to list endpoints
 - [ ] Implement search in repositories (ILIKE/WHERE)
 
-### 14. Activity Log Enhancements
+### 14. Activity Log Enhancements — Person C
 - [ ] Add `ipAddress` column to ActivityLog entity
 - [ ] Capture client IP from request in all log calls
 - [ ] Add more activity types as needed
 
-### 15. API Response Standard
+### 15. API Response Standard — Person C
 - [ ] Verify TransformInterceptor wraps all responses in { success, data, message }
 - [ ] Verify AllExceptionsFilter returns { success, statusCode, error, message, timestamp, path }
 - [ ] Change API prefix from `/api` to `/api/v1`
+
+### 16. Docker & Deployment — Person C
+- [ ] Create multi-stage Dockerfile
+- [ ] Create docker-compose.yml (API + MySQL + Nginx)
+- [ ] Create Nginx config (SSL, rate limiting, reverse proxy)
+- [ ] Add health check endpoint: GET /api/v1/health
+
+### 17. Match Score Calculation — Person C
+- [ ] Implement calculateMatchScore(): Skill Match (50%) + Rating (30%) + Availability (20%)
+- [ ] Create GET /api/matching/recommended-mentors endpoint (mentee only)
+- [ ] Return mentors sorted by match score descending with pagination
 
 ---
 
@@ -129,6 +140,6 @@
 
 | Person | HIGH | MEDIUM | LOW | Total |
 |--------|------|--------|-----|-------|
-| **A (Nita)** | 30 | 12 | 8 | 50 |
-| **B (Trea)** | 22 | 15 | 6 | 43 |
-| **C (Vichet)** | 18 | 10 | 4 | 32 |
+| **A (Nita)** | 20 | 8 | 5 | 33 |
+| **B (Trea)** | 18 | 10 | 4 | 32 |
+| **C (Vichet)** | 32 | 19 | 9 | 60 |
