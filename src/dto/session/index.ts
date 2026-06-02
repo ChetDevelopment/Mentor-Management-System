@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional, IsDateString, IsEnum } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsDateString, IsEnum, IsInt, Min, Max } from 'class-validator';
 import { SessionStatus } from '../../constants';
 
 export class CreateSessionDto {
@@ -22,9 +22,11 @@ export class CreateSessionDto {
   @IsNotEmpty()
   scheduledAt: string;
 
-  @IsString()
+  @IsInt()
+  @Min(15)
+  @Max(180)
   @IsOptional()
-  duration?: string;
+  duration?: number;
 
   @IsString()
   @IsOptional()

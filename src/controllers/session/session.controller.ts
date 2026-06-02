@@ -3,11 +3,13 @@ import { SessionService } from '../../services/session/session.service';
 import { CreateSessionDto, UpdateSessionDto } from '../../dto/session';
 import { AuthGuard } from '../../guards/auth.guard';
 import { User } from '../../decorators/user.decorator';
+import { Roles } from '../../decorators/roles.decorator';
+import { UserRole } from '../../constants';
 
 @Controller('sessions')
 @UseGuards(AuthGuard)
 export class SessionController {
-  constructor(private sessionService: SessionService) {}
+  constructor(private sessionService: SessionService) { }
 
   @Get()
   async findAll(@Query() query: any, @User() user: any) {
@@ -32,5 +34,31 @@ export class SessionController {
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return this.sessionService.remove(id);
+  }
+  @Roles(UserRole.MENTOR)
+  @Post(':id/accept')
+  async accept(@Param('id') id: string, @User() user: any) {
+    return this.sessionService.accept(id, user);
+  }
+
+  @Roles(UserRole.MENTOR)
+  @Post(':id/decline')
+  async decline(@Param('id') id: string, @User() user: any) {
+    return this.sessionService.decline(id, user);
+  }
+
+  @Post(':id/complete')
+  async complete(@Param('id') id: string, @User() user: any) {
+    return this.sessionService.complete(id, user);
+  }
+
+  @Post(':id/cancel')
+  async cancel(@Param('id') id: string, @User() user: any) {
+    return this.sessionService.cancel(id, user);
+  }
+
+  @Post(':id/no-show')
+  async noShow(@Param('id') id: string, @User() user: any) {
+    return this.sessionService.noShow(id, user);
   }
 }
