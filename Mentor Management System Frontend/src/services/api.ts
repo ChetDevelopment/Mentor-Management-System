@@ -192,24 +192,25 @@ function transformResponse(originalUrl: string, res: any) {
 }
 
 function mentorToFrontend(m: any) {
+  const statusMap = { 'active': 'APPROVED', 'approved': 'APPROVED', 'pending': 'PENDING', 'rejected': 'REJECTED', 'suspended': 'REJECTED' };
   return {
     id: m.id, userId: m.userId,
-    firstName: m.firstName || '',
-    lastName: m.lastName || '',
-    email: m.email || '',
+    firstName: m.firstName || m.user?.firstName || '',
+    lastName: m.lastName || m.user?.lastName || '',
+    email: m.email || m.user?.email || '',
     phone: m.phone || '',
     nationalId: m.nid || '',
-    avatar: m.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200',
+    avatar: m.avatar || m.user?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200',
     experience: m.yearsOfExperience || 0,
     skills: Array.isArray(m.skills) ? m.skills : [],
     shortDescription: m.shortDescription || '',
     fullDescription: m.fullBio || '',
-    category: m.title || 'General',
+    category: m.title || m.category || 'General',
     cvUrl: m.cvUrl || '',
     portfolioUrl: m.portfolioUrl || '',
     rating: m.rating || 0,
     reviewCount: m.totalSessions || 0,
-    verificationStatus: m.status === 'APPROVED' ? 'APPROVED' : 'PENDING',
+    verificationStatus: statusMap[(m.status || '').toLowerCase()] || 'PENDING',
     weeklySchedule: [],
     availableTimeSlots: [],
   };
