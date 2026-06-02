@@ -1,4 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {ManyToOne, JoinColumn, ManyToMany} from 'typeorm';
+import {Category} from '../category/category.entity';
+import {Mentor} from '../mentor/mentor.entity';
+
 
 @Entity('skills')
 export class Skill {
@@ -11,11 +15,18 @@ export class Skill {
   @Column({ nullable: true })
   description: string;
 
-  @Column({ nullable: true })
-  category: string;
+  @ManyToOne(() => Category, category => category.skills)
+  @JoinColumn()
+  category: Category;
+
+  @Column({nullable: true})
+  categoryId: string;
 
   @Column({ default: true })
   isActive: boolean;
+
+  @ManyToMany(() => Mentor, mentor => mentor.skills)
+  mentors: Mentor[];
 
   @CreateDateColumn()
   createdAt: Date;

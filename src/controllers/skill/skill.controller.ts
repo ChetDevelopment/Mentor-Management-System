@@ -3,38 +3,51 @@ import { SkillService } from '../../services/skill/skill.service';
 import { CreateSkillDto, UpdateSkillDto } from '../../dto/skill';
 import { AuthGuard } from '../../guards/auth.guard';
 import { Roles } from '../../decorators/roles.decorator';
+import { Public } from '../../decorators/public.decorator';
 import { UserRole } from '../../constants';
 
-@Controller('skills')
-@UseGuards(AuthGuard)
-export class SkillController {
-  constructor(private skillService: SkillService) {}
 
+@Controller('skills')
+export class SkillController {
+  constructor(private skillService: SkillService) { }
+
+  @Public()
   @Get()
   async findAll(@Query() query: any) {
     return this.skillService.findAll(query);
   }
 
+  @Public()
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.skillService.findById(id);
   }
 
-  @Post()
+  @Public()
+  @Get('category/:categoryId')
+  async findByCategory(@Param('categoryId') categoryId: string) {
+    return this.skillService.findByCategory(categoryId);
+  }
+
+  @UseGuards(AuthGuard)
   @Roles(UserRole.ADMIN)
+  @Post()
   async create(@Body() createSkillDto: CreateSkillDto) {
     return this.skillService.create(createSkillDto);
   }
 
-  @Put(':id')
+  @UseGuards(AuthGuard)
   @Roles(UserRole.ADMIN)
+  @Put(':id')
   async update(@Param('id') id: string, @Body() updateSkillDto: UpdateSkillDto) {
     return this.skillService.update(id, updateSkillDto);
   }
 
-  @Delete(':id')
+  @UseGuards(AuthGuard)
   @Roles(UserRole.ADMIN)
+  @Delete(':id')
   async remove(@Param('id') id: string) {
     return this.skillService.remove(id);
   }
+
 }
