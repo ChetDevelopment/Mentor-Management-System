@@ -164,7 +164,7 @@ function transformResponse(originalUrl: string, res: any) {
   }
 
   // Mentors list: map to frontend MentorProfile format
-  if (originalUrl === '/mentors' || originalUrl.match(/^\/mentors\//)) {
+  if (originalUrl === '/mentors' || originalUrl === '/admin/mentors' || originalUrl.match(/^\/mentors\//)) {
     if (Array.isArray(data)) {
       return { ...res, data: data.map(m => mentorToFrontend(m)) };
     }
