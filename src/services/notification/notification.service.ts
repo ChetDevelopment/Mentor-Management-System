@@ -4,6 +4,15 @@ import { CreateNotificationDto, UpdateNotificationDto } from '../../dto/notifica
 
 @Injectable()
 export class NotificationService {
+  delete(id: string) {
+    throw new Error('Method not implemented.');
+  }
+  markAllAsRead(userId: string) {
+    throw new Error('Method not implemented.');
+  }
+  createNotification(dto: CreateNotificationDto) {
+    throw new Error('Method not implemented.');
+  }
   constructor(private notificationRepository: NotificationRepository) {}
 
   async create(createNotificationDto: CreateNotificationDto) {

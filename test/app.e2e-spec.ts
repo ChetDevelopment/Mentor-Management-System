@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
+import { describe } from 'node:test';
 
 describe('MentorKhet API — Full QA Test Suite', () => {
   let app: INestApplication;

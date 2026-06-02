@@ -6,6 +6,9 @@ import { MentorStatus } from '../../constants';
 
 @Injectable()
 export class AdminService {
+  handleReport(id: string, body: any) {
+    throw new Error('Method not implemented.');
+  }
   constructor(
     private readonly userRepo: UserRepository,
     private readonly mentorRepo: MentorRepository,
