@@ -3,7 +3,7 @@ services:
     name: mentor-management-api
     env: node
     region: oregon
-    buildCommand: npm install && npm run build
+    buildCommand: npm install --include=dev && npm run build
     startCommand: node express/index.js
     plan: free
     envVars:
