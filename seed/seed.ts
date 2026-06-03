@@ -27,32 +27,58 @@ import { Session } from '../src/entities/session/session.entity';
 import { Skill } from '../src/entities/skill/skill.entity';
 import { User } from '../src/entities/user/user.entity';
 
-const dataSource = new DataSource({
-  type: 'mysql',
-  host: databaseConfig.host,
-  port: databaseConfig.port,
-  username: databaseConfig.username,
-  password: databaseConfig.password,
-  database: databaseConfig.database,
-  synchronize: false,
-  entities: [
-    ActivityLog,
-    AuthToken,
-    Availability,
-    BlockedDate,
-    Category,
-    Feedback,
-    Matching,
-    Mentee,
-    Mentor,
-    Message,
-    Notification,
-    Resource,
-    Session,
-    Skill,
-    User,
-  ],
-});
+const dbUrl = process.env.DATABASE_URL;
+
+const dataSource = dbUrl
+  ? new DataSource({
+      type: 'postgres',
+      url: dbUrl,
+      synchronize: false,
+      ssl: { rejectUnauthorized: false },
+      entities: [
+        ActivityLog,
+        AuthToken,
+        Availability,
+        BlockedDate,
+        Category,
+        Feedback,
+        Matching,
+        Mentee,
+        Mentor,
+        Message,
+        Notification,
+        Resource,
+        Session,
+        Skill,
+        User,
+      ],
+    })
+  : new DataSource({
+      type: 'postgres',
+      host: databaseConfig.host,
+      port: databaseConfig.port,
+      username: databaseConfig.username,
+      password: databaseConfig.password,
+      database: databaseConfig.database,
+      synchronize: false,
+      entities: [
+        ActivityLog,
+        AuthToken,
+        Availability,
+        BlockedDate,
+        Category,
+        Feedback,
+        Matching,
+        Mentee,
+        Mentor,
+        Message,
+        Notification,
+        Resource,
+        Session,
+        Skill,
+        User,
+      ],
+    });
 
 type UserSeed = {
   firstName: string;
@@ -286,73 +312,19 @@ async function createTableIfMissing(tableName: string, createSql: string) {
 }
 
 async function ensureSeedSchema() {
-  await addColumnIfMissing('users', 'resetToken', 'VARCHAR(255) NULL');
-  await addColumnIfMissing('users', 'resetTokenExpiry', 'TIMESTAMP NULL');
+  await addColumnIfMissing('users', 'resetToken', 'VARCHAR(255)');
+  await addColumnIfMissing('users', 'resetTokenExpiry', 'TIMESTAMP');
 
-  await createTableIfMissing(
-    'categories',
-    `CREATE TABLE \`categories\` (
-      \`id\` VARCHAR(36) NOT NULL PRIMARY KEY,
-      \`name\` VARCHAR(255) NOT NULL UNIQUE,
-      \`description\` VARCHAR(255) NULL,
-      \`slug\` VARCHAR(255) NOT NULL UNIQUE,
-      \`isActive\` TINYINT(1) NOT NULL DEFAULT 1,
-      \`createdAt\` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      \`updatedAt\` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`,
-  );
+  await addColumnIfMissing('skills', 'categoryId', 'VARCHAR(36)');
 
-  await addColumnIfMissing('skills', 'categoryId', 'VARCHAR(36) NULL');
-
-  await addColumnIfMissing('mentors', 'nid', 'VARCHAR(255) NULL');
-  await addColumnIfMissing('mentors', 'phone', 'VARCHAR(255) NULL');
-  await addColumnIfMissing('mentors', 'avatar', 'VARCHAR(255) NULL');
-  await addColumnIfMissing('mentors', 'cvUrl', 'VARCHAR(255) NULL');
-  await addColumnIfMissing('mentors', 'portfolioUrl', 'VARCHAR(255) NULL');
-  await addColumnIfMissing(
-    'mentors',
-    'status',
-    "ENUM('pending','approved','rejected','suspended') NOT NULL DEFAULT 'pending'",
-  );
-  await addColumnIfMissing('mentors', 'rejectionReason', 'VARCHAR(255) NULL');
-  await addColumnIfMissing('mentors', 'approvedAt', 'TIMESTAMP NULL');
-
-  await createTableIfMissing(
-    'mentor_skills',
-    `CREATE TABLE \`mentor_skills\` (
-      \`mentorId\` VARCHAR(36) NOT NULL,
-      \`skillId\` VARCHAR(36) NOT NULL,
-      PRIMARY KEY (\`mentorId\`, \`skillId\`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`,
-  );
-
-  await createTableIfMissing(
-    'availabilities',
-    `CREATE TABLE \`availabilities\` (
-      \`id\` VARCHAR(36) NOT NULL PRIMARY KEY,
-      \`mentorId\` VARCHAR(36) NOT NULL,
-      \`dayOfWeek\` ENUM('Mon','Tue','Wed','Thu','Fri','Sat','Sun') NOT NULL,
-      \`startTime\` TIME NOT NULL,
-      \`endTime\` TIME NOT NULL,
-      \`isActive\` TINYINT(1) NOT NULL DEFAULT 1,
-      \`createdAt\` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      \`updatedAt\` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`,
-  );
-
-  await dataSource.query(
-    `UPDATE \`sessions\`
-     SET \`status\` = CASE
-       WHEN \`status\` IN ('PENDING', 'CONFIRMED') THEN 'scheduled'
-       WHEN \`status\` = 'COMPLETED' THEN 'completed'
-       WHEN \`status\` = 'CANCELLED' THEN 'cancelled'
-       WHEN \`status\` = 'NO_SHOW' THEN 'no_show'
-       ELSE \`status\`
-     END`,
-  );
-  await dataSource.query(
-    "ALTER TABLE `sessions` MODIFY COLUMN `status` ENUM('scheduled','completed','cancelled','no_show') NOT NULL DEFAULT 'scheduled'",
-  );
+  await addColumnIfMissing('mentors', 'nid', 'VARCHAR(255)');
+  await addColumnIfMissing('mentors', 'phone', 'VARCHAR(255)');
+  await addColumnIfMissing('mentors', 'avatar', 'VARCHAR(255)');
+  await addColumnIfMissing('mentors', 'cvUrl', 'VARCHAR(255)');
+  await addColumnIfMissing('mentors', 'portfolioUrl', 'VARCHAR(255)');
+  await addColumnIfMissing('mentors', 'status', "VARCHAR(20) NOT NULL DEFAULT 'pending'");
+  await addColumnIfMissing('mentors', 'rejectionReason', 'VARCHAR(255)');
+  await addColumnIfMissing('mentors', 'approvedAt', 'TIMESTAMP');
 }
 
 async function seedUsers(userRepository: Repository<User>) {
@@ -469,12 +441,12 @@ async function seedMentorSkills(
     for (const pair of mentorSkillPairs) {
       if (hasIdColumn) {
         await queryRunner.query(
-          'INSERT IGNORE INTO `mentor_skills` (`id`, `mentorId`, `skillId`) VALUES (?, ?, ?)',
+          'INSERT INTO "mentor_skills" ("id", "mentorId", "skillId") VALUES (?, ?, ?) ON CONFLICT DO NOTHING',
           [randomUUID(), pair.mentorId, pair.skillId],
         );
       } else {
         await queryRunner.query(
-          'INSERT IGNORE INTO `mentor_skills` (`mentorId`, `skillId`) VALUES (?, ?)',
+          'INSERT INTO "mentor_skills" ("mentorId", "skillId") VALUES (?, ?) ON CONFLICT DO NOTHING',
           [pair.mentorId, pair.skillId],
         );
       }
