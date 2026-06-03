@@ -1,12 +1,9 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
+  "buildCommand": "npm run build:vercel",
   "functions": {
     "api/index.js": {
-      "includeFiles": "dist/**"
+      "includeFiles": "api/dist/**"
     }
-  },
-  "routes": [
-    { "src": "/(.*)", "dest": "api/index.js" }
-  ]
+  }
 }

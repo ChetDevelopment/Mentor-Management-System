@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "build": "nest build",
+    "build:vercel": "nest build && node -e \"require('fs').cpSync('dist','api/dist',{recursive:true})\"",
     "format": "prettier --write \"src/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -57,6 +58,7 @@
     "@types/supertest": "^7.2.0",
     "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
+    "@vercel/ncc": "^0.38.4",
     "@vercel/node": "^5.8.9",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^8.8.0",
