@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Mentor Management System",
-    "description": "Complete API collection for Mentor Management System\n\nBase URL: {{base_url}}\nAuth: Use {{token}} variable (set via Login/Register responses)\n\n== FLOW ==\n1. Register/Login as admin → copy token to {{token}}\n2. Test public endpoints\n3. Test admin, mentor, mentee endpoints with appropriate tokens",
+    "description": "Complete API collection for Mentor Management System\n\nBase URL: {{base_url}}\n\n== FLOW ==\n1. Run 'Login Admin' → saves admin_token + userId\n2. Run 'Login Mentor' → saves mentor_token\n3. Run 'Login Mentee' → saves mentee_token\n4. Run 'List Mentors' → copy one id to mentorId\n5. Run 'List Categories' → copy one id to categoryId\n6. Then test each section in order",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -29,24 +29,24 @@
       "name": "Auth",
       "item": [
         {
-          "name": "Register Admin",
+          "name": "Login Admin",
           "event": [
             {
               "listen": "test",
               "script": {
-                "exec": ["var jsonData = pm.response.json();", "if (jsonData.data) {", "  pm.collectionVariables.set('admin_token', jsonData.data.accessToken);", "  pm.collectionVariables.set('token', jsonData.data.accessToken);", "}"],
+                "exec": ["var jsonData = pm.response.json();", "if (jsonData.data) {", "  pm.collectionVariables.set('admin_token', jsonData.data.accessToken);", "  pm.collectionVariables.set('token', jsonData.data.accessToken);", "  pm.collectionVariables.set('userId', jsonData.data.user.id);", "}"],
                 "type": "text/javascript"
               }
             }
           ],
           "request": {
             "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}],
-            "body": {"mode": "raw", "raw": "{\n  \"email\": \"admin@test.com\",\n  \"password\": \"Pass123!\",\n  \"firstName\": \"Admin\",\n  \"lastName\": \"User\",\n  \"role\": \"admin\"\n}"},
-            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] }
+            "body": {"mode": "raw", "raw": "{\n  \"email\": \"admin@mentorkhet.test\",\n  \"password\": \"Password123!\"\n}"},
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
           }
         },
         {
-          "name": "Register Mentor",
+          "name": "Login Mentor",
           "event": [
             {
               "listen": "test",
@@ -58,29 +58,29 @@
           ],
           "request": {
             "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}],
-            "body": {"mode": "raw", "raw": "{\n  \"email\": \"mentor@test.com\",\n  \"password\": \"Pass123!\",\n  \"firstName\": \"Mentor\",\n  \"lastName\": \"User\",\n  \"role\": \"mentor\"\n}"},
-            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] }
+            "body": {"mode": "raw", "raw": "{\n  \"email\": \"sophea.mentor@mentorkhet.test\",\n  \"password\": \"Password123!\"\n}"},
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
           }
         },
         {
-          "name": "Register Mentee",
+          "name": "Login Mentee",
           "event": [
             {
               "listen": "test",
               "script": {
-                "exec": ["var jsonData = pm.response.json();", "if (jsonData.data) {", "  pm.collectionVariables.set('mentee_token', jsonData.data.accessToken);", "  pm.collectionVariables.set('userId', jsonData.data.user.id);", "}"],
+                "exec": ["var jsonData = pm.response.json();", "if (jsonData.data) {", "  pm.collectionVariables.set('mentee_token', jsonData.data.accessToken);", "}"],
                 "type": "text/javascript"
               }
             }
           ],
           "request": {
             "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}],
-            "body": {"mode": "raw", "raw": "{\n  \"email\": \"mentee@test.com\",\n  \"password\": \"Pass123!\",\n  \"firstName\": \"Mentee\",\n  \"lastName\": \"User\",\n  \"role\": \"mentee\"\n}"},
-            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] }
+            "body": {"mode": "raw", "raw": "{\n  \"email\": \"nita.mentee@mentorkhet.test\",\n  \"password\": \"Password123!\"\n}"},
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
           }
         },
         {
-          "name": "Login",
+          "name": "Register",
           "event": [
             {
               "listen": "test",
@@ -92,14 +92,14 @@
           ],
           "request": {
             "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}],
-            "body": {"mode": "raw", "raw": "{\n  \"email\": \"admin@test.com\",\n  \"password\": \"Pass123!\"\n}"},
-            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
+            "body": {"mode": "raw", "raw": "{\n  \"email\": \"newuser@test.com\",\n  \"password\": \"Pass123!\",\n  \"firstName\": \"Test\",\n  \"lastName\": \"User\",\n  \"role\": \"mentee\"\n}"},
+            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] }
           }
         },
-        { "name": "Forgot Password", "request": { "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"email\": \"admin@test.com\"\n}"}, "url": { "raw": "{{base_url}}/auth/forgot-password", "host": ["{{base_url}}"], "path": ["auth", "forgot-password"] } } },
-        { "name": "Reset Password", "request": { "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"token\": \"<reset_token_from_forgot_password>\",\n  \"password\": \"NewPass123!\"\n}"}, "url": { "raw": "{{base_url}}/auth/reset-password", "host": ["{{base_url}}"], "path": ["auth", "reset-password"] } } },
+        { "name": "Forgot Password", "request": { "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"email\": \"admin@mentorkhet.test\"\n}"}, "url": { "raw": "{{base_url}}/auth/forgot-password", "host": ["{{base_url}}"], "path": ["auth", "forgot-password"] } } },
+        { "name": "Reset Password", "request": { "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"token\": \"<reset_token>\",\n  \"password\": \"NewPass123!\"\n}"}, "url": { "raw": "{{base_url}}/auth/reset-password", "host": ["{{base_url}}"], "path": ["auth", "reset-password"] } } },
         { "name": "Verify Email", "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/auth/verify-email?token=<verification_token>", "host": ["{{base_url}}"], "path": ["auth", "verify-email"], "query": [{"key": "token", "value": "<verification_token>"}] } } },
-        { "name": "Resend Verification", "request": { "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"email\": \"mentor@test.com\"\n}"}, "url": { "raw": "{{base_url}}/auth/resend-verification", "host": ["{{base_url}}"], "path": ["auth", "resend-verification"] } } },
+        { "name": "Resend Verification", "request": { "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"email\": \"sophea.mentor@mentorkhet.test\"\n}"}, "url": { "raw": "{{base_url}}/auth/resend-verification", "host": ["{{base_url}}"], "path": ["auth", "resend-verification"] } } },
         {
           "name": "Logout",
           "request": {
@@ -119,8 +119,8 @@
     {
       "name": "Users",
       "item": [
-        { "name": "Get Profile", "request": { "method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"userId\": \"{{userId}}\"\n}"}, "url": { "raw": "{{base_url}}/users/profile", "host": ["{{base_url}}"], "path": ["users", "profile"] } } },
-        { "name": "Update Profile", "request": { "method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"firstName\": \"UpdatedName\"\n}"}, "url": { "raw": "{{base_url}}/users/profile", "host": ["{{base_url}}"], "path": ["users", "profile"] } } },
+        { "name": "Get Profile", "request": { "method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "url": { "raw": "{{base_url}}/users/profile", "host": ["{{base_url}}"], "path": ["users", "profile"] } } },
+        { "name": "Update Profile", "request": { "method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"firstName\": \"UpdatedName\"\n}"}, "url": { "raw": "{{base_url}}/users/profile", "host": ["{{base_url}}"], "path": ["users", "profile"] } } },
         { "name": "List All Users (Admin)", "request": { "method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}], "url": { "raw": "{{base_url}}/users", "host": ["{{base_url}}"], "path": ["users"] } } },
         { "name": "Get User By ID (Admin)", "request": { "method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}], "url": { "raw": "{{base_url}}/users/{{userId}}", "host": ["{{base_url}}"], "path": ["users", "{{userId}}"] } } },
         { "name": "Update User (Admin)", "request": { "method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"firstName\": \"UpdatedByAdmin\"\n}"}, "url": { "raw": "{{base_url}}/users/{{userId}}", "host": ["{{base_url}}"], "path": ["users", "{{userId}}"] } } },
@@ -203,8 +203,8 @@
         { "name": "List Skills", "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/skills", "host": ["{{base_url}}"], "path": ["skills"] } } },
         { "name": "Get Skill By ID", "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/skills/{{skillId}}", "host": ["{{base_url}}"], "path": ["skills", "{{skillId}}"] } } },
         { "name": "Get Skills By Category", "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/skills/category/{{categoryId}}", "host": ["{{base_url}}"], "path": ["skills", "category", "{{categoryId}}"] } } },
-        { "name": "Create Skill (Admin)", "request": { "method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"name\": \"TypeScript\",\n  \"description\": \"Typed JavaScript\",\n  \"categoryId\": \"{{categoryId}}\"\n}"}, "url": { "raw": "{{base_url}}/skills", "host": ["{{base_url}}"], "path": ["skills"] } } },
-        { "name": "Update Skill (Admin)", "request": { "method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"name\": \"TypeScript Updated\"\n}"}, "url": { "raw": "{{base_url}}/skills/{{skillId}}", "host": ["{{base_url}}"], "path": ["skills", "{{skillId}}"] } } },
+        { "name": "Create Skill (Admin)", "request": { "method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"name\": \"TypeScript\"\n}"}, "url": { "raw": "{{base_url}}/skills", "host": ["{{base_url}}"], "path": ["skills"] } } },
+        { "name": "Update Skill (Admin)", "request": { "method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"name\": \"TypeScript Pro\"\n}"}, "url": { "raw": "{{base_url}}/skills/{{skillId}}", "host": ["{{base_url}}"], "path": ["skills", "{{skillId}}"] } } },
         { "name": "Delete Skill (Admin)", "request": { "method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}], "url": { "raw": "{{base_url}}/skills/{{skillId}}", "host": ["{{base_url}}"], "path": ["skills", "{{skillId}}"] } } }
       ]
     },
@@ -213,8 +213,8 @@
       "item": [
         { "name": "List Categories", "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/categories", "host": ["{{base_url}}"], "path": ["categories"] } } },
         { "name": "Get Category By ID", "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/categories/{{categoryId}}", "host": ["{{base_url}}"], "path": ["categories", "{{categoryId}}"] } } },
-        { "name": "Create Category (Admin)", "request": { "method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"name\": \"Web Development\",\n  \"description\": \"Web development skills\"\n}"}, "url": { "raw": "{{base_url}}/categories", "host": ["{{base_url}}"], "path": ["categories"] } } },
-        { "name": "Update Category (Admin)", "request": { "method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"name\": \"Updated Category\"\n}"}, "url": { "raw": "{{base_url}}/categories/{{categoryId}}", "host": ["{{base_url}}"], "path": ["categories", "{{categoryId}}"] } } },
+        { "name": "Create Category (Admin)", "request": { "method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"name\": \"Programming\"\n}"}, "url": { "raw": "{{base_url}}/categories", "host": ["{{base_url}}"], "path": ["categories"] } } },
+        { "name": "Update Category (Admin)", "request": { "method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"name\": \"Coding\"\n}"}, "url": { "raw": "{{base_url}}/categories/{{categoryId}}", "host": ["{{base_url}}"], "path": ["categories", "{{categoryId}}"] } } },
         { "name": "Delete Category (Admin)", "request": { "method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}], "url": { "raw": "{{base_url}}/categories/{{categoryId}}", "host": ["{{base_url}}"], "path": ["categories", "{{categoryId}}"] } } }
       ]
     },
@@ -222,7 +222,7 @@
       "name": "Resources",
       "item": [
         { "name": "Get Resources By Mentor", "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/resources/{{mentorId}}", "host": ["{{base_url}}"], "path": ["resources", "{{mentorId}}"] } } },
-        { "name": "Upload Resource (Mentor)", "request": { "method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{mentor_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"mentorId\": \"{{mentorId}}\",\n  \"title\": \"JavaScript Guide\",\n  \"description\": \"A comprehensive guide\",\n  \"type\": \"document\",\n  \"fileUrl\": \"https://example.com/guide.pdf\"\n}"}, "url": { "raw": "{{base_url}}/resources", "host": ["{{base_url}}"], "path": ["resources"] } } },
+        { "name": "Upload Resource (Mentor)", "request": { "method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{mentor_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"mentorId\": \"{{mentorId}}\",\n  \"title\": \"Guide\",\n  \"type\": \"document\",\n  \"fileUrl\": \"https://example.com/doc.pdf\"\n}"}, "url": { "raw": "{{base_url}}/resources", "host": ["{{base_url}}"], "path": ["resources"] } } },
         { "name": "Delete Resource (Mentor)", "request": { "method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{mentor_token}}"}], "url": { "raw": "{{base_url}}/resources/:id", "host": ["{{base_url}}"], "path": ["resources", ":id"] } } }
       ]
     },
@@ -230,24 +230,24 @@
       "name": "Availability",
       "item": [
         { "name": "Get Mentor Availability", "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/availabilities/{{mentorId}}", "host": ["{{base_url}}"], "path": ["availabilities", "{{mentorId}}"] } } },
-        { "name": "Get Slots By Date", "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/availabilities/{{mentorId}}/slots?date=2026-06-15", "host": ["{{base_url}}"], "path": ["availabilities", "{{mentorId}}", "slots"], "query": [{"key": "date", "value": "2026-06-15"}] } } },
-        { "name": "Set Availability (Mentor)", "request": { "method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{mentor_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"mentorId\": \"{{mentorId}}\",\n  \"dayOfWeek\": \"Mon\",\n  \"startTime\": \"09:00\",\n  \"endTime\": \"17:00\",\n  \"isActive\": true\n}"}, "url": { "raw": "{{base_url}}/availabilities", "host": ["{{base_url}}"], "path": ["availabilities"] } } },
-        { "name": "Update Availability (Mentor)", "request": { "method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{mentor_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"startTime\": \"10:00\",\n  \"endTime\": \"16:00\"\n}"}, "url": { "raw": "{{base_url}}/availabilities/:id", "host": ["{{base_url}}"], "path": ["availabilities", ":id"] } } },
+        { "name": "Get Slots By Date", "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/availabilities/{{mentorId}}/slots?date=2026-07-15", "host": ["{{base_url}}"], "path": ["availabilities", "{{mentorId}}", "slots"], "query": [{"key": "date", "value": "2026-07-15"}] } } },
+        { "name": "Set Availability (Mentor)", "request": { "method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{mentor_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"mentorId\": \"{{mentorId}}\",\n  \"dayOfWeek\": \"Mon\",\n  \"startTime\": \"09:00\",\n  \"endTime\": \"17:00\"\n}"}, "url": { "raw": "{{base_url}}/availabilities", "host": ["{{base_url}}"], "path": ["availabilities"] } } },
+        { "name": "Update Availability (Mentor)", "request": { "method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{mentor_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"startTime\": \"10:00\"\n}"}, "url": { "raw": "{{base_url}}/availabilities/:id", "host": ["{{base_url}}"], "path": ["availabilities", ":id"] } } },
         { "name": "Delete Availability (Mentor)", "request": { "method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{mentor_token}}"}], "url": { "raw": "{{base_url}}/availabilities/:id", "host": ["{{base_url}}"], "path": ["availabilities", ":id"] } } },
-        { "name": "Block Date (Mentor)", "request": { "method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{mentor_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"mentorId\": \"{{mentorId}}\",\n  \"blockedDate\": \"2026-06-20\",\n  \"reason\": \"Vacation\"\n}"}, "url": { "raw": "{{base_url}}/availabilities/block", "host": ["{{base_url}}"], "path": ["availabilities", "block"] } } },
+        { "name": "Block Date (Mentor)", "request": { "method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{mentor_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"mentorId\": \"{{mentorId}}\",\n  \"blockedDate\": \"2026-07-16\",\n  \"reason\": \"Vacation\"\n}"}, "url": { "raw": "{{base_url}}/availabilities/block", "host": ["{{base_url}}"], "path": ["availabilities", "block"] } } },
         { "name": "Unblock Date (Mentor)", "request": { "method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{mentor_token}}"}], "url": { "raw": "{{base_url}}/availabilities/block/:id", "host": ["{{base_url}}"], "path": ["availabilities", "block", ":id"] } } }
       ]
     },
     {
       "name": "Notifications",
       "item": [
-        { "name": "Get User Notifications", "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/notifications/{{userId}}", "host": ["{{base_url}}"], "path": ["notifications", "{{userId}}"] } } },
-        { "name": "Get Unread Notifications", "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/notifications/unread/{{userId}}", "host": ["{{base_url}}"], "path": ["notifications", "unread", "{{userId}}"] } } },
-        { "name": "Get Notification Detail", "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/notifications/detail/:id", "host": ["{{base_url}}"], "path": ["notifications", "detail", ":id"] } } },
-        { "name": "Create Notification (Admin)", "request": { "method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"title\": \"Test Notification\",\n  \"message\": \"This is a test notification\",\n  \"type\": \"in_app\"\n}"}, "url": { "raw": "{{base_url}}/notifications", "host": ["{{base_url}}"], "path": ["notifications"] } } },
-        { "name": "Mark as Read", "request": { "method": "PUT", "header": [], "url": { "raw": "{{base_url}}/notifications/:id/read", "host": ["{{base_url}}"], "path": ["notifications", ":id", "read"] } } },
-        { "name": "Mark All as Read", "request": { "method": "PUT", "header": [], "url": { "raw": "{{base_url}}/notifications/read-all/{{userId}}", "host": ["{{base_url}}"], "path": ["notifications", "read-all", "{{userId}}"] } } },
-        { "name": "Delete Notification", "request": { "method": "DELETE", "header": [], "url": { "raw": "{{base_url}}/notifications/:id", "host": ["{{base_url}}"], "path": ["notifications", ":id"] } } }
+        { "name": "Create Notification (Admin)", "request": { "method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"title\": \"Test\",\n  \"message\": \"Hello\"\n}"}, "url": { "raw": "{{base_url}}/notifications", "host": ["{{base_url}}"], "path": ["notifications"] } } },
+        { "name": "Get My Notifications", "request": { "method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}], "url": { "raw": "{{base_url}}/notifications", "host": ["{{base_url}}"], "path": ["notifications"] } } },
+        { "name": "Get Unread Notifications", "request": { "method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}], "url": { "raw": "{{base_url}}/notifications/unread", "host": ["{{base_url}}"], "path": ["notifications", "unread"] } } },
+        { "name": "Get Notification Detail", "request": { "method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}], "url": { "raw": "{{base_url}}/notifications/detail/:id", "host": ["{{base_url}}"], "path": ["notifications", "detail", ":id"] } } },
+        { "name": "Mark as Read", "request": { "method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}], "url": { "raw": "{{base_url}}/notifications/:id/read", "host": ["{{base_url}}"], "path": ["notifications", ":id", "read"] } } },
+        { "name": "Mark All as Read", "request": { "method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}], "url": { "raw": "{{base_url}}/notifications/read-all", "host": ["{{base_url}}"], "path": ["notifications", "read-all"] } } },
+        { "name": "Delete Notification", "request": { "method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{admin_token}}"}], "url": { "raw": "{{base_url}}/notifications/:id", "host": ["{{base_url}}"], "path": ["notifications", ":id"] } } }
       ]
     },
     {

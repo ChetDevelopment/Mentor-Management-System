@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { SkillRepository } from '../../repositories/skill/skill.repository';
 import { CreateSkillDto, UpdateSkillDto } from '../../dto/skill';
 
@@ -7,6 +7,11 @@ export class SkillService {
   constructor(private skillRepository: SkillRepository) {}
 
   async create(createSkillDto: CreateSkillDto) {
+    const existing = await this.skillRepository.findByName(createSkillDto.name);
+    if (existing) {
+      throw new BadRequestException('Skill already exists');
+    }
+
     const { category, ...rest } = createSkillDto;
     return this.skillRepository.create({
       ...rest,

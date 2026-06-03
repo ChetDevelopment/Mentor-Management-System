@@ -28,9 +28,16 @@ export class AllExceptionsFilter implements ExceptionFilter {
                 message = Array.isArray(obj.message) ? obj.message[0] : obj.message || message;
             }
         } else if (exception instanceof QueryFailedError) {
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            message = 'Database operation failed';
-            console.error(`[DB ERROR] ${(exception as any).message}`);
+            const err = exception as any;
+            const driverErr = err.driverError;
+            if (driverErr && driverErr.code === 'ER_DUP_ENTRY') {
+                status = HttpStatus.BAD_REQUEST;
+                message = 'Duplicate entry — resource already exists';
+            } else {
+                status = HttpStatus.INTERNAL_SERVER_ERROR;
+                message = 'Database operation failed';
+            }
+            console.error(`[DB ERROR] ${err.message}`);
         } else {
             const err = exception as any;
             console.error(`[UNHANDLED ERROR] ${err?.message || exception}`);
