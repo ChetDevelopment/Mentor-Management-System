@@ -9,17 +9,14 @@ import { LoggingInterceptor } from './interceptors/logging.interceptor';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { SecurityMiddleware } from './middlewares/security.middleware';
 
-async function bootstrap() {
+async function createApp() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-        // Limit request body size to 1MB
         bodyParser: true,
         rawBody: false,
     });
 
-    // Body size limit — 1MB maximum
     app.useBodyParser('json', { limit: '1mb' });
 
-    // Security headers with relaxed CSP for API
     app.use(
         helmet({
             contentSecurityPolicy: {
@@ -76,7 +73,6 @@ async function bootstrap() {
     app.useGlobalInterceptors(new LoggingInterceptor());
     app.useGlobalInterceptors(new TransformInterceptor());
 
-    // CORS — restricted to known origins
     const corsOrigins = process.env.CORS_ORIGINS
         ? process.env.CORS_ORIGINS.split(',').map((s) => s.trim())
         : ['http://localhost:4200'];
@@ -90,11 +86,20 @@ async function bootstrap() {
         maxAge: 86400,
     });
 
-    // Apply security middleware
     app.use(new SecurityMiddleware().use);
 
+    return app;
+}
+
+async function bootstrap() {
+    const app = await createApp();
     const port = process.env.PORT || 3000;
     await app.listen(port);
-    console.log(`Application running on port ${port} (${process.env.NODE_ENV || 'development'})`);
+    console.log(`Running on port ${port}`);
 }
+
+// For local dev — listen on port
 bootstrap();
+
+// For Vercel serverless — export bare app creator
+export { createApp };

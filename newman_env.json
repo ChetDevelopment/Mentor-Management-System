@@ -1,0 +1,14 @@
+{
+  "name": "Neon-Postgres-Env",
+  "values": [
+    {"key": "base_url", "value": "http://localhost:3000/api/v1", "enabled": true},
+    {"key": "admin_token", "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjN2ZmZGJhNC1lMWQ0LTRiNzktOTU1Mi00MWQxMzMwODczY2MiLCJlbWFpbCI6ImFkbWluQG1lbnRvcmtoZXQudGVzdCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MDQ4MjAwNiwiZXhwIjoxNzgwNDgyOTA2LCJhdWQiOiJtZW50b3ItbWFuYWdlbWVudC1hcGkiLCJpc3MiOiJtZW50b3ItbWFuYWdlbWVudC1zeXN0ZW0ifQ.hRcIFYZArAsFv5HhiPakInkPMEFYOOQ1SI7Vst6ksZg", "enabled": true},
+    {"key": "mentor_token", "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI4ZTgzZjIzNC1kMzE4LTRiZjMtYjdlNy05MzhkMWVkYTM5OTIiLCJlbWFpbCI6InNvcGhlYS5tZW50b3JAbWVudG9ya2hldC50ZXN0Iiwicm9sZSI6Im1lbnRvciIsImlhdCI6MTc4MDQ4MjAwOSwiZXhwIjoxNzgwNDgyOTA5LCJhdWQiOiJtZW50b3ItbWFuYWdlbWVudC1hcGkiLCJpc3MiOiJtZW50b3ItbWFuYWdlbWVudC1zeXN0ZW0ifQ.0xHGhfPRHRucKhE503if5kz_AiCQGtfZZrBtJ9TwG_8", "enabled": true},
+    {"key": "mentee_token", "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0OTNlMmFlNy1lYWMyLTRjODktOTk5Zi1jMGU3NTg5MWM0MDUiLCJlbWFpbCI6Im5pdGEubWVudGVlQG1lbnRvcmtoZXQudGVzdCIsInJvbGUiOiJtZW50ZWUiLCJpYXQiOjE3ODA0ODIwMTIsImV4cCI6MTc4MDQ4MjkxMiwiYXVkIjoibWVudG9yLW1hbmFnZW1lbnQtYXBpIiwiaXNzIjoibWVudG9yLW1hbmFnZW1lbnQtc3lzdGVtIn0.e0X0Q0Y7dWoPwvoDw_nd9YCfKPUm9h6IdvqU8sLcIy0", "enabled": true},
+    {"key": "token", "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjN2ZmZGJhNC1lMWQ0LTRiNzktOTU1Mi00MWQxMzMwODczY2MiLCJlbWFpbCI6ImFkbWluQG1lbnRvcmtoZXQudGVzdCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MDQ4MjAwNiwiZXhwIjoxNzgwNDgyOTA2LCJhdWQiOiJtZW50b3ItbWFuYWdlbWVudC1hcGkiLCJpc3MiOiJtZW50b3ItbWFuYWdlbWVudC1zeXN0ZW0ifQ.hRcIFYZArAsFv5HhiPakInkPMEFYOOQ1SI7Vst6ksZg", "enabled": true},
+    {"key": "userId", "value": "c7ffdba4-e1d4-4b79-9552-41d1330873cc", "enabled": true},
+    {"key": "mentorId", "value": "ec77b361-7126-4f61-9824-004e9a685676", "enabled": true},
+    {"key": "menteeId", "value": "1e8a7520-2dfb-49f0-837b-49fb76e2a2ee", "enabled": true},
+    {"key": "categoryId", "value": "94020822-cd4b-4d09-bd59-acf3d3934570", "enabled": true}
+  ]
+}
