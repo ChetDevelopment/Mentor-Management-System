@@ -6,9 +6,10 @@ import { MentorModule } from '../mentor/mentor.module';
 import { MenteeModule } from '../mentee/mentee.module';
 import { SessionModule } from '../session/session.module';
 import { FeedbackModule } from '../feedback/feedback.module';
+import { ReportModule } from '../report/report.module';
 
 @Module({
-  imports: [UserModule, MentorModule, MenteeModule, SessionModule, FeedbackModule],
+  imports: [UserModule, MentorModule, MenteeModule, SessionModule, FeedbackModule, ReportModule],
   controllers: [AdminController],
   providers: [AdminService],
 })

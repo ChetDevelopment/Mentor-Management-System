@@ -2,11 +2,12 @@ import { Controller, Get, Post, Body, Param, UseGuards, Query } from '@nestjs/co
 import { ActivityLogService } from '../../services/activity-log/activity-log.service';
 import { CreateActivityLogDto } from '../../dto/activity-log';
 import { AuthGuard } from '../../guards/auth.guard';
+import { RolesGuard } from '../../guards/roles.guard';
 import { Roles } from '../../decorators/roles.decorator';
 import { UserRole } from '../../constants';
 
 @Controller('activity-logs')
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, RolesGuard)
 @Roles(UserRole.ADMIN)
 export class ActivityLogController {
   constructor(private activityLogService: ActivityLogService) {}

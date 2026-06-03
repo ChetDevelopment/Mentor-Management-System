@@ -19,6 +19,10 @@ export class CategoryRepository {
     return this.repo.findOne({ where: { slug } });
   }
 
+  findByName(name: string) {
+    return this.repo.findOne({ where: { name } });
+  }
+
   async create(data: Partial<Category>) {
     const category = this.repo.create(data);
     return this.repo.save(category);

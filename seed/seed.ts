@@ -10,6 +10,7 @@ import {
   SessionStatus,
   UserRole,
 } from '../src/constants';
+import { AvailabilityStatus } from '../src/entities/mentor/mentor.entity';
 import { ActivityLog } from '../src/entities/activity-log/activity-log.entity';
 import { AuthToken } from '../src/entities/auth/auth-token.entity';
 import { Availability } from '../src/entities/availability/availability.entity';
@@ -439,7 +440,7 @@ async function seedMentors(
     mentor.title = profile.title;
     mentor.company = profile.company;
     mentor.yearsOfExperience = profile.yearsOfExperience;
-    mentor.isAvailable = true;
+    mentor.availabilityStatus = AvailabilityStatus.AVAILABLE;
 
     const savedMentor = await mentorRepository.save(mentor);
     profileSkills.forEach(skill => {
@@ -497,9 +498,8 @@ async function seedMentees(
       {
         user,
         userId: user.id,
-        occupation: profile.occupation,
         organization: profile.organization,
-        goals: profile.goals,
+        careerGoal: profile.goals,
         interests: profile.interests,
         isActive: true,
       },
@@ -558,7 +558,7 @@ async function seedSessions(
       title: 'NestJS API Practice',
       mentor: 'sophea.mentor@mentorkhet.test',
       mentee: 'nita.mentee@mentorkhet.test',
-      status: SessionStatus.SCHEDULED,
+      status: SessionStatus.CONFIRMED,
       scheduledAt: new Date(now + 3 * 24 * 60 * 60 * 1000),
       notes: null,
     },

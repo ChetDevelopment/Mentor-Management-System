@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>API Tester - Mentor Management System </title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="Referrer-Policy" content="same-origin">
+<title>API Tester - Mentor Management System</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: monospace; background: #1e1e2e; color: #cdd6f4; padding: 20px; }
@@ -35,16 +39,8 @@ pre { background: #11111b; padding: 10px; border-radius: 4px; overflow-x: auto; 
 <div class="card">
   <h3>Login</h3>
   <div class="row">
-    <select id="loginSelect">
-      <option value='{"email":"admin@mentorkhet.com","password":"password123"}'>Admin (admin@mentorkhet.com)</option>
-      <option value='{"email":"sok.heng@example.com","password":"password123"}'>Mentor 1 (sok.heng)</option>
-      <option value='{"email":"chea.sovann@example.com","password":"password123"}'>Mentor 2 (chea.sovann)</option>
-      <option value='{"email":"thida.mey@example.com","password":"password123"}'>Mentor 3 (thida.mey)</option>
-      <option value='{"email":"sophea.kim@example.com","password":"password123"}'>Mentee 1 (sophea.kim)</option>
-      <option value='{"email":"vannak.long@example.com","password":"password123"}'>Mentee 2 (vannak.long)</option>
-      <option value='{"email":"dara.pich@example.com","password":"password123"}'>Mentee 3 (dara.pich)</option>
-    </select>
-    Password: password123
+    <input type="email" id="emailInput" placeholder="Email" value="admin@mentorkhet.com">
+    <input type="password" id="passwordInput" placeholder="Password" value="password123">
     <button onclick="doLogin()">Login</button>
   </div>
   <p style="margin-top:8px;font-size:12px;">Token: <span class="token-box" id="tokenDisplay">(not logged in)</span></p>
@@ -54,26 +50,22 @@ pre { background: #11111b; padding: 10px; border-radius: 4px; overflow-x: auto; 
   <h3>Users</h3>
   <div class="endpoint"><span class="method">GET</span> <span class="url">/api/users/profile</span> <button onclick="call('GET','/api/users/profile')">Send</button></div>
   <div class="endpoint"><span class="method">GET</span> <span class="url">/api/users</span> <button onclick="call('GET','/api/users')">Send</button></div>
-  <div class="endpoint"><span class="method">GET</span> <span class="url">/api/users/u2</span> <button onclick="call('GET','/api/users/u2')">Send</button></div>
   <div class="endpoint"><span class="method">PUT</span> <span class="url">/api/users/profile</span> <button onclick="call('PUT','/api/users/profile','{"firstName":"Updated"}')">Update Profile</button></div>
 </div>
 
 <div class="card">
   <h3>Mentors</h3>
   <div class="endpoint"><span class="method">GET</span> <span class="url">/api/mentors</span> <button onclick="call('GET','/api/mentors')">Send</button></div>
-  <div class="endpoint"><span class="method">GET</span> <span class="url">/api/mentors/m1</span> <button onclick="call('GET','/api/mentors/m1')">Send</button></div>
 </div>
 
 <div class="card">
   <h3>Mentees</h3>
   <div class="endpoint"><span class="method">GET</span> <span class="url">/api/mentees</span> <button onclick="call('GET','/api/mentees')">Send</button></div>
-  <div class="endpoint"><span class="method">GET</span> <span class="url">/api/mentees/me1</span> <button onclick="call('GET','/api/mentees/me1')">Send</button></div>
 </div>
 
 <div class="card">
   <h3>Skills</h3>
   <div class="endpoint"><span class="method">GET</span> <span class="url">/api/skills</span> <button onclick="call('GET','/api/skills')">Send</button></div>
-  <div class="endpoint"><span class="method">GET</span> <span class="url">/api/skills/s1</span> <button onclick="call('GET','/api/skills/s1')">Send</button></div>
 </div>
 
 <div class="card">
@@ -82,18 +74,8 @@ pre { background: #11111b; padding: 10px; border-radius: 4px; overflow-x: auto; 
 </div>
 
 <div class="card">
-  <h3>Matchings</h3>
-  <div class="endpoint"><span class="method">GET</span> <span class="url">/api/matchings</span> <button onclick="call('GET','/api/matchings')">Send</button></div>
-</div>
-
-<div class="card">
   <h3>Feedback</h3>
   <div class="endpoint"><span class="method">GET</span> <span class="url">/api/feedback</span> <button onclick="call('GET','/api/feedback')">Send</button></div>
-</div>
-
-<div class="card">
-  <h3>Notifications</h3>
-  <div class="endpoint"><span class="method">GET</span> <span class="url">/api/notifications</span> <button onclick="call('GET','/api/notifications')">Send</button></div>
 </div>
 
 <div class="card">
@@ -103,13 +85,13 @@ pre { background: #11111b; padding: 10px; border-radius: 4px; overflow-x: auto; 
 </div>
 
 <div class="card">
-  <h3>Activity Logs</h3>
-  <div class="endpoint"><span class="method">GET</span> <span class="url">/api/activity-logs</span> <button onclick="call('GET','/api/activity-logs')">Send</button></div>
+  <h3>Test Without Token (should return 401)</h3>
+  <div class="endpoint"><span class="method">GET</span> <span class="url">/api/users/profile</span> <button class="danger" onclick="callNoToken('GET','/api/users/profile')">No Auth</button></div>
 </div>
 
 <div class="card">
-  <h3>Test Without Token (should fail with 401)</h3>
-  <div class="endpoint"><span class="method">GET</span> <span class="url">/api/users/profile</span> <button class="danger" onclick="callNoToken('GET','/api/users/profile')">No Auth</button></div>
+  <h3>Logout</h3>
+  <div class="endpoint"><button class="danger" onclick="doLogout()">Logout</button></div>
 </div>
 
 <div class="card" id="responseCard">
@@ -121,43 +103,49 @@ pre { background: #11111b; padding: 10px; border-radius: 4px; overflow-x: auto; 
 
 <script>
 const BASE = 'http://localhost:3000';
-let token = '';
+let token = ''; // In-memory only — never stored in localStorage
 
 function doLogin() {
-  const creds = JSON.parse(document.getElementById('loginSelect').value);
-  callRaw('POST', '/api/auth/login', JSON.stringify(creds));
+    const email = document.getElementById('emailInput').value;
+    const password = document.getElementById('passwordInput').value;
+    callRaw('POST', '/api/auth/login', JSON.stringify({ email, password }), null);
+}
+
+function doLogout() {
+    callRaw('POST', '/api/auth/logout', null, token);
+    token = '';
+    document.getElementById('tokenDisplay').innerHTML = '<span style="color:#f38ba8;">Logged out.</span>';
 }
 
 function call(method, path, body) {
-  callRaw(method, path, body, token);
+    callRaw(method, path, body, token);
 }
 
 function callNoToken(method, path) {
-  callRaw(method, path, null, null);
+    callRaw(method, path, null, null);
 }
 
 async function callRaw(method, path, body, tok) {
-  const headers = { 'Content-Type': 'application/json' };
-  if (tok) headers['Authorization'] = 'Bearer ' + tok;
+    const headers = { 'Content-Type': 'application/json' };
+    if (tok) headers['Authorization'] = 'Bearer ' + tok;
 
-  const opts = { method, headers };
-  if (body) opts.body = body;
+    const opts = { method, headers };
+    if (body) opts.body = body;
 
-  try {
-    const res = await fetch(BASE + path, opts);
-    const data = await res.json();
-    const statusClass = res.ok ? 'status-ok' : 'status-err';
-    const output = `<span class="${statusClass}">${res.status} ${res.statusText}</span>\n${JSON.stringify(data, null, 2)}`;
-    document.getElementById('response').innerHTML = output;
+    try {
+        const res = await fetch(BASE + path, opts);
+        const data = await res.json();
+        const statusClass = res.ok ? 'status-ok' : 'status-err';
+        const output = `<span class="${statusClass}">${res.status} ${res.statusText}</span>\n${JSON.stringify(data, null, 2)}`;
+        document.getElementById('response').innerHTML = output;
 
-    // Auto-save token from login
-    if (path === '/api/auth/login' && data.data && data.data.accessToken) {
-      token = data.data.accessToken;
-      document.getElementById('tokenDisplay').innerHTML = '<span style="color:#a6e3a1;">Logged in! Token saved.</span>';
+        if (path === '/api/auth/login' && data.accessToken) {
+            token = data.accessToken;
+            document.getElementById('tokenDisplay').innerHTML = '<span style="color:#a6e3a1;">Logged in! Token in memory only.</span>';
+        }
+    } catch (e) {
+        document.getElementById('response').innerHTML = `<span class="status-err">ERROR:</span> ${e.message}`;
     }
-  } catch (e) {
-    document.getElementById('response').innerHTML = `<span class="status-err">ERROR:</span> ${e.message}`;
-  }
 }
 </script>
 </body>

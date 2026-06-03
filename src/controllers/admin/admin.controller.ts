@@ -11,11 +11,11 @@ import {
 import { AdminService } from '../../services/admin/admin.service';
 import { RolesGuard } from '../../guards/roles.guard';
 import { Roles } from '../../decorators/roles.decorator';
-import { Role } from '../../constants';
+import { UserRole } from '../../constants';
 
 @Controller('admin')
 @UseGuards(RolesGuard)
-@Roles(Role.ADMIN)
+@Roles(UserRole.ADMIN)
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 

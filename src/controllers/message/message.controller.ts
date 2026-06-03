@@ -1,35 +1,46 @@
-import { Controller, Post, Get, Put, Body, Param } from '@nestjs/common';
+import {
+    Controller, Post, Get, Put, Body, Param, UseGuards,
+    ForbiddenException,
+} from '@nestjs/common';
 import { MessageService } from '../../services/message/message.service';
 import { CreateMessageDto } from '../../dto/message';
+import { AuthGuard } from '../../guards/auth.guard';
+import { User } from '../../decorators/user.decorator';
 
 @Controller('messages')
+@UseGuards(AuthGuard)
 export class MessageController {
-  constructor(private readonly messageService: MessageService) {}
+    constructor(private readonly messageService: MessageService) {}
 
-  // 11.21 Send message
-  @Post()
-  async sendMessage(@Body() dto: CreateMessageDto) {
-    return this.messageService.sendMessage(dto);
-  }
+    @Post()
+    async sendMessage(@Body() dto: CreateMessageDto, @User() user: any) {
+        // Users can only send messages as themselves
+        if (dto.senderId !== user.userId) {
+            throw new ForbiddenException('You can only send messages as yourself');
+        }
+        return this.messageService.sendMessage(dto);
+    }
 
-  // 11.22 List all conversations for logged-in user
-  @Get('conversations/:userId')
-  async getConversationList(@Param('userId') userId: string) {
-    return this.messageService.getConversationList(userId);
-  }
+    @Get('conversations')
+    async getConversationList(@User() user: any) {
+        return this.messageService.getConversationList(user.userId);
+    }
 
-  // 11.23 Get thread with specific user
-  @Get(':senderId/:receiverId')
-  async getConversation(
-    @Param('senderId') senderId: string,
-    @Param('receiverId') receiverId: string,
-  ) {
-    return this.messageService.getConversation(senderId, receiverId);
-  }
+    @Get(':senderId/:receiverId')
+    async getConversation(
+        @Param('senderId') senderId: string,
+        @Param('receiverId') receiverId: string,
+        @User() user: any,
+    ) {
+        // User must be one of the participants
+        if (senderId !== user.userId && receiverId !== user.userId) {
+            throw new ForbiddenException('You can only view your own conversations');
+        }
+        return this.messageService.getConversation(senderId, receiverId);
+    }
 
-  // 11.24 Mark message as read
-  @Put(':id/read')
-  async markAsRead(@Param('id') id: string) {
-    return this.messageService.markAsRead(id);
-  }
+    @Put(':id/read')
+    async markAsRead(@Param('id') id: string, @User() user: any) {
+        return this.messageService.markAsRead(id, user.userId);
+    }
 }
