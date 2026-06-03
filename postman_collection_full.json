@@ -1,0 +1,518 @@
+{
+  "info": {
+    "name": "Mentor Management API — Full Test Suite",
+    "description": "Tests all endpoints on Render: https://mentor-management-api.onrender.com\n\nHOW TO RUN:\n1. Import this file into Postman\n2. Set base_url to your API URL\n3. Run folders in order (Auth first, then rest)\n4. Variables auto-populate from responses",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "https://mentor-management-api.onrender.com/api/v1" },
+    { "key": "admin_token", "value": "" },
+    { "key": "mentor_token", "value": "" },
+    { "key": "mentee_token", "value": "" },
+    { "key": "userId", "value": "" },
+    { "key": "mentorId", "value": "" },
+    { "key": "menteeId", "value": "" },
+    { "key": "categoryId", "value": "" },
+    { "key": "skillId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "0. Auth (Run First)",
+      "item": [
+        {
+          "name": "Login Admin",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var d = pm.response.json().data;",
+                "pm.collectionVariables.set('admin_token', d.accessToken);",
+                "pm.collectionVariables.set('userId', d.user.id);",
+                "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                "pm.test('Has token', () => pm.expect(d.accessToken).to.be.a('string'));"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"email\":\"admin@mentorkhet.test\",\"password\":\"Password123!\"}" },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Login Mentor",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var d = pm.response.json().data;",
+                "pm.collectionVariables.set('mentor_token', d.accessToken);",
+                "pm.test('Status 201', () => pm.response.to.have.status(201));"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"email\":\"sophea.mentor@mentorkhet.test\",\"password\":\"Password123!\"}" },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Login Mentee",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var d = pm.response.json().data;",
+                "pm.collectionVariables.set('mentee_token', d.accessToken);",
+                "pm.test('Status 201', () => pm.response.to.have.status(201));"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"email\":\"nita.mentee@mentorkhet.test\",\"password\":\"Password123!\"}" },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Login — Wrong Password",
+          "event": [{
+            "listen": "test",
+            "script": { "exec": ["pm.test('Status 401', () => pm.response.to.have.status(401));"], "type": "text/javascript" }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"email\":\"admin@mentorkhet.test\",\"password\":\"WrongPassword!\"}" },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Register New User",
+          "event": [{
+            "listen": "test",
+            "script": { "exec": ["pm.test('Status 201', () => pm.response.to.have.status(201));"], "type": "text/javascript" }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"email\":\"newuser@test.com\",\"password\":\"Password123!\",\"firstName\":\"Test\",\"lastName\":\"User\",\"role\":\"mentee\"}" },
+            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "1. Health",
+      "item": [{
+        "name": "Health Check",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.test('Status ok', () => pm.response.json().data.status === 'ok');"],
+            "type": "text/javascript"
+          }
+        }],
+        "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/health", "host": ["{{base_url}}"], "path": ["health"] } }
+      }]
+    },
+    {
+      "name": "2. Skills",
+      "item": [
+        {
+          "name": "List Skills (Public)",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.test('Is array', () => pm.expect(pm.response.json().data).to.be.an('array'));"], "type": "text/javascript" } }],
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/skills", "host": ["{{base_url}}"], "path": ["skills"] } }
+        },
+        {
+          "name": "Create Skill (Admin)",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": ["pm.test('Status 201', () => pm.response.to.have.status(201));", "var d = pm.response.json().data;", "if (d) pm.collectionVariables.set('skillId', d.id);"],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"name\":\"SkillTest\"}" },
+            "url": { "raw": "{{base_url}}/skills", "host": ["{{base_url}}"], "path": ["skills"] }
+          }
+        },
+        {
+          "name": "Duplicate Skill — Should Fail",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 400', () => pm.response.to.have.status(400));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"name\":\"SkillTest\"}" },
+            "url": { "raw": "{{base_url}}/skills", "host": ["{{base_url}}"], "path": ["skills"] }
+          }
+        },
+        {
+          "name": "Create Skill by Non-Admin — Should Fail",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 403', () => pm.response.to.have.status(403));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{mentee_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"name\":\"Rust\"}" },
+            "url": { "raw": "{{base_url}}/skills", "host": ["{{base_url}}"], "path": ["skills"] }
+          }
+        },
+        {
+          "name": "Get Skill by ID",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"], "type": "text/javascript" } }],
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/skills/{{skillId}}", "host": ["{{base_url}}"], "path": ["skills", "{{skillId}}"] } }
+        },
+        {
+          "name": "Get Non-Existent Skill — 404",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 404', () => pm.response.to.have.status(404));"], "type": "text/javascript" } }],
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/skills/00000000-0000-0000-0000-000000000000", "host": ["{{base_url}}"], "path": ["skills", "00000000-0000-0000-0000-000000000000"] } }
+        },
+        {
+          "name": "Update Skill (Admin)",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"name\":\"SkillUpdated\"}" },
+            "url": { "raw": "{{base_url}}/skills/{{skillId}}", "host": ["{{base_url}}"], "path": ["skills", "{{skillId}}"] }
+          }
+        },
+        {
+          "name": "Delete Skill (Admin)",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": { "raw": "{{base_url}}/skills/{{skillId}}", "host": ["{{base_url}}"], "path": ["skills", "{{skillId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Categories",
+      "item": [
+        {
+          "name": "List Categories (Public)",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "var d = pm.response.json().data;", "if (d && d.length) pm.collectionVariables.set('categoryId', d[0].id);"],
+              "type": "text/javascript"
+            }
+          }],
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/categories", "host": ["{{base_url}}"], "path": ["categories"] } }
+        },
+        {
+          "name": "Create Category (Admin)",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 201', () => pm.response.to.have.status(201));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"name\":\"Programming\"}" },
+            "url": { "raw": "{{base_url}}/categories", "host": ["{{base_url}}"], "path": ["categories"] }
+          }
+        },
+        {
+          "name": "Create Category by Non-Admin — 403",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 403', () => pm.response.to.have.status(403));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{mentee_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"name\":\"Hack\"}" },
+            "url": { "raw": "{{base_url}}/categories", "host": ["{{base_url}}"], "path": ["categories"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Mentors",
+      "item": [
+        {
+          "name": "List Mentors (Public)",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "var d = pm.response.json().data;", "if (d && d.length) pm.collectionVariables.set('mentorId', d[0].id);"],
+              "type": "text/javascript"
+            }
+          }],
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/mentors", "host": ["{{base_url}}"], "path": ["mentors"] } }
+        },
+        {
+          "name": "Get Mentor by ID",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"], "type": "text/javascript" } }],
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/mentors/{{mentorId}}", "host": ["{{base_url}}"], "path": ["mentors", "{{mentorId}}"] } }
+        },
+        {
+          "name": "Update Mentor",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"title\":\"Senior Engineer\"}" },
+            "url": { "raw": "{{base_url}}/mentors/{{mentorId}}", "host": ["{{base_url}}"], "path": ["mentors", "{{mentorId}}"] }
+          }
+        },
+        {
+          "name": "Approve Mentor (Admin)",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200 or 201', () => pm.expect(pm.response.code).to.be.oneOf([200,201]));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": { "raw": "{{base_url}}/mentors/{{mentorId}}/approve", "host": ["{{base_url}}"], "path": ["mentors", "{{mentorId}}", "approve"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Mentees",
+      "item": [
+        {
+          "name": "List Mentees (Auth Required)",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "var d = pm.response.json().data;", "if (d && d.length) pm.collectionVariables.set('menteeId', d[0].id);"],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": { "raw": "{{base_url}}/mentees", "host": ["{{base_url}}"], "path": ["mentees"] }
+          }
+        },
+        {
+          "name": "List Mentees — No Auth (401)",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 401', () => pm.response.to.have.status(401));"], "type": "text/javascript" } }],
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/mentees", "host": ["{{base_url}}"], "path": ["mentees"] } }
+        }
+      ]
+    },
+    {
+      "name": "6. Notifications",
+      "item": [
+        {
+          "name": "Create Notification (Admin)",
+          "event": [{
+            "listen": "test", "script": {
+              "exec": ["pm.test('Status 201', () => pm.response.to.have.status(201));", "var d = pm.response.json().data;", "if (d) pm.collectionVariables.set('notifId', d.id);"],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"userId\":\"{{userId}}\",\"title\":\"Test Notification\",\"message\":\"Hello from Postman!\"}" },
+            "url": { "raw": "{{base_url}}/notifications", "host": ["{{base_url}}"], "path": ["notifications"] }
+          }
+        },
+        {
+          "name": "List My Notifications",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": { "raw": "{{base_url}}/notifications", "host": ["{{base_url}}"], "path": ["notifications"] }
+          }
+        },
+        {
+          "name": "Get Unread Notifications",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": { "raw": "{{base_url}}/notifications/unread", "host": ["{{base_url}}"], "path": ["notifications", "unread"] }
+          }
+        },
+        {
+          "name": "Mark Notification as Read",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": { "raw": "{{base_url}}/notifications/{{notifId}}/read", "host": ["{{base_url}}"], "path": ["notifications", "{{notifId}}", "read"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Resources",
+      "item": [
+        {
+          "name": "Upload Resource (Mentor)",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 201', () => pm.response.to.have.status(201));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{mentor_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"mentorId\":\"{{userId}}\",\"title\":\"Learning Guide\",\"fileUrl\":\"https://example.com/guide.pdf\"}" },
+            "url": { "raw": "{{base_url}}/resources", "host": ["{{base_url}}"], "path": ["resources"] }
+          }
+        },
+        {
+          "name": "Get Resources (Public)",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"], "type": "text/javascript" } }],
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/resources/{{mentorId}}", "host": ["{{base_url}}"], "path": ["resources", "{{mentorId}}"] } }
+        }
+      ]
+    },
+    {
+      "name": "8. Availability",
+      "item": [
+        {
+          "name": "Get Availability (Public)",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"], "type": "text/javascript" } }],
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/availabilities/{{mentorId}}", "host": ["{{base_url}}"], "path": ["availabilities", "{{mentorId}}"] } }
+        },
+        {
+          "name": "Set Availability (Mentor)",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 201', () => pm.response.to.have.status(201));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{mentor_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"mentorId\":\"{{userId}}\",\"dayOfWeek\":\"Sat\",\"startTime\":\"09:00\",\"endTime\":\"17:00\"}" },
+            "url": { "raw": "{{base_url}}/availabilities", "host": ["{{base_url}}"], "path": ["availabilities"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Sessions",
+      "item": [
+        {
+          "name": "Create Session",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 201', () => pm.response.to.have.status(201));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"mentorId\":\"{{mentorId}}\",\"menteeId\":\"{{menteeId}}\",\"title\":\"Career Advice\",\"scheduledAt\":\"2026-12-01T10:00:00Z\",\"duration\":60}" },
+            "url": { "raw": "{{base_url}}/sessions", "host": ["{{base_url}}"], "path": ["sessions"] }
+          }
+        },
+        {
+          "name": "List Sessions",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": { "raw": "{{base_url}}/sessions", "host": ["{{base_url}}"], "path": ["sessions"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Messages",
+      "item": [
+        {
+          "name": "Send Message",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 201', () => pm.response.to.have.status(201));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"senderId\":\"{{userId}}\",\"receiverId\":\"{{userId}}\",\"content\":\"Hello!\"}" },
+            "url": { "raw": "{{base_url}}/messages", "host": ["{{base_url}}"], "path": ["messages"] }
+          }
+        },
+        {
+          "name": "Get Conversations",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": { "raw": "{{base_url}}/messages/conversations", "host": ["{{base_url}}"], "path": ["messages", "conversations"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "11. Matchings",
+      "item": [
+        {
+          "name": "Create Matching (Admin)",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 201', () => pm.response.to.have.status(201));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"mentorId\":\"{{mentorId}}\",\"menteeId\":\"{{menteeId}}\",\"reason\":\"Good skill match\"}" },
+            "url": { "raw": "{{base_url}}/matchings", "host": ["{{base_url}}"], "path": ["matchings"] }
+          }
+        },
+        {
+          "name": "List Matchings",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": { "raw": "{{base_url}}/matchings", "host": ["{{base_url}}"], "path": ["matchings"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "12. Feedback",
+      "item": [
+        {
+          "name": "Create Feedback",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 201', () => pm.response.to.have.status(201));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{mentee_token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"mentorId\":\"{{mentorId}}\",\"menteeId\":\"{{menteeId}}\",\"rating\":5,\"comment\":\"Great mentor!\"}" },
+            "url": { "raw": "{{base_url}}/feedback", "host": ["{{base_url}}"], "path": ["feedback"] }
+          }
+        },
+        {
+          "name": "Get Feedback by Mentor",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": { "raw": "{{base_url}}/feedback/mentor/{{mentorId}}", "host": ["{{base_url}}"], "path": ["feedback", "mentor", "{{mentorId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "13. Admin",
+      "item": [
+        {
+          "name": "Dashboard",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.test('Has stats', () => pm.expect(pm.response.json().data).to.have.property('totalUsers'));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": { "raw": "{{base_url}}/admin/dashboard", "host": ["{{base_url}}"], "path": ["admin", "dashboard"] }
+          }
+        },
+        {
+          "name": "Dashboard — Non-Admin (403)",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 403', () => pm.response.to.have.status(403));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{mentee_token}}" }],
+            "url": { "raw": "{{base_url}}/admin/dashboard", "host": ["{{base_url}}"], "path": ["admin", "dashboard"] }
+          }
+        },
+        {
+          "name": "List Users",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));"], "type": "text/javascript" } }],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": { "raw": "{{base_url}}/admin/users", "host": ["{{base_url}}"], "path": ["admin", "users"] }
+          }
+        }
+      ]
+    }
+  ]
+}
