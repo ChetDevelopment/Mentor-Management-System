@@ -10,6 +10,11 @@ app.use(helmet());
 app.use(cors({ origin: process.env.CORS_ORIGINS?.split(',') || '*', credentials: true }));
 app.use(express.json({ limit: '1mb' }));
 
+// Root welcome page
+app.get('/', (req, res) => {
+  res.send(`<!DOCTYPE html><html><head><title>Mentor API</title><style>body{font-family:system-ui;max-width:700px;margin:60px auto;padding:20px;background:#f5f5f5}h1{color:#1a237e}</style></head><body><h1>Mentor Management API</h1><p>Running</p><p><a href="/api/v1/health">Health</a> | <a href="/api/v1/skills">Skills</a> | <a href="/api/v1/mentors">Mentors</a></p></body></html>`);
+});
+
 // Routes
 app.use('/api/v1/health', require('./routes/health'));
 app.use('/api/v1/auth', require('./routes/auth'));

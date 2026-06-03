@@ -67,6 +67,24 @@ app.get('/api/v1/health', (req, res) => {
   res.json({ success: true, data: { status: 'ok', timestamp: new Date().toISOString() } });
 });
 
+// Root welcome page
+app.get('/', (req, res) => {
+  res.send(`<!DOCTYPE html>
+<html><head><title>Mentor Management API</title><style>body{font-family:system-ui;max-width:700px;margin:50px auto;padding:20px;background:#f5f5f5}h1{color:#1a237e}a{color:#1565c0}</style></head>
+<body>
+<h1>Mentor Management System API</h1>
+<p>Status: Running</p>
+<p>Base URL: <code>/api/v1</code></p>
+<h2>Quick Links</h2>
+<ul>
+<li><a href="/api/v1/health">Health Check</a></li>
+<li><a href="/api/v1/skills">Skills (Public)</a></li>
+<li><a href="/api/v1/mentors">Mentors (Public)</a></li>
+<li><a href="/api/v1/categories">Categories (Public)</a></li>
+</ul>
+</body></html>`);
+});
+
 // Auth
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
