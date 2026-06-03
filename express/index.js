@@ -14,22 +14,8 @@ app.use(express.json({ limit: '1mb' }));
 app.get('/', (req, res) => {
   res.send(`<!DOCTYPE html>
 <html><head><title>Mentor API</title>
-<style>body{font-family:system-ui,sans-serif;max-width:600px;margin:60px auto;padding:30px;background:#f0f4ff;border-radius:12px}
-h1{color:#1a237e;margin-bottom:5px}.status{color:#2e7d32;font-weight:bold}.links{margin-top:20px}
-.links a{display:block;padding:8px 12px;margin:5px 0;background:#fff;border-radius:6px;color:#1565c0;text-decoration:none;border:1px solid #ddd}
-.links a:hover{background:#e3f2fd}code{background:#e8eaf6;padding:2px 6px;border-radius:3px}</style></head>
-<body>
-<h1>Mentor Management API</h1>
-<p class="status">Running</p>
-<p>Base: <code>https://mentor-management-api.onrender.com/api/v1</code></p>
-<div class="links">
-<a href="/api/v1/health">Health Check</a>
-<a href="/api/v1/skills">Skills (Public)</a>
-<a href="/api/v1/mentors">Mentors (Public)</a>
-<a href="/api/v1/categories">Categories (Public)</a>
-</div>
-<p style="margin-top:20px;font-size:12px;color:#999">Express.js + TypeORM + Neon PostgreSQL + Render</p>
-</body></html>`);
+<style>body{font-family:system-ui,sans-serif;max-width:400px;margin:80px auto;text-align:center}h1{color:#1a237e}.ok{color:#2e7d32;font-size:18px;font-weight:bold}</style></head>
+<body><h1>Mentor Management API</h1><p class="ok">Running</p></body></html>`);
 });
 
 // Routes
