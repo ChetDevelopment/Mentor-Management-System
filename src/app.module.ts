@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './modules/auth/auth.module';
@@ -19,40 +20,56 @@ import { CategoryModule } from './modules/category/category.module';
 import { AvailabilityModule } from './modules/availability/availability.module';
 import { MessageModule } from './modules/message/message.module';
 import { SharedModule } from './modules/shared/shared.module';
+import { BlacklistModule } from './modules/blacklist/blacklist.module';
+import { SessionManagementModule } from './modules/session-management/session-management.module';
+import { SecurityModule } from './security/security.module';
 import { HealthController } from './controllers/health.controller';
 import { AuthGuard } from './guards/auth.guard';
 
 @Module({
-  controllers: [HealthController],
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '.env',
-    }),
-    DatabaseModule,
-    AuthModule,
-    UserModule,
-    MentorModule,
-    MenteeModule,
-    SkillModule,
-    SessionModule,
-    MatchingModule,
-    FeedbackModule,
-    NotificationModule,
-    AdminModule,
-    ActivityLogModule,
-    ResourceModule,
-    ReportModule,
-    CategoryModule,
-    AvailabilityModule,
-    MessageModule,
-    SharedModule,
-  ],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
-  ],
+    controllers: [HealthController],
+    imports: [
+        ConfigModule.forRoot({
+            isGlobal: true,
+            envFilePath: '.env',
+        }),
+        ThrottlerModule.forRoot([
+            {
+                ttl: 60000,
+                limit: 100,
+            },
+        ]),
+        DatabaseModule,
+        AuthModule,
+        UserModule,
+        MentorModule,
+        MenteeModule,
+        SkillModule,
+        SessionModule,
+        MatchingModule,
+        FeedbackModule,
+        NotificationModule,
+        AdminModule,
+        ActivityLogModule,
+        ResourceModule,
+        ReportModule,
+        CategoryModule,
+        AvailabilityModule,
+        MessageModule,
+        SharedModule,
+        BlacklistModule,
+        SessionManagementModule,
+        SecurityModule,
+    ],
+    providers: [
+        {
+            provide: APP_GUARD,
+            useClass: AuthGuard,
+        },
+        {
+            provide: APP_GUARD,
+            useClass: ThrottlerGuard,
+        },
+    ],
 })
 export class AppModule {}

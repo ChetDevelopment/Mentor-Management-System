@@ -1,30 +1,32 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { MessageRepository } from '../../repositories/message/message.repository';
 import { CreateMessageDto } from '../../dto/message';
 
 @Injectable()
 export class MessageService {
-  constructor(private readonly messageRepo: MessageRepository) {}
+    constructor(private readonly messageRepo: MessageRepository) {}
 
-  // 11.15 Send message
-  async sendMessage(dto: CreateMessageDto) {
-    return this.messageRepo.create(dto);
-  }
+    async sendMessage(dto: CreateMessageDto) {
+        return this.messageRepo.create(dto);
+    }
 
-  // 11.16 Get conversation between two users
-  async getConversation(senderId: string, receiverId: string) {
-    return this.messageRepo.findConversation(senderId, receiverId);
-  }
+    async getConversation(senderId: string, receiverId: string) {
+        return this.messageRepo.findConversation(senderId, receiverId);
+    }
 
-  // 11.17 Get conversation list (unique threads)
-  async getConversationList(userId: string) {
-    return this.messageRepo.findConversationList(userId);
-  }
+    async getConversationList(userId: string) {
+        return this.messageRepo.findConversationList(userId);
+    }
 
-  // 11.18 Mark message as read
-  async markAsRead(id: string) {
-    const message = await this.messageRepo.findById(id);
-    if (!message) throw new NotFoundException('Message not found');
-    return this.messageRepo.markAsRead(message.senderId, message.receiverId);
-  }
+    async markAsRead(messageId: string, userId: string) {
+        const message = await this.messageRepo.findById(messageId);
+        if (!message) throw new NotFoundException('Message not found');
+
+        // Only the receiver can mark as read
+        if (message.receiverId !== userId) {
+            throw new ForbiddenException('You can only mark your own messages as read');
+        }
+
+        return this.messageRepo.markAsRead(message.id, userId);
+    }
 }
