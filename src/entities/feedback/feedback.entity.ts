@@ -14,7 +14,7 @@ export class Feedback {
   @Column()
   menteeId: string;
 
-  @Column()
+  @Column({ nullable: true })
   sessionId: string;
 
   @Column({ type: 'int', width: 1, nullable: true })
