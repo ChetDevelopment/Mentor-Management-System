@@ -429,30 +429,11 @@ async function seedMentors(
 async function seedMentorSkills(
   mentorSkillPairs: Array<{ mentorId: string; skillId: string }>,
 ) {
-  const queryRunner = dataSource.createQueryRunner();
-  await queryRunner.connect();
-
-  try {
-    const mentorSkillsTable = await queryRunner.getTable('mentor_skills');
-    const hasIdColumn = Boolean(
-      mentorSkillsTable?.columns.some(column => column.name === 'id'),
+  for (const pair of mentorSkillPairs) {
+    await dataSource.query(
+      'INSERT INTO "mentor_skills" ("mentorsId", "skillsId") VALUES ($1, $2) ON CONFLICT DO NOTHING',
+      [pair.mentorId, pair.skillId],
     );
-
-    for (const pair of mentorSkillPairs) {
-      if (hasIdColumn) {
-        await queryRunner.query(
-          'INSERT INTO "mentor_skills" ("id", "mentorId", "skillId") VALUES (?, ?, ?) ON CONFLICT DO NOTHING',
-          [randomUUID(), pair.mentorId, pair.skillId],
-        );
-      } else {
-        await queryRunner.query(
-          'INSERT INTO "mentor_skills" ("mentorId", "skillId") VALUES (?, ?) ON CONFLICT DO NOTHING',
-          [pair.mentorId, pair.skillId],
-        );
-      }
-    }
-  } finally {
-    await queryRunner.release();
   }
 }
 

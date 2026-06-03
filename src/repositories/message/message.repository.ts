@@ -34,14 +34,14 @@ export class MessageRepository {
                 'otherUserId',
             )
             .where('m.senderId = :userId OR m.receiverId = :userId')
-            .groupBy('otherUserId');
+            .groupBy('CASE WHEN m.senderId = :userId THEN m.receiverId ELSE m.senderId END');
 
         const results = await this.repository
             .createQueryBuilder('m')
             .innerJoin(
                 `(${subquery.getQuery()})`,
                 'latest',
-                'm.createdAt = latest.maxDate',
+                'm.createdAt = latest."maxDate"',
             )
             .setParameter('userId', userId)
             .leftJoinAndSelect('m.sender', 'sender')
