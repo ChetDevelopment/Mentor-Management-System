@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: mentor-management-api
+    env: node
+    region: oregon
+    buildCommand: npm install && npm run build
+    startCommand: node express/index.js
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: "*"
