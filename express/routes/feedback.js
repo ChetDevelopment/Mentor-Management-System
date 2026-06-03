@@ -31,7 +31,8 @@ router.get('/:id', authGuard, async (req, res) => {
 router.post('/', authGuard, async (req, res) => {
   try {
     const repo = await getRepo(Feedback);
-    const fb = await repo.save({ mentorId: req.body.mentorId, menteeId: req.body.menteeId, sessionId: req.body.sessionId, rating: req.body.rating, comment: req.body.comment, isAnonymous: req.body.isAnonymous || false });
+    const sessionId = req.body.sessionId || '00000000-0000-0000-0000-000000000000';
+    const fb = await repo.save({ mentorId: req.body.mentorId, menteeId: req.body.menteeId, sessionId, rating: req.body.rating || 1, comment: req.body.comment, isAnonymous: req.body.isAnonymous || false });
     res.status(201).json({ success: true, data: fb });
   } catch (e) { res.status(500).json({ success: false, message: e.message }); }
 });
