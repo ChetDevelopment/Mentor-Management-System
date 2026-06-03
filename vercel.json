@@ -3,7 +3,9 @@
   "buildCommand": "npm run build:vercel",
   "functions": {
     "api/index.js": {
-      "includeFiles": "api/dist/**"
+      "includeFiles": "node_modules/**",
+      "memory": 512,
+      "maxDuration": 30
     }
   }
 }

@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "build": "nest build",
-    "build:vercel": "nest build && node -e \"require('fs').cpSync('dist','api/dist',{recursive:true})\"",
+    "build:vercel": "nest build && ncc build src/serverless.ts -o api/ -e @nestjs/core -e @nestjs/common -e @nestjs/platform-express -e @nestjs/typeorm -e @nestjs/config -e @nestjs/jwt -e @nestjs/passport -e @nestjs/throttler -e typeorm -e pg -e bcrypt -e helmet -e passport -e passport-jwt -e reflect-metadata -e rxjs -e serverless-http -e class-validator -e class-transformer -e jsonwebtoken",
     "format": "prettier --write \"src/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -41,6 +41,7 @@
     "pg": "^8.21.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
+    "serverless-http": "^4.0.0",
     "transliteration": "^2.6.1",
     "typeorm": "^0.3.17"
   },

@@ -1,0 +1,45 @@
+import { MatchingRepository } from '../../repositories/matching/matching.repository';
+import { MentorRepository } from '../../repositories/mentor/mentor.repository';
+import { AvailabilityRepository } from '../../repositories/availability/availability.repository';
+import { CreateMatchingDto, UpdateMatchingDto } from '../../dto/matching';
+export declare class MatchingService {
+    private matchingRepository;
+    private mentorRepository;
+    private availabilityRepository;
+    constructor(matchingRepository: MatchingRepository, mentorRepository: MentorRepository, availabilityRepository: AvailabilityRepository);
+    create(createMatchingDto: CreateMatchingDto): Promise<import("../../entities/matching/matching.entity").Matching>;
+    findAll(query?: any): Promise<import("../../entities/matching/matching.entity").Matching[]>;
+    findById(id: string): Promise<import("../../entities/matching/matching.entity").Matching>;
+    findByMentorId(mentorId: string): Promise<import("../../entities/matching/matching.entity").Matching[]>;
+    findByMenteeId(menteeId: string): Promise<import("../../entities/matching/matching.entity").Matching[]>;
+    update(id: string, updateMatchingDto: UpdateMatchingDto): Promise<import("../../entities/matching/matching.entity").Matching>;
+    remove(id: string): Promise<void>;
+    getRecommendedMentors(menteeId: string, skillFilter?: string): Promise<{
+        matchScore: number;
+        id: string;
+        user: import("../../entities/user/user.entity").User;
+        userId: string;
+        nid: string;
+        phone: string;
+        avatar: string;
+        cvUrl: string;
+        portfolioUrl: string;
+        shortDescription: string;
+        fullBio: string;
+        status: import("../../constants").MentorStatus;
+        rejectionReason: string;
+        approvedAt: Date;
+        title: string;
+        company: string;
+        yearsOfExperience: number;
+        skills: import("../../entities/skill/skill.entity").Skill[];
+        rating: number;
+        totalSessions: number;
+        availabilityStatus: import("../../entities/mentor/mentor.entity").AvailabilityStatus;
+        profileCompleteness: number;
+        createdAt: Date;
+        updatedAt: Date;
+        feedbacks: any;
+    }[]>;
+    calculateMatchScore(mentor: any, menteeId: string, skillFilter?: string): Promise<number>;
+}

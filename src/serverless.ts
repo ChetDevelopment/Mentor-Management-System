@@ -1,16 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
+import serverless from 'serverless-http';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './filters/http-exception.filter';
-import { LoggingInterceptor } from './interceptors/logging.interceptor';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { SecurityMiddleware } from './middlewares/security.middleware';
 
-let cachedApp: any;
+let cachedHandler: any;
 
-async function getApp() {
-  if (cachedApp) return cachedApp;
+async function bootstrap() {
+  if (cachedHandler) return cachedHandler;
 
   const app = await NestFactory.create(AppModule, {
     logger: ['error', 'warn'],
@@ -18,40 +18,20 @@ async function getApp() {
 
   app.setGlobalPrefix('api/v1');
   app.use(helmet());
+  app.enableCors({ origin: true, credentials: true });
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-  );
-
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.useGlobalFilters(new AllExceptionsFilter());
-  app.useGlobalInterceptors(new LoggingInterceptor());
   app.useGlobalInterceptors(new TransformInterceptor());
-
-  app.enableCors({
-    origin: process.env.CORS_ORIGINS?.split(',') || ['*'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-  });
-
   app.use(new SecurityMiddleware().use);
-  await app.init();
 
-  cachedApp = app;
-  return cachedApp;
+  await app.init();
+  const expressApp = app.getHttpAdapter().getInstance();
+  cachedHandler = serverless(expressApp);
+  return cachedHandler;
 }
 
 export default async function handler(req: any, res: any) {
-  try {
-    const app = await getApp();
-    const instance = app.getHttpAdapter().getInstance();
-    return instance(req, res);
-  } catch (error: any) {
-    console.error(error.message);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
+  const fn = await bootstrap();
+  return fn(req, res);
 }
